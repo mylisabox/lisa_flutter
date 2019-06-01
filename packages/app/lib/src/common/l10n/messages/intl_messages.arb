@@ -1,0 +1,293 @@
+{
+  "@@locale": "fr",
+  "@@last_modified": "2019-06-22T12:51:17.081868",
+  "appTitle": "L.I.S.A.",
+  "@appTitle": {
+    "description": "Action bar title on main screen.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "finished": "Finished",
+  "@finished": {
+    "description": "Applied to buttons.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginButton": "Login",
+  "@loginButton": {
+    "description": "Login button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "signupButton": "Sign up",
+  "@signupButton": {
+    "description": "Sign up button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "close": "Close",
+  "@close": {
+    "description": "Applied to buttons, typically to close a dialog.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "confirm": "Confirm",
+  "@confirm": {
+    "description": "Applied to buttons.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "copy": "Copy",
+  "@copy": {
+    "description": "Applied to buttons.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "copied": "Copied to clipboard",
+  "@copied": {
+    "description": "Applied to snarbar once copy is done.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "retry": "Retry",
+  "@retry": {
+    "description": "Applied to buttons.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "continueButton": "Continue",
+  "@continueButton": {
+    "description": "Applied to buttons.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "emptyList": "Nothing to show.",
+  "@emptyList": {
+    "description": "Displayed when a list is empty and nothing is to display",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseWait": "Please wait.",
+  "@pleaseWait": {
+    "description": "Something's going on!",
+    "type": "text",
+    "placeholders": {}
+  },
+  "undo": "Undo",
+  "@undo": {
+    "description": "Button label to undo something",
+    "type": "text",
+    "placeholders": {}
+  },
+  "saving": "Saving...",
+  "@saving": {
+    "description": "Label when saving is ongoing, example save a customer in database",
+    "type": "text",
+    "placeholders": {}
+  },
+  "phoneField": "Phone number",
+  "@phoneField": {
+    "description": "Phone field label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "emailField": "Email",
+  "@emailField": {
+    "description": "Email field label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "passwordField": "Password",
+  "@passwordField": {
+    "description": "Password field label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "nameField": "Name",
+  "@nameField": {
+    "description": "Name field label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "colorField": "Color",
+  "@colorField": {
+    "description": "Color field label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "search": "Search",
+  "@search": {
+    "description": "Hint under search field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "deleteAction": "Delete",
+  "@deleteAction": {
+    "description": "Delete label on button, swipe action",
+    "type": "text",
+    "placeholders": {}
+  },
+  "editAction": "Edit",
+  "@editAction": {
+    "description": "Edit label on button, swipe action",
+    "type": "text",
+    "placeholders": {}
+  },
+  "favoriteAction": "Favorite",
+  "@favoriteAction": {
+    "description": "Favorite label on button, swipe action",
+    "type": "text",
+    "placeholders": {}
+  },
+  "success": "Success",
+  "@success": {
+    "description": "Success general label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "helpIntro": "If you have questions regarding the application or if you want to know more about KiWi, do not hesitate to get in touch with us.",
+  "@helpIntro": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "helpFooter": "We look forward to hearing from you!",
+  "@helpFooter": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "helpEmail": "ayuda@kiwi-bop.com",
+  "@helpEmail": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "helpVersion": "Version {version}, build {buildNumber}",
+  "@helpVersion": {
+    "description": "Displayed on the support page",
+    "type": "text",
+    "placeholders": {
+      "version": {},
+      "buildNumber": {}
+    }
+  },
+  "menuWelcome": "Welcome to L.I.S.A.",
+  "@menuWelcome": {
+    "description": "The title of the menu drawer",
+    "type": "text",
+    "placeholders": {}
+  },
+  "menuNightMode": "Night mode",
+  "@menuNightMode": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "menuRooms": "Rooms",
+  "@menuRooms": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "menuAddRoom": "Add new room",
+  "@menuAddRoom": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "menuOrphans": "Orphans",
+  "@menuOrphans": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "menuPreferences": "Preferences",
+  "@menuPreferences": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "menuFavorite": "Favorites",
+  "@menuFavorite": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "menuLogout": "Logout",
+  "@menuLogout": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "logoutConfirm": "Do you really want to log out?",
+  "@logoutConfirm": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "menuHelp": "Help",
+  "@menuHelp": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "linkExternalUrl": "Set external URL for remote access",
+  "@linkExternalUrl": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "externalUrl": "External URL",
+  "@externalUrl": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "externalUrlHint": "http://myDomain.com:3000",
+  "@externalUrlHint": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "dialogErrorTitle": "Oops!",
+  "@dialogErrorTitle": {
+    "description": "The title of a dialog where something went wrong",
+    "type": "text",
+    "placeholders": {}
+  },
+  "wrongEmailMessage": "Email is not correct",
+  "@wrongEmailMessage": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "internalHint": "An error as occured",
+  "@internalHint": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "internalMessage": "There is nothing you can do, we'll try to fix this asap",
+  "@internalMessage": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "noNetworkHint": "Try again later when you have better coverage",
+  "@noNetworkHint": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "noNetworkMessage": "Device seems to be offline",
+  "@noNetworkMessage": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "noAppForTheAction": "No application available for this action",
+  "@noAppForTheAction": {
+    "description": "Displayed when no app can handle the wanted action (send sms, email, open web page...)",
+    "type": "text",
+    "placeholders": {}
+  },
+  "noAppForTheActionHint": "Try to install an application who handle this kind of action",
+  "@noAppForTheActionHint": {
+    "description": "Displayed when no app can handle the wanted action (send sms, email, open web page...)",
+    "type": "text",
+    "placeholders": {}
+  },
+  "fieldRequired": "This field is required",
+  "@fieldRequired": {
+    "description": "When a field is required on a form",
+    "type": "text",
+    "placeholders": {}
+  },
+  "fieldRequiredHint": "Please fill this field",
+  "@fieldRequiredHint": {
+    "description": "When a field is required on a form",
+    "type": "text",
+    "placeholders": {}
+  }
+}

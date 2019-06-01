@@ -1,0 +1,78 @@
+name: lisa_flutter
+description: A new Flutter project.
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.2.2 <3.0.0"
+
+dependencies:
+  flutter_speech: ^1.0.0
+  #path: '../../../flutter_speech_recognition'
+  lisa_server_sdk:
+    path: '../api'
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  crypted_preferences: ^0.0.1+1
+  flutter_crashlytics: ^1.0.0
+  connectivity: ^0.4.3+6
+  mobx: ^0.3.5
+  image_picker: ^0.6.0+17
+  flutter_staggered_grid_view: ^0.3.0
+  flutter_mobx: ^0.3.0+1
+  remote_ui: ^0.0.3
+  remote_color_picker:
+    path: '../../../remote_ui/packages/remote_color_picker'
+  remote_ip_camera:
+    path: '../../../remote_ui/packages/remote_ip_camera'
+  remote_image_button:
+    path: '../../../remote_ui/packages/remote_image_button'
+  proxy_layout: ^2.0.0
+  provider: ^3.0.0+1
+  flare_splash_screen: ^2.1.3
+    #path: '../../../../StudioProjects/flare_splash_screen'
+  flare_checkbox: ^1.0.2
+  flutter_hooks: ^0.6.0
+  multicast_lock: ^0.0.5
+  path_provider: ^1.2.0
+  intl_translation: ^0.17.5
+  flare_flutter: ^1.5.4
+  flutter_svg: ^0.13.1
+  toast: ^0.1.5
+  #flutter_crashlytics: ^1.0.0
+  #firebase_analytics: ^3.0.1
+
+
+  cupertino_icons: ^0.1.2
+
+dev_dependencies:
+  mobx_codegen: ^0.3.3+1
+  build_runner: ^1.6.4
+  flutter_test:
+    sdk: flutter
+
+dependency_overrides:
+  remote_ui:
+    path: '../../../remote_ui/packages/remote_ui'
+
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/animations/
+
+  fonts:
+     - family: Raleway
+       fonts:
+         - asset: assets/fonts/Raleway-Regular.ttf
+         - asset: assets/fonts/Raleway-Italic.ttf
+           style: italic
+         - asset: assets/fonts/Raleway-Bold.ttf
+           weight: 700
+         - asset: assets/fonts/Raleway-SemiBold.ttf
+           weight: 600

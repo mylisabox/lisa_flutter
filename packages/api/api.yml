@@ -1,0 +1,673 @@
+openapi: 3.0.0
+info:
+  title: L.I.S.A. API v1
+  description: L.I.S.A. API v1
+  contact:
+    email: jimmy.aumard@gmail.com
+  license:
+    name: MIT License
+  version: v1
+security:
+  - Bearer:
+      []
+paths:
+  /api/v1/chatbot/userBot/{scene}:
+    parameters:
+      - name: scene
+        in: path
+        required: true
+        schema:
+          type: string
+    delete:
+      operationId: deleteScene
+      responses:
+        200:
+          description: ""
+      tags:
+        - scene
+  /api/v1/chatbot/userBot:
+    get:
+      operationId: getScene
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScenesResponse'
+          description: ""
+      tags:
+        - scene
+    post:
+      operationId: saveScene
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Scene'
+      responses:
+        200:
+          description: ""
+      tags:
+        - scene
+  /api/v1/plugin/{pluginName}/drivers/{driver}/pairing:
+    parameters:
+      - name: pluginName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: driver
+        in: path
+        required: true
+        schema:
+          type: string
+    post:
+      operationId: pairing
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: object
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PairingResponse'
+          description: ""
+      tags:
+        - plugin
+  /api/v1/plugin/search:
+    get:
+      operationId: searchPlugins
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: activated
+          in: query
+          schema:
+            type: boolean
+            default: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Plugin'
+          description: ""
+      tags:
+        - plugin
+  /api/v1/dashboard/room/{roomId}:
+    parameters:
+      - name: roomId
+        in: path
+        required: false
+        schema:
+          type: integer
+    get:
+      operationId: getDashboard
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dashboard'
+          description: ""
+      tags:
+        - dashboard
+    post:
+      operationId: saveDashboard
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: integer
+      responses:
+        200:
+          description: ""
+      tags:
+        - dashboard
+  /api/v1/favorite/{deviceId}:
+    parameters:
+      - name: deviceId
+        in: path
+        required: true
+        schema:
+          type: integer
+    put:
+      operationId: addToFavorite
+      responses:
+        200:
+          description: ""
+      tags:
+        - favorite
+    delete:
+      operationId: deleteFromFavorite
+      responses:
+        200:
+          description: ""
+      tags:
+        - favorite
+  /api/v1/favorite:
+    get:
+      operationId: getFavorites
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FavoriteResponse"
+          description: ""
+      tags:
+        - favorite
+  /api/v1/device/{deviceId}:
+    parameters:
+      - name: deviceId
+        in: path
+        required: true
+        schema:
+          type: integer
+    delete:
+      operationId: deleteDevice
+      responses:
+        200:
+          description: ""
+      tags:
+        - device
+    patch:
+      operationId: saveDeviceName
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/UpdateDeviceNameRequest"
+      responses:
+        200:
+          description: ""
+      tags:
+        - device
+  /api/v1/plugins/{pluginName}/{deviceId}:
+    parameters:
+      - name: deviceId
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: pluginName
+        in: path
+        required: true
+        schema:
+          type: string
+    post:
+      operationId: updateDevice
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/UpdateDeviceDataRequest"
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Device"
+          description: ""
+      tags:
+        - device
+  /api/v1/room:
+    get:
+      operationId: getRooms
+      description: ""
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/RoomResponse"
+          description: ""
+      tags:
+        - room
+    post:
+      operationId: addRoom
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Room"
+      responses:
+        200:
+          description: ""
+      tags:
+        - room
+  /api/v1/room/{roomId}:
+    parameters:
+      - name: roomId
+        in: path
+        required: true
+        schema:
+          type: integer
+    delete:
+      operationId: deleteRoom
+      description: ""
+      responses:
+        200:
+          description: ""
+      tags:
+        - room
+    put:
+      operationId: saveRoom
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Room"
+      responses:
+        200:
+          description: ""
+      tags:
+        - room
+  /api/v1/initialized:
+    get:
+      operationId: isInitialized
+      description: ""
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/IsInitialized"
+          description: ""
+      tags:
+        - config
+  /api/v1/auth/local:
+    post:
+      operationId: login
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/LoginRequest"
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/LoginResponse"
+      tags:
+        - login
+      security:
+        []
+  /api/v1/auth/register:
+    post:
+      operationId: register
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/LoginRequest"
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/LoginResponse"
+      tags:
+        - login
+      security:
+        []
+  /api/v1/auth/logout:
+    get:
+      operationId: logout
+      description: ""
+      responses:
+        "201":
+          description: All good
+      tags:
+        - login
+  /api/v1/user:
+    get:
+      operationId: getProfile
+      description: ""
+      responses:
+        "200":
+          description: All good
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/User"
+      tags:
+        - user
+    post:
+      operationId: saveProfile
+      description: ""
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              "$ref": "#/components/schemas/UserUpdate"
+      responses:
+        "200":
+          description: All good
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/User"
+      tags:
+        - user
+  /api/v1/chatbot/interact:
+    post:
+      operationId: interact
+      description: ""
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/InteractRequest"
+      responses:
+        "200":
+          description: All good
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/InteractResponse"
+      tags:
+        - chatbot
+
+servers:
+  - url: http://localhost:3000/
+  - url: http://mylisabox:3000/
+components:
+  securitySchemes:
+    Bearer:
+      in: header
+      name: Authorization
+      type: apiKey
+  schemas:
+    InteractRequest:
+      type:  object
+      required:
+        - sentence
+      properties:
+        sentence:
+          type: string
+        lang:
+          type: string
+    InteractResponse:
+      type:  object
+      required:
+        - userId
+        - lang
+        - action
+        - userSentence
+        - responses
+        - response
+      properties:
+        action:
+          type: string
+        lang:
+          type: string
+        userId:
+          type: string
+        userSentence:
+          type: string
+        response:
+          type: string
+        responses:
+          type: array
+          items:
+            type: string
+    PairingResponse:
+      type: object
+      required:
+        - step
+      properties:
+        singleChoice:
+          type: boolean
+        devices:
+          $ref: '#/components/schemas/PairingDevice'
+        step:
+          type: string
+    PairingDevice:
+      type: object
+      required:
+        - name
+        - ìd
+      properties:
+        name:
+          type: string
+        image:
+          type: string
+        id:
+          type: string
+    Plugin:
+      type: object
+      required:
+        - id
+        - name
+        - description
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        image:
+          type: string
+        devicesSettings:
+          $ref: '#/components/schemas/DeviceSettings'
+    DeviceSettings:
+      type: object
+      properties:
+        name:
+          type: string
+        driver:
+          type: string
+        image:
+          type: string
+        pairing:
+          type: string
+        pluginName:
+          type: string
+        description:
+          type: string
+        settings:
+          type: object
+          additionalProperties:
+            type: object
+    Dashboard:
+      type: object
+      required:
+        - id
+        - roomId
+        - userId
+        - widgets
+      properties:
+        id:
+          type: integer
+        roomId:
+          type: integer
+        userId:
+          type: integer
+        widgets:
+          type: array
+          items:
+            $ref: '#/components/schemas/Device'
+    FavoriteResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/Device'
+    Device:
+      type: object
+      required:
+        - id
+        - name
+        - driver
+        - pluginName
+        - favorite
+        - type
+      properties:
+        id:
+          type: integer
+        roomId:
+          type: integer
+        name:
+          type: string
+        driver:
+          type: string
+        pluginName:
+          type: string
+        type:
+          type: string
+        template:
+          type: object
+          additionalProperties:
+            type: object
+        data:
+          type: object
+          additionalProperties:
+            type: object
+        favorite:
+          type: boolean
+    UpdateDeviceNameRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+    UpdateDeviceDataRequest:
+      type: object
+      additionalProperties:
+        type: object
+    RoomResponse:
+      type: array
+      items:
+        $ref: "#/components/schemas/Room"
+    Room:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    LoginResponse:
+      type: object
+      required:
+        - token
+        - user
+      properties:
+        token:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+    UserUpdate:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+          format: email
+        firstname:
+          type: string
+        lang:
+          type: string
+        lastname:
+          type: string
+        mobile:
+          type: string
+        password:
+          type: string
+        avatar:
+          type: string
+          format: binary
+    User:
+      type: object
+      required:
+        - id
+        - email
+        - lang
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+          format: email
+        firstname:
+          type: string
+        lang:
+          type: string
+        lastname:
+          type: string
+        mobile:
+          type: string
+        avatar:
+          type: string
+    IsInitialized:
+      type: object
+      required:
+        - initialized
+      properties:
+        initialized:
+          type: boolean
+    ScenesResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/Scene'
+    Scene:
+      type: object
+      required:
+        - name
+        - displayName
+        - data
+      properties:
+        name:
+          type: string
+        displayName:
+          type: string
+        data:
+          $ref: '#/components/schemas/SceneData'
+    SceneData:
+      type: object
+      properties:
+        sentences:
+          type: array
+          items:
+            type: string
+        responses:
+          type: array
+          items:
+            type: string
+        commands:
+          type: array
+          items:
+            type: string
