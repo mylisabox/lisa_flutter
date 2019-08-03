@@ -105,19 +105,15 @@ class TitleNavigatorObserver extends NavigatorObserver {
   @override
   void didPop(Route route, Route previousRoute) {
     _log.info('didPop ${route.settings.name}');
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      onTitleChange(getTitle(previousRoute.settings.name, arguments: previousRoute.settings.arguments), getRoute(previousRoute));
-    });
     super.didPop(route, previousRoute);
+    onTitleChange(getTitle(previousRoute.settings.name, arguments: previousRoute.settings.arguments), getRoute(previousRoute));
   }
 
   @override
   void didPush(Route route, Route previousRoute) {
     _log.info('didPush ${route.settings.name}');
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      onTitleChange(getTitle(route.settings.name, arguments: route.settings.arguments), getRoute(route));
-    });
     super.didPush(route, previousRoute);
+    onTitleChange(getTitle(route.settings.name, arguments: route.settings.arguments), getRoute(route));
   }
 
   String getTitle(String route, {arguments}) {

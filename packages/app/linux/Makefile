@@ -19,7 +19,7 @@
 # Executable name.
 BINARY_NAME=flutter_desktop_example
 # The C++ code for the embedder application.
-SOURCES=flutter_embedder_example.cc
+SOURCES=lisa.cc
 
 # Default build type. For a release build, set BUILD=release.
 # Currently this only sets NDEBUG, which is used to control the flags passed
@@ -74,9 +74,9 @@ WRAPPER_INCLUDE_DIR=$(WRAPPER_ROOT)/include
 INCLUDE_DIRS=$(FLUTTER_APP_CACHE_DIR) $(WRAPPER_INCLUDE_DIR)
 
 # Build settings
-CXX=g++ -std=c++14
+CXX=clang++
 CXXFLAGS.release=-DNDEBUG
-CXXFLAGS=-Wall -Werror $(CXXFLAGS.$(BUILD))
+CXXFLAGS=-std=c++14 -Wall -Werror $(CXXFLAGS.$(BUILD))
 CPPFLAGS=$(patsubst %,-I%,$(INCLUDE_DIRS))
 LDFLAGS=-L$(BUNDLE_LIB_DIR) \
 	-l$(FLUTTER_LIB_NAME) \

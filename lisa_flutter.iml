@@ -75,6 +75,12 @@
       <excludeFolder url="file://$MODULE_DIR$/packages/app/macos/Flutter/ephemeral/.symlinks/plugins/flutter_speech_recognition/example/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/packages/app/macos/Flutter/ephemeral/.symlinks/plugins/flutter_speech_recognition/example/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/packages/app/macos/Flutter/ephemeral/.symlinks/plugins/flutter_speech_recognition/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/app/macos/Flutter/ephemeral/.symlinks/plugins/image_picker/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/app/macos/Flutter/ephemeral/.symlinks/plugins/image_picker/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/app/macos/Flutter/ephemeral/.symlinks/plugins/image_picker/build" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/app/macos/Flutter/ephemeral/.symlinks/plugins/image_picker/example/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/app/macos/Flutter/ephemeral/.symlinks/plugins/image_picker/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/app/macos/Flutter/ephemeral/.symlinks/plugins/image_picker/example/build" />
       <excludeFolder url="file://$MODULE_DIR$/packages/app/macos/Flutter/ephemeral/.symlinks/plugins/multicast_lock/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/packages/app/macos/Flutter/ephemeral/.symlinks/plugins/multicast_lock/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/packages/app/macos/Flutter/ephemeral/.symlinks/plugins/multicast_lock/build" />
