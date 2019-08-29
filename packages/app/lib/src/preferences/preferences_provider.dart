@@ -1,6 +1,5 @@
-import 'dart:io';
-
 import 'package:crypted_preferences/crypted_preferences.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 
 class PreferencesProvider {
@@ -20,7 +19,7 @@ class PreferencesProvider {
 
   Future<void> setup() async {
     String appDocPath = '.';
-    if(Platform.isAndroid || Platform.isIOS) {
+    if (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.android) {
       final appDocDir = await getApplicationDocumentsDirectory();
       appDocPath = appDocDir.path;
     }

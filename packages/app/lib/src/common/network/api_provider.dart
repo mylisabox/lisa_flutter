@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:connectivity/connectivity.dart';
-import 'package:http/io_client.dart';
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import 'package:jaguar_retrofit/jaguar_retrofit.dart';
 import 'package:lisa_flutter/src/common/config.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
@@ -27,9 +27,9 @@ class HostInterceptor extends Interceptor {
     LocalServerProvider serverProvider,
     PreferencesProvider preferencesProvider,
   })  : _connectivity = connectivity ?? Connectivity(),
-        _serverProvider = serverProvider ?? LocalServerProvider(),
+        _serverProvider = serverProvider ?? LocalServerProvider.create(),
         _preferencesProvider = preferencesProvider ?? PreferencesProvider() {
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.android) {
       _connectivity.onConnectivityChanged.listen((connectivityResult) async {
         if (_previousConnectivity != connectivityResult) {
           _host = null; //reset host to trigger another search on next request
@@ -50,7 +50,7 @@ class HostInterceptor extends Interceptor {
     final url = route.getUrl;
     if (_host == null) {
       final prefExternalUrl = _preferencesProvider.prefs.getString(PreferencesProvider.keyExternalUrl, defaultValue: url);
-      if (Platform.isAndroid || Platform.isIOS) {
+      if (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.android) {
         var connectivityResult = await (_connectivity.checkConnectivity());
         if (connectivityResult == ConnectivityResult.mobile) {
           _setExternalUrl(route, prefExternalUrl);
@@ -157,8 +157,8 @@ class BackendApiProvider {
     baseUrl ??= Config.kUrl;
     interceptors ??= getInterceptors();
 
-    final client = HttpClient()..connectionTimeout = const Duration(seconds: connectionTimeout);
-    globalClient = IOClient(client);
+    globalClient = http.Client();
+
     return _singleton = BackendApiProvider._(interceptors, baseUrl);
   }
 

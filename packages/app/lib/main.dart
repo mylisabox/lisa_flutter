@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -26,9 +24,10 @@ import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
 
 void main() async {
-  if (!Platform.isAndroid && !Platform.isIOS) {
+  if (kIsWeb || defaultTargetPlatform != TargetPlatform.iOS && defaultTargetPlatform == TargetPlatform.android) {
     debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia; //FIXME remove when desktop is supported
   }
+  WidgetsFlutterBinding.ensureInitialized();
   await PreferencesProvider().setup();
   BackendApiProvider.setup();
   initLogger();

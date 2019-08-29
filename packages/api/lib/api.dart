@@ -1,6 +1,6 @@
 library lisa_server_sdk.api;
 
-import 'package:http/io_client.dart';
+import 'package:http/http.dart';
 import 'package:jaguar_mimetype/jaguar_mimetype.dart';
 import 'package:jaguar_retrofit/jaguar_retrofit.dart';
 import 'package:jaguar_serializer/jaguar_serializer.dart';
@@ -69,7 +69,7 @@ class JaguarApiGen {
     * Add custom global interceptors, put overrideInterceptors to true to set your interceptors only (auth interceptors will not be added)
     */
   JaguarApiGen({List<Interceptor> interceptors, bool overrideInterceptors = false, String baseUrl, this.timeout = const Duration(minutes: 2)}) {
-    _baseRoute = Route(baseUrl ?? basePath).withClient(globalClient ?? IOClient());
+    _baseRoute = Route(baseUrl ?? basePath).withClient(globalClient ?? Client());
     if (interceptors == null) {
       this.interceptors = _defaultInterceptors;
     } else if (overrideInterceptors) {
