@@ -14,9 +14,9 @@ class LocalServerProviderWeb extends LocalServerProvider {
 
   String _getPort() {
     final defaultPort = window.location.protocol.contains('https') ? "443" : "80";
-    if ((int.tryParse(window.location.port) ?? 0) > 60000) {
+    if ((int.tryParse(window.location.port) ?? 0) > 30000) {
       return '3000'; // Dev mode
     }
-    return window.location.port == "" ? defaultPort : window.location.port;
+    return window.location.port.isEmpty ? defaultPort : window.location.port;
   }
 }

@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:crypted_preferences/crypted_preferences.dart';
 import 'package:jaguar_retrofit/jaguar_retrofit.dart';
@@ -73,7 +73,8 @@ abstract class _UserBloc with Store {
     String lastName,
     String phone,
     String password,
-    File avatar,
+    Uint8List avatarData,
+    String avatarName,
   }) async {
     final result = await _api.getUserApi().saveProfile(
           user.id,
@@ -83,7 +84,7 @@ abstract class _UserBloc with Store {
           lastName,
           phone,
           password,
-          avatar == null ? null : MultipartFile(await avatar.readAsBytes(), filename: basename(avatar.path)),
+          avatarData == null ? null : MultipartFile(avatarData, filename: basename(avatarName)),
         );
     setUser(result);
   }

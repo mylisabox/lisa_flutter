@@ -140,7 +140,7 @@ packages:
       name: connectivity
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.3+7"
+    version: "0.4.4"
   convert:
     dependency: transitive
     description:
@@ -295,6 +295,15 @@ packages:
     dependency: "direct dev"
     description: flutter
     source: sdk
+    version: "0.0.0"
+  flutter_web_ui:
+    dependency: "direct main"
+    description:
+      path: "packages/flutter_web_ui"
+      ref: HEAD
+      resolved-ref: cc38319841009fcbdf632d9b03aab18d28939438
+      url: "https://github.com/flutter/flutter_web"
+    source: git
     version: "0.0.0"
   front_end:
     dependency: transitive

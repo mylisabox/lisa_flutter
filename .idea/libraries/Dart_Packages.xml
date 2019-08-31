@@ -1,6 +1,7 @@
 <component name="libraryTable">
   <library name="Dart Packages">
     <CLASSES>
+      <root url="file://$USER_HOME$/.pub-cache/git/flutter_web-cc38319841009fcbdf632d9b03aab18d28939438/packages/flutter_web_ui/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/analyzer-0.34.3/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/analyzer-0.36.4/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/archive-2.0.10/lib" />
@@ -31,8 +32,9 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/client_cookie-2.2.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/code_builder-3.2.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/collection-1.14.11/lib" />
-      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/connectivity-0.4.3+7/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/connectivity-0.4.4/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/convert-2.1.1/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/crypted_preferences-0.0.2/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/crypto-2.0.6/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/crypto-2.1.2/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/csslib-0.16.0/lib" />
@@ -128,7 +130,6 @@
       <root url="file://$PROJECT_DIR$/../remote_ui/packages/remote_image_button/lib" />
       <root url="file://$PROJECT_DIR$/../remote_ui/packages/remote_ip_camera/lib" />
       <root url="file://$PROJECT_DIR$/../remote_ui/packages/remote_ui/lib" />
-      <root url="file://$USER_HOME$/StudioProjects/crypted_preferences/lib" />
       <root url="file://$USER_HOME$/flutter_master/bin/cache/pkg/sky_engine/lib" />
       <root url="file://$USER_HOME$/flutter_master/packages/flutter/lib" />
       <root url="file://$USER_HOME$/flutter_master/packages/flutter_localizations/lib" />

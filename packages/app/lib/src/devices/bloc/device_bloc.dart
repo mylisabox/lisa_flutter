@@ -48,7 +48,7 @@ abstract class _DeviceBloc with Store {
   }
 
   @action
-  Future deviceChange(String key, value, {associatedData}) async {
+  Future deviceChange(String key, dynamic value, {associatedData}) async {
     final device = associatedData as Device;
     await _deviceApi.updateDevice(device.id, device.pluginName, {'key': key, 'value': value});
   }

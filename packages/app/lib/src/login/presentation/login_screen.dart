@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:lisa_flutter/main.dart';
+import 'package:lisa_flutter/src/common/bloc/user_bloc.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
@@ -21,6 +22,7 @@ class LoginScreen extends HookWidget {
   Widget build(BuildContext context) {
     final translations = CommonLocalizations.of(context);
     final bloc = useMemoized(() => LoginBloc());
+    final userBloc = Provider.of<UserBloc>(context, listen: false);
 
     useEffect(() {
       bloc.init();
@@ -108,7 +110,7 @@ class LoginScreen extends HookWidget {
                               final isSuccessful = await showLoadingDialog(
                                 context,
                                 (_) => Text(translations.loginButton),
-                                () => bloc.login(),
+                                () => bloc.login().then((_) => userBloc.init()),
                                 onError: (err) {
                                   showErrorDialog(context, err, null);
                                 },
@@ -154,7 +156,7 @@ class LoginScreen extends HookWidget {
                         child: Center(
                           child: ProgressButton(
                             padding: EdgeInsets.all(kNormalPadding),
-                            until: () => bloc.login(),
+                            until: () => bloc.login().then((_) => userBloc.init()),
                             onError: (err, stack) {
                               showErrorDialog(context, err, stack);
                             },
