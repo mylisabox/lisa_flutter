@@ -190,47 +190,75 @@ Future<T> showSelectDialog<T>(BuildContext context, WidgetBuilder title, List<T>
   }
 }
 
-Future<T> showAppDialog<T>(BuildContext context, WidgetBuilder title, WidgetBuilder content,
-    {bool barrierDismissible = true, List<DialogAction> actions = const []}) {
+Widget getAppDialog(BuildContext context, WidgetBuilder title, WidgetBuilder content, {List<DialogAction> actions = const [], bool forceAndroid = false}) {
+  if (defaultTargetPlatform == TargetPlatform.iOS && !forceAndroid) {
+    return CupertinoAlertDialog(
+      title: title(context),
+      content: content(context),
+      actions: actions
+          .map((action) => CupertinoDialogAction(
+                child: Text(
+                  action.text,
+                  style: TextStyle(color: _getColorForAction(context, action)),
+                ),
+                onPressed: action.callback == null ? null : () => action.callback(context),
+                isDestructiveAction: action.isDestructiveAction,
+                isDefaultAction: action.isDefaultAction,
+              ))
+          .toList(growable: false),
+    );
+  } else {
+    return AlertDialog(
+      title: title(context),
+      content: content(context),
+      actions: actions
+          .map((action) => FlatButton(
+                child: Text(
+                  action.text,
+                  style: TextStyle(color: _getColorForAction(context, action)),
+                ),
+                onPressed: action.callback == null ? null : () => action.callback(context),
+              ))
+          .toList(growable: false),
+    );
+  }
+}
+
+Future<T> showPlatformDialog<T>(BuildContext context, WidgetBuilder builder, {bool barrierDismissible = true}) {
   if (defaultTargetPlatform == TargetPlatform.iOS) {
     final Future<T> Function({BuildContext context, WidgetBuilder builder}) showCupertino = barrierDismissible ? showCupertinoDialog : showCupertinoModalPopup;
     return showCupertino(
-        context: context,
-        builder: (context) {
-          return CupertinoAlertDialog(
-            title: title(context),
-            content: content(context),
-            actions: actions
-                .map((action) => CupertinoDialogAction(
-                      child: Text(
-                        action.text,
-                        style: TextStyle(color: _getColorForAction(context, action)),
-                      ),
-                      onPressed: action.callback == null ? null : () => action.callback(context),
-                      isDestructiveAction: action.isDestructiveAction,
-                      isDefaultAction: action.isDefaultAction,
-                    ))
-                .toList(growable: false),
-          );
-        });
+      context: context,
+      builder: (context) {
+        return builder(context);
+      },
+    );
   }
 
   return showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: title(context),
-          content: content(context),
-          actions: actions
-              .map((action) => FlatButton(
-                    child: Text(
-                      action.text,
-                      style: TextStyle(color: _getColorForAction(context, action)),
-                    ),
-                    onPressed: action.callback == null ? null : () => action.callback(context),
-                  ))
-              .toList(growable: false),
-        );
+        return builder(context);
+      },
+      barrierDismissible: barrierDismissible);
+}
+
+Future<T> showAppDialog<T>(BuildContext context, WidgetBuilder title, WidgetBuilder content,
+    {bool barrierDismissible = true, List<DialogAction> actions = const []}) {
+  if (defaultTargetPlatform == TargetPlatform.iOS) {
+    final Future<T> Function({BuildContext context, WidgetBuilder builder}) showCupertino = barrierDismissible ? showCupertinoDialog : showCupertinoModalPopup;
+    return showCupertino(
+      context: context,
+      builder: (context) {
+        return getAppDialog(context, title, content, actions: actions);
+      },
+    );
+  }
+
+  return showDialog(
+      context: context,
+      builder: (context) {
+        return getAppDialog(context, title, content, actions: actions);
       },
       barrierDismissible: barrierDismissible);
 }

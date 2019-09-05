@@ -2,26 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/config/routes.dart';
+import 'package:lisa_flutter/src/drawer/bloc/drawer_bloc.dart';
 import 'package:lisa_flutter/src/favorites/presentation/favorites.dart';
 import 'package:lisa_flutter/src/orphans/presentation/orphans.dart';
 import 'package:lisa_flutter/src/preferences/presentation/preferences.dart';
 import 'package:lisa_flutter/src/profile/presentation/profile.dart';
 import 'package:lisa_flutter/src/rooms/presentation/room_dashboard.dart';
+import 'package:lisa_flutter/src/scenes/presentation/scenes.dart';
 import 'package:lisa_server_sdk/model/room.dart';
-import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:proxy_layout/proxy_layout.dart';
 
 typedef OnTitleChange = void Function(String title, String route);
+typedef OnCanPopChange = void Function(bool canPop);
 
 class ProxyScaffold extends HookWidget {
   final WidgetBuilder builderDrawer;
   final String initialRoute;
   final Widget floatingActionButton;
-  final PreferredSizeWidget appBar;
-  final OnTitleChange onTitleChange;
 
-  const ProxyScaffold({Key key, this.onTitleChange, this.builderDrawer, this.initialRoute, this.floatingActionButton, this.appBar}) : super(key: key);
+  const ProxyScaffold({Key key, this.builderDrawer, this.initialRoute, this.floatingActionButton}) : super(key: key);
 
   static bool isMobileView(BuildContext context) {
     return DeviceProxy.isMobile(context) || (DeviceProxy.isTablet(context) && OrientationProxy.isPortrait(context));
@@ -29,10 +29,25 @@ class ProxyScaffold extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final navigatorKey = useMemoized(() => GlobalKey<NavigatorState>());
     final localizations = CommonLocalizations.of(context);
-    return Provider(
-      builder: (context) => navigatorKey,
+    final titleState = useState('L.I.S.A.');
+    final canPopState = useState(false);
+
+    final onTitleChange = (title, route) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        titleState.value = title;
+      });
+      Provider.of<DrawerBloc>(context).selectRoute(route);
+    };
+    final onCanPopChange = (canPop) {
+      canPopState.value = canPop;
+    };
+
+    final navigatorKey = useMemoized(() => GlobalKey<NavigatorState>());
+    final observers = useMemoized(() => [TitleNavigatorObserver(onTitleChange, localizations), HistoryNavigatorObserver(onCanPopChange)]);
+
+    return Provider.value(
+      value: navigatorKey,
       child: DeviceProxy(
         mobileBuilder: (context) {
           return Scaffold(
@@ -41,12 +56,12 @@ class ProxyScaffold extends HookWidget {
               clipBehavior: Clip.hardEdge,
               child: Navigator(
                 initialRoute: initialRoute,
-                observers: [TitleNavigatorObserver(onTitleChange, localizations)],
+                observers: observers,
                 onGenerateRoute: Router().onGenerateRoute,
                 key: navigatorKey,
               ),
             ),
-            appBar: appBar,
+            appBar: _getAppBar(context, titleState.value, canPopState.value, navigatorKey),
             floatingActionButton: floatingActionButton,
           );
         },
@@ -54,7 +69,7 @@ class ProxyScaffold extends HookWidget {
           return OrientationProxy(
             landscapeBuilder: (context) {
               return Scaffold(
-                appBar: appBar,
+                appBar: _getAppBar(context, titleState.value, canPopState.value, navigatorKey),
                 floatingActionButton: floatingActionButton,
                 body: Row(
                   children: <Widget>[
@@ -65,7 +80,7 @@ class ProxyScaffold extends HookWidget {
                           clipBehavior: Clip.hardEdge,
                           child: Navigator(
                             initialRoute: initialRoute,
-                            observers: [TitleNavigatorObserver(onTitleChange, localizations)],
+                            observers: observers,
                             onGenerateRoute: Router().onGenerateRoute,
                             key: navigatorKey,
                           ),
@@ -78,11 +93,11 @@ class ProxyScaffold extends HookWidget {
             portraitBuilder: (context) {
               return Scaffold(
                 drawer: builderDrawer == null ? null : Drawer(child: builderDrawer(context)),
-                appBar: appBar,
+                appBar: _getAppBar(context, titleState.value, canPopState.value, navigatorKey),
                 floatingActionButton: floatingActionButton,
                 body: Navigator(
                   initialRoute: initialRoute,
-                  observers: [TitleNavigatorObserver(onTitleChange, localizations)],
+                  observers: observers,
                   onGenerateRoute: Router().onGenerateRoute,
                   key: navigatorKey,
                 ),
@@ -93,10 +108,45 @@ class ProxyScaffold extends HookWidget {
       ),
     );
   }
+
+  AppBar _getAppBar(BuildContext context, String title, bool canPop, GlobalKey<NavigatorState> navigatorKey) {
+    return AppBar(
+      leading: canPop
+          ? IconButton(
+              icon: const BackButtonIcon(),
+              tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+              onPressed: () {
+                navigatorKey.currentState.pop();
+              },
+            )
+          : null,
+      title: Text(title),
+    );
+  }
+}
+
+class HistoryNavigatorObserver extends NavigatorObserver {
+  final OnCanPopChange onCanPopChange;
+  final List<String> _history = [];
+
+  HistoryNavigatorObserver(this.onCanPopChange);
+
+  @override
+  void didPop(Route route, Route previousRoute) {
+    super.didPop(route, previousRoute);
+    _history.removeLast();
+    onCanPopChange(_history.length > 1);
+  }
+
+  @override
+  void didPush(Route route, Route previousRoute) {
+    super.didPush(route, previousRoute);
+    onCanPopChange(_history.isNotEmpty);
+    _history.add(route.settings.name);
+  }
 }
 
 class TitleNavigatorObserver extends NavigatorObserver {
-  final _log = Logger('TitleNavigatorObserver');
   final OnTitleChange onTitleChange;
   final CommonLocalizations localizations;
 
@@ -104,14 +154,12 @@ class TitleNavigatorObserver extends NavigatorObserver {
 
   @override
   void didPop(Route route, Route previousRoute) {
-    _log.info('didPop ${route.settings.name}');
     super.didPop(route, previousRoute);
     onTitleChange(getTitle(previousRoute.settings.name, arguments: previousRoute.settings.arguments), getRoute(previousRoute));
   }
 
   @override
   void didPush(Route route, Route previousRoute) {
-    _log.info('didPush ${route.settings.name}');
     super.didPush(route, previousRoute);
     onTitleChange(getTitle(route.settings.name, arguments: route.settings.arguments), getRoute(route));
   }
@@ -120,7 +168,7 @@ class TitleNavigatorObserver extends NavigatorObserver {
     switch (route) {
       case FavoritesWidget.route:
         return localizations.menuFavorite;
-      case ProfileWidget.route:
+      case ProfileScreen.route:
         return localizations.profile;
       case PreferencesWidget.route:
         return localizations.menuPreferences;
@@ -128,6 +176,8 @@ class TitleNavigatorObserver extends NavigatorObserver {
         return localizations.menuOrphans;
       case RoomDashboard.route:
         return (arguments as Room).name;
+      case ScenesWidget.route:
+        return localizations.menuScenes;
     }
     return 'L.I.S.A.';
   }

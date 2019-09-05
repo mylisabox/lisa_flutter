@@ -5,7 +5,7 @@ import 'package:flutter_crashlytics/flutter_crashlytics.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:logging/logging.dart';
 
-const _logFilter = ['TitleHandler', 'FavoritesWidget', 'TitleNavigatorObserver'];
+const _logFilter = [];
 
 void initLogger() {
   Logger.root.level = Level.ALL;

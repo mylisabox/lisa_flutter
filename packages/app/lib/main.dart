@@ -25,10 +25,10 @@ import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
 
 void main() async {
-  if (defaultTargetPlatform != TargetPlatform.iOS && defaultTargetPlatform != TargetPlatform.android) {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (!kIsMobile()) {
     platform.debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia; //FIXME remove when desktop/web are detected and supported
   }
-  WidgetsFlutterBinding.ensureInitialized();
   await PreferencesProvider().setup();
   BackendApiProvider.setup();
   initLogger();
@@ -119,15 +119,9 @@ class MyHomePage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final titleState = useMemoized(() => ValueNotifier('L.I.S.A.'));
     final bloc = useMemoized(() => SpeechBloc());
-    final drawerBloc = Provider.of<DrawerBloc>(context);
     return ProxyScaffold(
-      onTitleChange: (title, route) {
-        titleState.value = title;
-        drawerBloc.selectRoute(route);
-      },
-      floatingActionButton: defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS
+      floatingActionButton: kIsMobile()
           ? SpeechButton(
               onResults: (text) async {
                 final response = await bloc.sendSentence(text, Localizations.localeOf(context).languageCode);
@@ -136,14 +130,6 @@ class MyHomePage extends HookWidget {
             )
           : null,
       builderDrawer: (context) => AppDrawer(),
-      appBar: AppBar(
-        title: ChangeNotifierProvider<ValueNotifier<String>>(
-          child: Builder(builder: (context) {
-            return Text(Provider.of<ValueNotifier<String>>(context).value);
-          }),
-          builder: (BuildContext context) => titleState,
-        ),
-      ),
       initialRoute: FavoritesWidget.route,
     );
   }

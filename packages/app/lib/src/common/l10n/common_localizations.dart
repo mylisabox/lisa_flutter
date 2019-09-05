@@ -28,11 +28,17 @@ class CommonLocalizations {
 
   String get finished => Intl.message('Finished', name: 'finished', desc: 'Applied to buttons.');
 
+  String get addDevice => Intl.message('Add new device...', name: 'addDevice', desc: 'Add device popup title.');
+
+  String addDeviceTo(String room) => Intl.message('Add new device to $room', args: [room], name: 'addDeviceTo', desc: 'Add device popup title.');
+
   String get loginButton => Intl.message('Login', name: 'loginButton', desc: 'Login button');
 
   String get signupButton => Intl.message('Sign up', name: 'signupButton', desc: 'Sign up button');
 
   String get close => Intl.message('Close', name: 'close', desc: 'Applied to buttons, typically to close a dialog.');
+
+  String get cancel => Intl.message('Cancel', name: 'cancel', desc: 'Applied to buttons, typically to cancel a dialog.');
 
   String get confirm => Intl.message('Confirm', name: 'confirm', desc: 'Applied to buttons.');
 
@@ -51,6 +57,8 @@ class CommonLocalizations {
   String get undo => Intl.message('Undo', name: 'undo', desc: 'Button label to undo something');
 
   String get saving => Intl.message('Saving...', name: 'saving', desc: 'Label when saving is ongoing, example save a customer in database');
+
+  String get profileSaved => Intl.message('Profil successfully saved!', name: 'profileSaved', desc: 'Profile saved message');
 
   String get phoneField => Intl.message('Phone number', name: 'phoneField', desc: 'Phone field label');
 
@@ -96,6 +104,8 @@ class CommonLocalizations {
   String get menuOrphans => Intl.message('Orphans', name: 'menuOrphans');
 
   String get menuPreferences => Intl.message('Preferences', name: 'menuPreferences');
+
+  String get menuScenes => Intl.message('Scenes', name: 'menuScenes');
 
   String get menuFavorite => Intl.message('Favorites', name: 'menuFavorite');
 

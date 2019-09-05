@@ -56,7 +56,7 @@ class HostInterceptor extends Interceptor {
           _setExternalUrl(route, prefExternalUrl);
         } else if (connectivityResult == ConnectivityResult.wifi) {
           final localServer = await _serverProvider.search().catchError((err) {
-            return 'http://192.168.1.19:3000'; //FIXME don't return dev value ^^
+            return 'http://localhost:3000'; //FIXME don't return dev value ^^
           });
           _log.info('lisa host found at $localServer');
           if (localServer == null) {
@@ -94,7 +94,6 @@ class HostInterceptor extends Interceptor {
     final finalUrl = urlParts.replace(host: externalUrlParts.host, scheme: externalUrlParts.scheme, port: externalUrlParts.port);
     _host = externalUrlParts.origin;
     route.url(externalUrlParts.toString()); //FIXME use finalUrl https://github.com/Jaguar-dart/client/issues/53
-    print(externalUrlParts.toString());
   }
 
   @override

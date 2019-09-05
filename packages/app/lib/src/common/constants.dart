@@ -1,10 +1,14 @@
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 
 const bool kIsProductionMode = bool.fromEnvironment('dart.vm.product');
 
 const kNetworkDebug = !kIsProductionMode;
+
+/// Return true if platform is Android or iOS
+bool kIsMobile() => defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS;
 
 final kDebugLogger = Logger('Lisa');
 

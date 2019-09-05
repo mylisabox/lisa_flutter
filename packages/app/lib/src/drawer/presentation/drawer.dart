@@ -12,6 +12,7 @@ import 'package:lisa_flutter/src/favorites/presentation/favorites.dart';
 import 'package:lisa_flutter/src/login/presentation/login_screen.dart';
 import 'package:lisa_flutter/src/preferences/bloc/preferences_bloc.dart';
 import 'package:lisa_flutter/src/preferences/presentation/preferences.dart';
+import 'package:lisa_flutter/src/scenes/presentation/scenes.dart';
 import 'package:provider/provider.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -57,6 +58,18 @@ class AppDrawer extends StatelessWidget {
                 ),*/
                 Divider(height: 1),
                 DrawerEntry(
+                  text: translations.menuScenes,
+                  icon: Icons.filter_frames,
+                  onTap: () {
+                    if (drawerBloc.currentSelectedRoute != ScenesWidget.route) {
+                      Provider.of<GlobalKey<NavigatorState>>(context).currentState.pushNamed(ScenesWidget.route);
+                      _closeDrawer(context);
+                      drawerBloc.selectRoute(ScenesWidget.route);
+                    }
+                  },
+                ),
+                Divider(height: 1),
+                DrawerEntry(
                   text: translations.menuPreferences,
                   icon: Icons.settings,
                   onTap: () {
@@ -88,12 +101,12 @@ class AppDrawer extends StatelessWidget {
                   trailing: SizedBox.fromSize(
                     child: Observer(
                       builder: (context) => Switch.adaptive(
-                            activeColor: Theme.of(context).primaryColor,
-                            value: prefsBloc.isDarkTheme,
-                            onChanged: (value) {
-                              prefsBloc.setDarkTheme(value);
-                            },
-                          ),
+                        activeColor: Theme.of(context).primaryColor,
+                        value: prefsBloc.isDarkTheme,
+                        onChanged: (value) {
+                          prefsBloc.setDarkTheme(value);
+                        },
+                      ),
                     ),
                     size: Size(60, 20),
                   ),
