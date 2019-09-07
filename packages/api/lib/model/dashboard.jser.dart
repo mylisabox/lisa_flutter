@@ -9,7 +9,7 @@ part of 'dashboard.dart';
 abstract class _$DashboardSerializer implements Serializer<Dashboard> {
   Serializer<Device> __deviceSerializer;
   Serializer<Device> get _deviceSerializer =>
-      __deviceSerializer ??= new DeviceSerializer();
+      __deviceSerializer ??= DeviceSerializer();
   @override
   Map<String, dynamic> toMap(Dashboard model) {
     if (model == null) return null;
@@ -28,7 +28,7 @@ abstract class _$DashboardSerializer implements Serializer<Dashboard> {
   @override
   Dashboard fromMap(Map map) {
     if (map == null) return null;
-    final obj = new Dashboard(
+    final obj = Dashboard(
         id: map['id'] as int ?? getJserDefault('id'),
         roomId: map['roomId'] as int ?? getJserDefault('roomId'),
         userId: map['userId'] as int ?? getJserDefault('userId'),

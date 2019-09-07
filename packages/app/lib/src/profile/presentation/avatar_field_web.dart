@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_web_ui/ui.dart' as ui;
-import 'package:lisa_flutter/src/common/bloc/user_bloc.dart';
+import 'package:lisa_flutter/src/common/stores/user_store.dart';
 import 'package:lisa_flutter/src/profile/presentation/avatar_field.dart';
 import 'package:provider/provider.dart';
 
@@ -19,12 +18,13 @@ class AvatarFieldWeb extends AvatarField {
 
   @override
   Widget build(BuildContext context) {
-    final userBloc = Provider.of<UserBloc>(context);
-    ImageProvider avatarImage = userBloc.avatar == null ? null : NetworkImage(userBloc.avatar);
+    final userStore = Provider.of<UserStore>(context);
+    ImageProvider avatarImage = userStore.avatar == null ? null : NetworkImage(userStore.avatar);
 
     useEffect(() {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         print('TEST FILE UPLOAD');
+        /*
         final _upload = FileUploadInputElement();
         _upload.onChange.listen((e) {
           //File file = (e.target as dynamic).files[0];
@@ -34,7 +34,7 @@ class AvatarFieldWeb extends AvatarField {
           print('TEST FILE UPLOAD REGISTERED');
         } else {
           print('TEST FILE UPLOAD NOT REGISTERED');
-        }
+        }*/
       });
       return null;
     }, const []);

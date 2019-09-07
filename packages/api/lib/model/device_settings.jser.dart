@@ -29,7 +29,7 @@ abstract class _$DeviceSettingsSerializer
   @override
   DeviceSettings fromMap(Map map) {
     if (map == null) return null;
-    final obj = new DeviceSettings(
+    final obj = DeviceSettings(
         name: map['name'] as String ?? getJserDefault('name'),
         driver: map['driver'] as String ?? getJserDefault('driver'),
         image: map['image'] as String ?? getJserDefault('image'),

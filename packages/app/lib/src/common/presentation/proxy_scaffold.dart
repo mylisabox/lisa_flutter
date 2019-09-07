@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/config/routes.dart';
-import 'package:lisa_flutter/src/drawer/bloc/drawer_bloc.dart';
+import 'package:lisa_flutter/src/drawer/stores/drawer_store.dart';
 import 'package:lisa_flutter/src/favorites/presentation/favorites.dart';
 import 'package:lisa_flutter/src/orphans/presentation/orphans.dart';
 import 'package:lisa_flutter/src/preferences/presentation/preferences.dart';
@@ -37,7 +37,7 @@ class ProxyScaffold extends HookWidget {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         titleState.value = title;
       });
-      Provider.of<DrawerBloc>(context).selectRoute(route);
+      Provider.of<DrawerStore>(context).selectRoute(route);
     };
     final onCanPopChange = (canPop) {
       canPopState.value = canPop;

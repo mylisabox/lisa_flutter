@@ -7,13 +7,13 @@ import 'package:lisa_server_sdk/api.dart';
 import 'package:lisa_server_sdk/model/login_request.dart';
 import 'package:mobx/mobx.dart';
 
-part 'login_bloc.g.dart';
+part 'login_store.g.dart';
 
 enum AuthMode { login, registration }
 
-class LoginBloc = _LoginBloc with _$LoginBloc;
+class LoginStore = _LoginStore with _$LoginStore;
 
-abstract class _LoginBloc with Store {
+abstract class _LoginStore with Store {
   static const keyLastEmail = 'last_email';
   final JaguarApiGen _api;
   final Preferences _preferences;
@@ -33,7 +33,7 @@ abstract class _LoginBloc with Store {
   @observable
   ErrorResult passwordError;
 
-  _LoginBloc({
+  _LoginStore({
     JaguarApiGen api,
     Preferences prefs,
     Validator validator,

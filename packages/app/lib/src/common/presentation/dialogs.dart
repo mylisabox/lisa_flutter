@@ -267,7 +267,7 @@ Future<bool> showLoadingDialog(
   BuildContext context,
   WidgetBuilder title,
   Future Function() until, {
-  void Function(dynamic error) onError,
+  void Function(dynamic error, dynamic stack) onError,
   bool barrierDismissible = false,
 }) {
   return showAppDialog<bool>(
@@ -280,10 +280,10 @@ Future<bool> showLoadingDialog(
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     Navigator.of(mainContext).pop(true);
                   });
-                }).catchError((err) {
+                }).catchError((err, stack) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     Navigator.of(mainContext).pop(false);
-                    onError(err);
+                    onError(err, stack);
                   });
                 });
                 return null;

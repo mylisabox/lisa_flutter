@@ -3,10 +3,10 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lisa_flutter/src/common/bloc/user_bloc.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
+import 'package:lisa_flutter/src/common/stores/user_store.dart';
 import 'package:lisa_flutter/src/common/utils/hooks.dart';
 import 'package:lisa_flutter/src/profile/presentation/avatar_field.dart';
 import 'package:provider/provider.dart';
@@ -20,11 +20,11 @@ class AvatarData {
 }
 
 _ProfileFormController useProfileManager(BuildContext context) {
-  final userBloc = Provider.of<UserBloc>(context);
-  final controllerEmail = useTextEditingController(text: userBloc.user.email);
-  final controllerFirst = useTextEditingController(text: userBloc.user.firstname);
-  final controllerLast = useTextEditingController(text: userBloc.user.lastname);
-  final controllerPhone = useTextEditingController(text: userBloc.user.mobile);
+  final userStore = Provider.of<UserStore>(context);
+  final controllerEmail = useTextEditingController(text: userStore.user.email);
+  final controllerFirst = useTextEditingController(text: userStore.user.firstname);
+  final controllerLast = useTextEditingController(text: userStore.user.lastname);
+  final controllerPhone = useTextEditingController(text: userStore.user.mobile);
   final controllerPassword = useTextEditingController();
   final controllerPasswordConfirmation = useTextEditingController();
   final avatar = useState<AvatarData>(null);
@@ -60,8 +60,8 @@ class _ProfileFormController {
   });
 
   Future<void> save(BuildContext context) {
-    final userBloc = Provider.of<UserBloc>(context);
-    return userBloc.updateUser(
+    final userStore = Provider.of<UserStore>(context);
+    return userStore.updateUser(
       email: email.text,
       firstName: firstName.text.isEmpty ? null : firstName.text,
       lastName: lastName.text.isEmpty ? null : lastName.text,
@@ -98,7 +98,7 @@ class ProfileDialog extends HookWidget {
                 context,
                 (_) => Text(translations.profile),
                 () async => profileManager.save(context),
-                onError: (err) => showErrorDialog(context, err, null),
+                onError: (err, stack) => showErrorDialog(context, err, stack),
               );
               if (isSuccessful) {
                 Navigator.of(context).pop();
@@ -222,7 +222,7 @@ class _ProfileWidget extends HookWidget {
                         context,
                         (_) => Text(translations.profile),
                         () async => profileManager.save(context),
-                        onError: (err) => showErrorDialog(context, err, null),
+                        onError: (err, stack) => showErrorDialog(context, err, stack),
                       );
                       if (isSuccessful) {
                         final snackBar = SnackBar(content: Text(translations.profileSaved));

@@ -17,7 +17,7 @@ ErrorResultException handleError(error, stackTrace) {
     if (error is TimeoutException || error is SocketException) {
       result = ErrorResultException(ErrorResult.noNetwork);
     }
-    kDebugLogger.severe('Future error from $error forwarded to $result', error, stackTrace);
+    kDebugLogger.severe('handleError: Future error from $error forwarded to $result', error, stackTrace);
     return result;
   }
 }
@@ -67,7 +67,6 @@ class ErrorResult {
         return localizations.noAppForTheAction;
       case _ErrorType.fieldRequired:
         return localizations.fieldRequired;
-
     }
     return null;
   }
@@ -90,7 +89,6 @@ class ErrorResult {
         return localizations.noAppForTheActionHint;
       case _ErrorType.fieldRequired:
         return localizations.fieldRequiredHint;
-
     }
     return null;
   }

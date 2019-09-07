@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
+import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
-import 'package:lisa_flutter/src/devices/bloc/device_bloc.dart';
+import 'package:lisa_flutter/src/common/presentation/refresh_no_scroll_content.dart';
+import 'package:lisa_flutter/src/devices/stores/device_store.dart';
 import 'package:lisa_server_sdk/model/device.dart';
 import 'package:provider/provider.dart';
 import 'package:remote_color_picker/remote_color_picker.dart';
@@ -26,21 +29,25 @@ class Dashboard extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = useMemoized(() => DeviceBloc());
-    final callback =
-        useMemoized(() => (String key, value, {associatedData}) => bloc.deviceChange(key, value, associatedData: associatedData).catchError((err, stack) {
+    final translations = CommonLocalizations.of(context);
+    final store = useMemoized(() => DeviceStore());
+    final callback = useMemoized(
+      () => (String key, value, {associatedData}) => store.deviceChange(key, value, associatedData: associatedData).catchError(
+            (err, stack) {
               showErrorDialog(context, err, stack);
-            }));
+            },
+          ),
+    );
 
     useEffect(() {
-      bloc.loadDevices(roomId: roomId, devices: devices).catchError((err, stack) {
+      store.loadDevices(roomId: roomId, devices: devices).catchError((err, stack) {
         showErrorDialog(context, err, stack);
       });
       return null;
-    }, [bloc]);
+    }, [store, roomId]);
 
-    return Provider(
-      builder: (_) => bloc,
+    return Provider.value(
+      value: store,
       child: RemoteManagerWidget(
         parsers: [
           RemoteColorPickerFactory(),
@@ -53,38 +60,58 @@ class Dashboard extends HookWidget {
         onChanges: callback,
         child: LayoutBuilder(
           builder: (context, constraints) {
-            return Observer(
-              builder: (context) {
-                if (bloc.isLoading) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                if (bloc.devices.length == 0) {
-                  return Center(child: Text('No device to show'));
-                }
-                return RefreshIndicator(
-                  onRefresh: () {
-                    return bloc.loadDevices(roomId: roomId, devices: devices, isManual: true).catchError((err, stack) {
-                      showErrorDialog(context, err, stack);
-                    });
-                  },
-                  child: StaggeredGridView.countBuilder(
-                    crossAxisCount: (constraints.maxWidth / _widgetWidthSize).floor() * _widgetWidthUnit,
-                    itemCount: bloc.devices.length,
-                    staggeredTileBuilder: (int index) {
-                      final device = bloc.devices[index];
-                      final int width = device?.template['widgetWidth'] ?? 1;
-                      final int height = device?.template['widgetHeight'] ?? 1;
-                      return StaggeredTile.count(width * _widgetWidthUnit, height * _widgetHeightUnit);
-                    },
-                    mainAxisSpacing: kSmallPadding,
-                    crossAxisSpacing: kSmallPadding,
-                    itemBuilder: (context, index) {
-                      final device = bloc.devices[index];
-                      return _DashboardWidget(device: device);
-                    },
-                  ),
-                );
+            return RefreshIndicator(
+              onRefresh: () {
+                return store.loadDevices(roomId: roomId, devices: devices);
               },
+              child: Observer(
+                builder: (context) {
+                  if (store.error != null) {
+                    return RefreshIndicatorContent(
+                      child: Center(
+                        child: Text(
+                          store.error.cause.twoLiner(context),
+                          style: TextStyle(color: Theme.of(context).errorColor),
+                        ),
+                      ),
+                    );
+                  }
+
+                  if (store.devices == null) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  if (store.devices.length == 0) {
+                    return RefreshIndicatorContent(
+                      child: Center(child: Text(translations.emptyList)),
+                    );
+                  }
+                  return AnimationLimiter(
+                    child: StaggeredGridView.countBuilder(
+                      crossAxisCount: (constraints.maxWidth / _widgetWidthSize).floor() * _widgetWidthUnit,
+                      itemCount: store.devices.length,
+                      staggeredTileBuilder: (int index) {
+                        final device = store.devices[index];
+                        final int width = device?.template['widgetWidth'] ?? 1;
+                        final int height = device?.template['widgetHeight'] ?? 1;
+                        return StaggeredTile.count(width * _widgetWidthUnit, height * _widgetHeightUnit);
+                      },
+                      mainAxisSpacing: kSmallPadding,
+                      crossAxisSpacing: kSmallPadding,
+                      itemBuilder: (context, index) {
+                        final device = store.devices[index];
+                        return AnimationConfiguration.staggeredList(
+                          position: index,
+                          duration: const Duration(milliseconds: 450),
+                          child: SlideAnimation(
+                            verticalOffset: 70.0,
+                            child: FadeInAnimation(child: _DashboardWidget(device: device)),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
             );
           },
         ),
@@ -122,8 +149,8 @@ class _DashboardWidget extends StatelessWidget {
                     ),
                   ),
                   onTap: () {
-                    final bloc = Provider.of<DeviceBloc>(context);
-                    bloc.toggleFavorite(device.id, device.favorite).catchError((err, stack) {
+                    final store = Provider.of<DeviceStore>(context);
+                    store.toggleFavorite(device.id, device.favorite).catchError((err, stack) {
                       showErrorDialog(context, err, stack);
                     });
                   },

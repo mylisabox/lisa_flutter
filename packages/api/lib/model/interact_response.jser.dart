@@ -25,7 +25,7 @@ abstract class _$InteractResponseSerializer
   @override
   InteractResponse fromMap(Map map) {
     if (map == null) return null;
-    final obj = new InteractResponse(
+    final obj = InteractResponse(
         action: map['action'] as String ?? getJserDefault('action'),
         lang: map['lang'] as String ?? getJserDefault('lang'),
         userId: map['userId'] as String ?? getJserDefault('userId'),

@@ -2,18 +2,18 @@ import 'package:crypted_preferences/crypted_preferences.dart';
 import 'package:lisa_flutter/src/preferences/preferences_provider.dart';
 import 'package:mobx/mobx.dart';
 
-part 'preferences_bloc.g.dart';
+part 'preferences_store.g.dart';
 
-class PreferencesBloc = _PreferencesBloc with _$PreferencesBloc;
+class PreferencesStore = _PreferencesStore with _$PreferencesStore;
 
-abstract class _PreferencesBloc with Store {
+abstract class _PreferencesStore with Store {
   static const _keyDarkTheme = 'darkTheme';
   final Preferences _prefs;
 
   @observable
   bool isDarkTheme = false;
 
-  _PreferencesBloc({Preferences prefs}) : _prefs = prefs ?? PreferencesProvider().prefs;
+  _PreferencesStore({Preferences prefs}) : _prefs = prefs ?? PreferencesProvider().prefs;
 
   @action
   void init() {

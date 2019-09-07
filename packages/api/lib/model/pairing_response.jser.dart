@@ -10,7 +10,7 @@ abstract class _$PairingResponseSerializer
     implements Serializer<PairingResponse> {
   Serializer<PairingDevice> __pairingDeviceSerializer;
   Serializer<PairingDevice> get _pairingDeviceSerializer =>
-      __pairingDeviceSerializer ??= new PairingDeviceSerializer();
+      __pairingDeviceSerializer ??= PairingDeviceSerializer();
   @override
   Map<String, dynamic> toMap(PairingResponse model) {
     if (model == null) return null;
@@ -25,7 +25,7 @@ abstract class _$PairingResponseSerializer
   @override
   PairingResponse fromMap(Map map) {
     if (map == null) return null;
-    final obj = new PairingResponse(
+    final obj = PairingResponse(
         singleChoice:
             map['singleChoice'] as bool ?? getJserDefault('singleChoice'),
         devices: _pairingDeviceSerializer.fromMap(map['devices'] as Map) ??

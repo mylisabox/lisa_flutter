@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:lisa_flutter/src/common/bloc/user_bloc.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
 import 'package:lisa_flutter/src/common/presentation/proxy_scaffold.dart';
-import 'package:lisa_flutter/src/drawer/bloc/drawer_bloc.dart';
+import 'package:lisa_flutter/src/common/stores/user_store.dart';
+import 'package:lisa_flutter/src/drawer/stores/drawer_store.dart';
 import 'package:lisa_flutter/src/profile/presentation/profile.dart';
 import 'package:provider/provider.dart';
 import 'package:proxy_layout/proxy_layout.dart';
@@ -13,7 +13,7 @@ import 'package:proxy_layout/proxy_layout.dart';
 class AppDrawerHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final userBloc = Provider.of<UserBloc>(context);
+    final userStore = Provider.of<UserStore>(context);
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -31,7 +31,7 @@ class AppDrawerHeader extends StatelessWidget {
                 children: <Widget>[
                   CircleAvatar(
                     radius: 30,
-                    backgroundImage: userBloc.avatar == null ? ExactAssetImage('assets/images/lisa.png') : NetworkImage(userBloc.avatar),
+                    backgroundImage: userStore.avatar == null ? ExactAssetImage('assets/images/lisa.png') : NetworkImage(userStore.avatar),
                     child: Material(
                       type: MaterialType.circle,
                       clipBehavior: Clip.hardEdge,
@@ -54,7 +54,7 @@ class AppDrawerHeader extends StatelessWidget {
                   ),
                   FlatButton(
                     splashColor: Theme.of(context).primaryColor,
-                    child: Text(userBloc.fullName, style: TextStyle(color: Colors.white)),
+                    child: Text(userStore.fullName, style: TextStyle(color: Colors.white)),
                     onPressed: () {
                       _goToProfile(context);
                     },
@@ -70,13 +70,13 @@ class AppDrawerHeader extends StatelessWidget {
 
   void _goToProfile(BuildContext context) {
     _closeDrawer(context);
-    final drawerBloc = Provider.of<DrawerBloc>(context);
-    if (drawerBloc.currentSelectedRoute != ProfileScreen.route) {
+    final drawerStore = Provider.of<DrawerStore>(context);
+    if (drawerStore.currentSelectedRoute != ProfileScreen.route) {
       if (DeviceProxy.isTablet(context)) {
         showPlatformDialog(context, (context) => ProfileDialog());
       } else {
         Provider.of<GlobalKey<NavigatorState>>(context).currentState.pushNamed(ProfileScreen.route);
-        drawerBloc.selectRoute(ProfileScreen.route);
+        drawerStore.selectRoute(ProfileScreen.route);
       }
     }
   }

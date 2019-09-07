@@ -6,15 +6,15 @@ import 'package:lisa_server_sdk/model/room.dart';
 import 'package:logging/logging.dart';
 import 'package:mobx/mobx.dart';
 
-part 'drawer_bloc.g.dart';
+part 'drawer_store.g.dart';
 
-class DrawerBloc = _DrawerBloc with _$DrawerBloc;
+class DrawerStore = _DrawerStore with _$DrawerStore;
 
-abstract class _DrawerBloc with Store {
+abstract class _DrawerStore with Store {
   final RoomApi _roomApi;
-  final _log = Logger('DrawerBloc');
+  final _log = Logger('DrawerStore');
 
-  _DrawerBloc({RoomApi roomApi}) : _roomApi = roomApi ?? BackendApiProvider().api.getRoomApi();
+  _DrawerStore({RoomApi roomApi}) : _roomApi = roomApi ?? BackendApiProvider().api.getRoomApi();
 
   @observable
   List<Room> rooms = [];

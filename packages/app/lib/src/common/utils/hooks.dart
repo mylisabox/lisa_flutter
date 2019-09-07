@@ -7,8 +7,8 @@ TextEditingController useTextEditingController({text}) {
   return controller;
 }
 
-dynamic useDisposable(dynamic Function() valueBuilder) {
-  final disposable = useMemoized(valueBuilder);
+dynamic useDisposable(dynamic Function() valueBuilder, [List<Object> keys = const <dynamic>[]]) {
+  final disposable = useMemoized(valueBuilder, keys);
   useEffect(() => disposable.dispose, [disposable]);
   return disposable;
 }

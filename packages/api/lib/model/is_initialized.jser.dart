@@ -18,7 +18,7 @@ abstract class _$IsInitializedSerializer implements Serializer<IsInitialized> {
   @override
   IsInitialized fromMap(Map map) {
     if (map == null) return null;
-    final obj = new IsInitialized(
+    final obj = IsInitialized(
         initialized:
             map['initialized'] as bool ?? getJserDefault('initialized'));
     return obj;

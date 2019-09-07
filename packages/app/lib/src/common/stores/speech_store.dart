@@ -3,14 +3,14 @@ import 'package:lisa_server_sdk/api/chatbot_api.dart';
 import 'package:lisa_server_sdk/model/interact_request.dart';
 import 'package:mobx/mobx.dart';
 
-part 'speech_bloc.g.dart';
+part 'speech_store.g.dart';
 
-class SpeechBloc = _SpeechBloc with _$SpeechBloc;
+class SpeechStore = _SpeechStore with _$SpeechStore;
 
-abstract class _SpeechBloc with Store {
+abstract class _SpeechStore with Store {
   final ChatbotApi _api;
 
-  _SpeechBloc({ChatbotApi api}) : _api = api ?? BackendApiProvider().api.getChatbotApi();
+  _SpeechStore({ChatbotApi api}) : _api = api ?? BackendApiProvider().api.getChatbotApi();
 
   @action
   Future<String> sendSentence(String sentence, String lang) async {

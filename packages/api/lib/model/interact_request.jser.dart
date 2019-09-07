@@ -20,7 +20,7 @@ abstract class _$InteractRequestSerializer
   @override
   InteractRequest fromMap(Map map) {
     if (map == null) return null;
-    final obj = new InteractRequest(
+    final obj = InteractRequest(
         sentence: map['sentence'] as String ?? getJserDefault('sentence'),
         lang: map['lang'] as String ?? getJserDefault('lang'));
     return obj;

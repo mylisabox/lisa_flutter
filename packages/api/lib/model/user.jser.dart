@@ -24,7 +24,7 @@ abstract class _$UserSerializer implements Serializer<User> {
   @override
   User fromMap(Map map) {
     if (map == null) return null;
-    final obj = new User(
+    final obj = User(
         id: map['id'] as int ?? getJserDefault('id'),
         email: map['email'] as String ?? getJserDefault('email'),
         firstname: map['firstname'] as String ?? getJserDefault('firstname'),

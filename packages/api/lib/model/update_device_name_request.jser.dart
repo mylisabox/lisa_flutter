@@ -19,7 +19,7 @@ abstract class _$UpdateDeviceNameRequestSerializer
   @override
   UpdateDeviceNameRequest fromMap(Map map) {
     if (map == null) return null;
-    final obj = new UpdateDeviceNameRequest(
+    final obj = UpdateDeviceNameRequest(
         name: map['name'] as String ?? getJserDefault('name'));
     return obj;
   }

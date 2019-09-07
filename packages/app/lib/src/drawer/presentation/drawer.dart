@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:lisa_flutter/src/common/bloc/user_bloc.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
 import 'package:lisa_flutter/src/common/presentation/proxy_scaffold.dart';
-import 'package:lisa_flutter/src/drawer/bloc/drawer_bloc.dart';
+import 'package:lisa_flutter/src/common/stores/user_store.dart';
 import 'package:lisa_flutter/src/drawer/presentation/drawer_header.dart';
 import 'package:lisa_flutter/src/drawer/presentation/room_list.dart';
+import 'package:lisa_flutter/src/drawer/stores/drawer_store.dart';
 import 'package:lisa_flutter/src/favorites/presentation/favorites.dart';
 import 'package:lisa_flutter/src/login/presentation/login_screen.dart';
-import 'package:lisa_flutter/src/preferences/bloc/preferences_bloc.dart';
 import 'package:lisa_flutter/src/preferences/presentation/preferences.dart';
+import 'package:lisa_flutter/src/preferences/stores/preferences_store.dart';
 import 'package:lisa_flutter/src/scenes/presentation/scenes.dart';
 import 'package:provider/provider.dart';
 
 class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final prefsBloc = Provider.of<PreferencesBloc>(context);
-    final drawerBloc = Provider.of<DrawerBloc>(context);
+    final prefsStore = Provider.of<PreferencesStore>(context);
+    final drawerStore = Provider.of<DrawerStore>(context);
     final translations = CommonLocalizations.of(context);
 
     return Column(
@@ -34,10 +34,10 @@ class AppDrawer extends StatelessWidget {
                   text: translations.menuFavorite,
                   icon: Icons.star_border,
                   onTap: () {
-                    if (drawerBloc.currentSelectedRoute != FavoritesWidget.route) {
+                    if (drawerStore.currentSelectedRoute != FavoritesWidget.route) {
                       Provider.of<GlobalKey<NavigatorState>>(context).currentState.pushNamed(FavoritesWidget.route);
                       _closeDrawer(context);
-                      drawerBloc.selectRoute(FavoritesWidget.route);
+                      drawerStore.selectRoute(FavoritesWidget.route);
                     }
                   },
                 ),
@@ -49,10 +49,10 @@ class AppDrawer extends StatelessWidget {
                   text: translations.menuOrphans,
                   icon: Icons.device_hub,
                   onTap: () {
-                    if (drawerBloc.currentSelectedRoute != OrphansWidget.route) {
+                    if (drawerStore.currentSelectedRoute != OrphansWidget.route) {
                       Provider.of<GlobalKey<NavigatorState>>(context).currentState.pushNamed(OrphansWidget.route);
                       _closeDrawer(context);
-                      drawerBloc.selectRoute(OrphansWidget.route);
+                      drawerStore.selectRoute(OrphansWidget.route);
                     }
                   },
                 ),*/
@@ -61,10 +61,10 @@ class AppDrawer extends StatelessWidget {
                   text: translations.menuScenes,
                   icon: Icons.filter_frames,
                   onTap: () {
-                    if (drawerBloc.currentSelectedRoute != ScenesWidget.route) {
+                    if (drawerStore.currentSelectedRoute != ScenesWidget.route) {
                       Provider.of<GlobalKey<NavigatorState>>(context).currentState.pushNamed(ScenesWidget.route);
                       _closeDrawer(context);
-                      drawerBloc.selectRoute(ScenesWidget.route);
+                      drawerStore.selectRoute(ScenesWidget.route);
                     }
                   },
                 ),
@@ -73,10 +73,10 @@ class AppDrawer extends StatelessWidget {
                   text: translations.menuPreferences,
                   icon: Icons.settings,
                   onTap: () {
-                    if (drawerBloc.currentSelectedRoute != PreferencesWidget.route) {
+                    if (drawerStore.currentSelectedRoute != PreferencesWidget.route) {
                       Provider.of<GlobalKey<NavigatorState>>(context).currentState.pushNamed(PreferencesWidget.route);
                       _closeDrawer(context);
-                      drawerBloc.selectRoute(PreferencesWidget.route);
+                      drawerStore.selectRoute(PreferencesWidget.route);
                     }
                   },
                 ),
@@ -88,7 +88,7 @@ class AppDrawer extends StatelessWidget {
                     final logout = await showConfirm(context, translations.menuLogout, translations.logoutConfirm);
                     if (logout) {
                       //FIXME show loading
-                      await Provider.of<UserBloc>(context).logout();
+                      await Provider.of<UserStore>(context).logout();
                       Navigator.of(context, rootNavigator: true).popUntil((_) => true);
                       Navigator.of(context, rootNavigator: true).pushReplacement(MaterialPageRoute(builder: (context) => LoginScreen()));
                     }
@@ -102,9 +102,9 @@ class AppDrawer extends StatelessWidget {
                     child: Observer(
                       builder: (context) => Switch.adaptive(
                         activeColor: Theme.of(context).primaryColor,
-                        value: prefsBloc.isDarkTheme,
+                        value: prefsStore.isDarkTheme,
                         onChanged: (value) {
-                          prefsBloc.setDarkTheme(value);
+                          prefsStore.setDarkTheme(value);
                         },
                       ),
                     ),

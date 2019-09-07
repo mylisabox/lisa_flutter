@@ -9,7 +9,7 @@ part of 'scene.dart';
 abstract class _$SceneSerializer implements Serializer<Scene> {
   Serializer<SceneData> __sceneDataSerializer;
   Serializer<SceneData> get _sceneDataSerializer =>
-      __sceneDataSerializer ??= new SceneDataSerializer();
+      __sceneDataSerializer ??= SceneDataSerializer();
   @override
   Map<String, dynamic> toMap(Scene model) {
     if (model == null) return null;
@@ -23,7 +23,7 @@ abstract class _$SceneSerializer implements Serializer<Scene> {
   @override
   Scene fromMap(Map map) {
     if (map == null) return null;
-    final obj = new Scene(
+    final obj = Scene(
         name: map['name'] as String ?? getJserDefault('name'),
         displayName:
             map['displayName'] as String ?? getJserDefault('displayName'),

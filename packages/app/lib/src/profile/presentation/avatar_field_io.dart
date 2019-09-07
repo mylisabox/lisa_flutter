@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:lisa_flutter/src/common/bloc/user_bloc.dart';
+import 'package:lisa_flutter/src/common/stores/user_store.dart';
 import 'package:lisa_flutter/src/profile/presentation/avatar_field.dart';
 import 'package:provider/provider.dart';
 
@@ -18,10 +18,10 @@ class AvatarFieldIO extends AvatarField {
 
   @override
   Widget build(BuildContext context) {
-    final userBloc = Provider.of<UserBloc>(context);
+    final userStore = Provider.of<UserStore>(context);
     final avatar = useState<File>(null);
 
-    ImageProvider avatarImage = userBloc.avatar == null ? null : NetworkImage(userBloc.avatar);
+    ImageProvider avatarImage = userStore.avatar == null ? null : NetworkImage(userStore.avatar);
 
     if (avatar.value != null) {
       avatarImage = FileImage(avatar.value);

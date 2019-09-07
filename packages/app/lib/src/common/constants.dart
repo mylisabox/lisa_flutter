@@ -19,5 +19,6 @@ final kSupportedLanguages = [
 ];
 
 const double kSmallPadding = 8.0;
-const double kNormalPadding = 16.0;
+const double kMediumPadding = 12.0;
+const double kNormalPadding = 15.0;
 const double kBigPadding = 32.0;

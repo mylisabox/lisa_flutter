@@ -277,6 +277,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  flutter_staggered_animations:
+    dependency: "direct main"
+    description:
+      name: flutter_staggered_animations
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.1"
   flutter_staggered_grid_view:
     dependency: "direct main"
     description:
@@ -295,15 +302,6 @@ packages:
     dependency: "direct dev"
     description: flutter
     source: sdk
-    version: "0.0.0"
-  flutter_web_ui:
-    dependency: "direct main"
-    description:
-      path: "packages/flutter_web_ui"
-      ref: HEAD
-      resolved-ref: cc38319841009fcbdf632d9b03aab18d28939438
-      url: "https://github.com/flutter/flutter_web"
-    source: git
     version: "0.0.0"
   front_end:
     dependency: transitive
@@ -402,14 +400,14 @@ packages:
       name: jaguar_resty
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.10.12"
+    version: "2.10.14"
   jaguar_retrofit:
     dependency: transitive
     description:
       name: jaguar_retrofit
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.8.6"
+    version: "2.8.8"
   jaguar_serializer:
     dependency: transitive
     description:

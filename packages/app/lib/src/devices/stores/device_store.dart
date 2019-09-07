@@ -1,21 +1,26 @@
+import 'dart:async';
+
+import 'package:lisa_flutter/src/common/errors.dart';
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
 import 'package:lisa_server_sdk/api/dashboard_api.dart';
 import 'package:lisa_server_sdk/api/device_api.dart';
 import 'package:lisa_server_sdk/api/favorite_api.dart';
 import 'package:lisa_server_sdk/model/dashboard.dart';
 import 'package:lisa_server_sdk/model/device.dart';
+import 'package:logging/logging.dart';
 import 'package:mobx/mobx.dart';
 
-part 'device_bloc.g.dart';
+part 'device_store.g.dart';
 
-class DeviceBloc = _DeviceBloc with _$DeviceBloc;
+class DeviceStore = _DeviceStore with _$DeviceStore;
 
-abstract class _DeviceBloc with Store {
+abstract class _DeviceStore with Store {
+  final _log = Logger('DeviceStore');
   final DeviceApi _deviceApi;
   final FavoriteApi _favoriteApi;
   final DashboardApi _dashboardApi;
 
-  _DeviceBloc({
+  _DeviceStore({
     DeviceApi deviceApi,
     FavoriteApi favoriteApi,
     DashboardApi dashboardApi,
@@ -24,27 +29,28 @@ abstract class _DeviceBloc with Store {
         _dashboardApi = dashboardApi ?? BackendApiProvider().api.getDashboardApi();
 
   @observable
-  List<Device> devices = [];
+  List<Device> devices;
 
   @observable
-  bool isLoading = false;
+  ErrorResultException error;
 
   Dashboard _dashboard;
   int _roomId;
 
   @action
-  Future loadDevices({int roomId, List<Device> devices, bool isManual = false}) async {
-    isLoading = true && !isManual;
+  Future loadDevices({int roomId, List<Device> devices}) async {
     _roomId = roomId;
     if (devices != null) {
       this.devices = devices;
-      isLoading = false;
       return;
     }
 
-    _dashboard = await _dashboardApi.getDashboard(roomId);
-    this.devices = _dashboard.widgets;
-    isLoading = false;
+    try {
+      _dashboard = await _dashboardApi.getDashboard(roomId).catchError(handleCaughtError);
+      this.devices = _dashboard.widgets;
+    } on ErrorResultException catch (ex) {
+      error = ex;
+    }
   }
 
   @action

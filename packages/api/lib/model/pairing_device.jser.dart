@@ -20,7 +20,7 @@ abstract class _$PairingDeviceSerializer implements Serializer<PairingDevice> {
   @override
   PairingDevice fromMap(Map map) {
     if (map == null) return null;
-    final obj = new PairingDevice(
+    final obj = PairingDevice(
         name: map['name'] as String ?? getJserDefault('name'),
         image: map['image'] as String ?? getJserDefault('image'),
         id: map['id'] as String ?? getJserDefault('id'));

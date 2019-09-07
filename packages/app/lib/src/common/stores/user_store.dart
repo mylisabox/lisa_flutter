@@ -9,15 +9,15 @@ import 'package:lisa_server_sdk/model/user.dart';
 import 'package:mobx/mobx.dart';
 import 'package:path/path.dart';
 
-part 'user_bloc.g.dart';
+part 'user_store.g.dart';
 
-class UserBloc = _UserBloc with _$UserBloc;
+class UserStore = _UserStore with _$UserStore;
 
-abstract class _UserBloc with Store {
+abstract class _UserStore with Store {
   final Preferences _preferences;
   final JaguarApiGen _api;
 
-  _UserBloc({
+  _UserStore({
     JaguarApiGen api,
     Preferences prefs,
   })  : _api = api ?? BackendApiProvider().api,

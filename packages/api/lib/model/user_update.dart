@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:jaguar_serializer/jaguar_serializer.dart';
 
 part 'user_update.jser.dart';
@@ -27,7 +25,7 @@ class UserUpdate {
   final String password;
 
   @Alias('avatar')
-  final Uint8List avatar;
+  final List<int> avatar;
 
   UserUpdate(
       {this.id = null,

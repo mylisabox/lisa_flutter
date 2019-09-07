@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:lisa_flutter/src/common/bloc/user_bloc.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
-import 'package:lisa_flutter/src/preferences/bloc/preferences_bloc.dart';
+import 'package:lisa_flutter/src/common/stores/user_store.dart';
+import 'package:lisa_flutter/src/preferences/stores/preferences_store.dart';
 import 'package:provider/provider.dart';
 
 class PreferencesWidget extends HookWidget {
@@ -14,7 +14,7 @@ class PreferencesWidget extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final translations = CommonLocalizations.of(context);
-    final userBloc = Provider.of<UserBloc>(context);
+    final userStore = Provider.of<UserStore>(context);
 
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
@@ -37,15 +37,15 @@ class PreferencesWidget extends HookWidget {
                   await showLoadingDialog(
                     context,
                     (_) => Text(translations.saving),
-                    () => userBloc.changeLang(selected.languageCode),
-                    onError: (err) => showErrorDialog(context, err, null),
+                    () => userStore.changeLang(selected.languageCode),
+                    onError: (err, stack) => showErrorDialog(context, err, stack),
                   );
                 },
                 leading: Icon(Icons.language),
                 title: Text(translations.prefLanguage),
                 subtitle: Text(translations.prefLanguageDesc),
                 trailing: Text(
-                  userBloc.lang ?? Localizations.localeOf(context).languageCode,
+                  userStore.lang ?? Localizations.localeOf(context).languageCode,
                   style: TextStyle(color: Theme.of(context).primaryColor),
                 ),
               ),
@@ -55,7 +55,7 @@ class PreferencesWidget extends HookWidget {
               onTap: () async {
                 final url = await showPrompt(context, translations.externalUrl, hint: translations.externalUrlHint);
                 if (url != null) {
-                  Provider.of<PreferencesBloc>(context).setExternalUrl(url);
+                  Provider.of<PreferencesStore>(context).setExternalUrl(url);
                 }
               },
               leading: Icon(Icons.settings_remote),

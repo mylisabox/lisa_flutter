@@ -7,7 +7,7 @@ environment:
   sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
-  flutter_web_ui: any
+  flutter_staggered_animations: ^0.1.1
   flutter_speech: ^1.0.0
   #path: '../../../flutter_speech_recognition'
   lisa_server_sdk:
@@ -54,10 +54,6 @@ dev_dependencies:
     sdk: flutter
 
 dependency_overrides:
-  flutter_web_ui:
-    git:
-      url: https://github.com/flutter/flutter_web
-      path: packages/flutter_web_ui
   remote_ui:
     path: '../../../remote_ui/packages/remote_ui'
 

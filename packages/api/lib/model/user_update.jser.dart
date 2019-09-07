@@ -18,14 +18,15 @@ abstract class _$UserUpdateSerializer implements Serializer<UserUpdate> {
     setMapValueIfNotNull(ret, 'lastname', model.lastname);
     setMapValueIfNotNull(ret, 'mobile', model.mobile);
     setMapValueIfNotNull(ret, 'password', model.password);
-    setMapValueIfNotNull(ret, 'avatar', passProcessor.serialize(model.avatar));
+    setMapValueIfNotNull(ret, 'avatar',
+        codeNonNullIterable(model.avatar, (val) => val as int, []));
     return ret;
   }
 
   @override
   UserUpdate fromMap(Map map) {
     if (map == null) return null;
-    final obj = new UserUpdate(
+    final obj = UserUpdate(
         id: map['id'] as int ?? getJserDefault('id'),
         email: map['email'] as String ?? getJserDefault('email'),
         firstname: map['firstname'] as String ?? getJserDefault('firstname'),
@@ -33,7 +34,8 @@ abstract class _$UserUpdateSerializer implements Serializer<UserUpdate> {
         lastname: map['lastname'] as String ?? getJserDefault('lastname'),
         mobile: map['mobile'] as String ?? getJserDefault('mobile'),
         password: map['password'] as String ?? getJserDefault('password'),
-        avatar: passProcessor.deserialize(map['avatar']) ??
+        avatar: codeNonNullIterable<int>(
+                map['avatar'] as Iterable, (val) => val as int, <int>[]) ??
             getJserDefault('avatar'));
     return obj;
   }

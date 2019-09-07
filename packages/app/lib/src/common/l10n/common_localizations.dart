@@ -40,6 +40,8 @@ class CommonLocalizations {
 
   String get cancel => Intl.message('Cancel', name: 'cancel', desc: 'Applied to buttons, typically to cancel a dialog.');
 
+  String get save => Intl.message('Save', name: 'save', desc: 'Applied to buttons, typically to save something.');
+
   String get confirm => Intl.message('Confirm', name: 'confirm', desc: 'Applied to buttons.');
 
   String get copy => Intl.message('Copy', name: 'copy', desc: 'Applied to buttons.');
@@ -58,6 +60,8 @@ class CommonLocalizations {
 
   String get saving => Intl.message('Saving...', name: 'saving', desc: 'Label when saving is ongoing, example save a customer in database');
 
+  String get deleting => Intl.message('Deleting...', name: 'deleting', desc: 'Label when deleting is ongoing, example delete a customer in database');
+
   String get profileSaved => Intl.message('Profil successfully saved!', name: 'profileSaved', desc: 'Profile saved message');
 
   String get phoneField => Intl.message('Phone number', name: 'phoneField', desc: 'Phone field label');
@@ -69,6 +73,8 @@ class CommonLocalizations {
   String get passwordConfirmationField => Intl.message('Password confirmation', name: 'passwordConfirmationField', desc: 'Password field label');
 
   String get nameField => Intl.message('Name', name: 'nameField', desc: 'Name field label');
+
+  String get actions => Intl.message('Actions', name: 'actions');
 
   String get colorField => Intl.message('Color', name: 'colorField', desc: 'Color field label');
 
@@ -126,9 +132,24 @@ class CommonLocalizations {
   String get prefLanguageDesc => Intl.message('Language used on the app and voice commands', name: 'prefLanguageDesc');
 
   String get profile => Intl.message('Profile', name: 'profile');
+
+  String get addScene => Intl.message('Add new scene', name: 'addScene');
+
   String get firstNameField => Intl.message('First name', name: 'firstNameField');
+
   String get lastNameField => Intl.message('Last name', name: 'lastNameField');
+
   String get dialogErrorTitle => Intl.message('Ooops', name: 'dialogErrorTitle');
+
+  String get sceneCommandsTitle => Intl.message('Voice commands', name: 'sceneCommandsTitle');
+
+  String get sceneResponsesTitle => Intl.message('Responses', name: 'sceneResponsesTitle');
+
+  String get sceneActionsTitle => Intl.message('Actions', name: 'sceneSentencesTitle');
+
+  String get sceneAddSentence => Intl.message('Add sentence', name: 'sceneAddSentence');
+  String get sceneAddResponse => Intl.message('Add response', name: 'sceneAddResponse');
+  String get sceneAddCommand => Intl.message('Add command', name: 'sceneAddCommand');
 }
 
 class CommonLocalizationsDelegate extends LocalizationsDelegate<CommonLocalizations> {

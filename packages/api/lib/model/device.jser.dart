@@ -34,7 +34,7 @@ abstract class _$DeviceSerializer implements Serializer<Device> {
   @override
   Device fromMap(Map map) {
     if (map == null) return null;
-    final obj = new Device(
+    final obj = Device(
         id: map['id'] as int ?? getJserDefault('id'),
         roomId: map['roomId'] as int ?? getJserDefault('roomId'),
         name: map['name'] as String ?? getJserDefault('name'),

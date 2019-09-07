@@ -7,8 +7,8 @@ import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/presentation/proxy_scaffold.dart';
 import 'package:lisa_flutter/src/common/utils/hooks.dart';
-import 'package:lisa_flutter/src/drawer/bloc/drawer_bloc.dart';
 import 'package:lisa_flutter/src/drawer/presentation/drawer.dart';
+import 'package:lisa_flutter/src/drawer/stores/drawer_store.dart';
 import 'package:lisa_flutter/src/rooms/presentation/room_dashboard.dart';
 import 'package:provider/provider.dart';
 
@@ -16,20 +16,20 @@ class RoomList extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final translations = CommonLocalizations.of(context);
-    final drawerBloc = Provider.of<DrawerBloc>(context);
-    final rotationController = useAnimationController(duration: Duration(milliseconds: 200), initialValue: drawerBloc.isRoomListOpened ? 1 : 0);
+    final drawerStore = Provider.of<DrawerStore>(context);
+    final rotationController = useAnimationController(duration: Duration(milliseconds: 200), initialValue: drawerStore.isRoomListOpened ? 1 : 0);
 
     useEffect(() {
-      drawerBloc.loadRooms();
+      drawerStore.loadRooms();
       return null;
-    }, [drawerBloc]);
+    }, [drawerStore]);
 
     return Observer(
       builder: (context) {
         return Column(
           children: <Widget>[
             Material(
-              elevation: drawerBloc.isRoomListOpened ? 2 : 0,
+              elevation: drawerStore.isRoomListOpened ? 2 : 0,
               child: DrawerEntry(
                 text: translations.menuRooms,
                 icon: Icons.home,
@@ -38,8 +38,8 @@ class RoomList extends HookWidget {
                   turns: Tween(begin: .0, end: .25).animate(rotationController),
                 ),
                 onTap: () {
-                  drawerBloc.toggleListOpened();
-                  if (drawerBloc.isRoomListOpened) {
+                  drawerStore.toggleListOpened();
+                  if (drawerStore.isRoomListOpened) {
                     rotationController.forward();
                   } else {
                     rotationController.reverse();
@@ -48,30 +48,30 @@ class RoomList extends HookWidget {
               ),
             ),
             Visibility(
-              visible: drawerBloc.isRoomListOpened,
+              visible: drawerStore.isRoomListOpened,
               child: Divider(
                 height: 1,
               ),
             ),
             AnimatedContainer(
               alignment: Alignment.topCenter,
-              duration: Duration(milliseconds: min(drawerBloc.roomNumber * 200, 400)),
-              height: drawerBloc.isRoomListOpened ? drawerBloc.roomNumber * DrawerEntry.height + 1 : .0,
+              duration: Duration(milliseconds: min(drawerStore.roomNumber * 200, 400)),
+              height: drawerStore.isRoomListOpened ? drawerStore.roomNumber * DrawerEntry.height + 1 : .0,
               child: ClipRect(
                 child: OverflowBox(
-                  maxHeight: drawerBloc.roomNumber * DrawerEntry.height + 2,
+                  maxHeight: drawerStore.roomNumber * DrawerEntry.height + 2,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      for (var room in drawerBloc.rooms) ...[
+                      for (var room in drawerStore.rooms) ...[
                         DrawerEntry(
                           text: room.name,
                           onTap: () {
                             final route = '${RoomDashboard.route}/${room.id}';
-                            if (drawerBloc.currentSelectedRoute != route) {
+                            if (drawerStore.currentSelectedRoute != route) {
                               Provider.of<GlobalKey<NavigatorState>>(context).currentState.pushNamed(RoomDashboard.route, arguments: room);
                               _closeDrawer(context);
-                              drawerBloc.selectRoute(route);
+                              drawerStore.selectRoute(route);
                             }
                           },
                         ),
@@ -100,7 +100,7 @@ class RoomList extends HookWidget {
                                     color: Theme.of(context).primaryColor,
                                   ),
                                   onPressed: () async {
-                                    await drawerBloc.addRoom(controller.text);
+                                    await drawerStore.addRoom(controller.text);
                                     controller.text = '';
                                   },
                                   tooltip: translations.menuAddRoom,

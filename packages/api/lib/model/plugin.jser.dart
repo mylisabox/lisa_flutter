@@ -9,7 +9,7 @@ part of 'plugin.dart';
 abstract class _$PluginSerializer implements Serializer<Plugin> {
   Serializer<DeviceSettings> __deviceSettingsSerializer;
   Serializer<DeviceSettings> get _deviceSettingsSerializer =>
-      __deviceSettingsSerializer ??= new DeviceSettingsSerializer();
+      __deviceSettingsSerializer ??= DeviceSettingsSerializer();
   @override
   Map<String, dynamic> toMap(Plugin model) {
     if (model == null) return null;
@@ -26,7 +26,7 @@ abstract class _$PluginSerializer implements Serializer<Plugin> {
   @override
   Plugin fromMap(Map map) {
     if (map == null) return null;
-    final obj = new Plugin(
+    final obj = Plugin(
         id: map['id'] as String ?? getJserDefault('id'),
         name: map['name'] as String ?? getJserDefault('name'),
         description:

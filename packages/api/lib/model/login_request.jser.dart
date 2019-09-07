@@ -19,7 +19,7 @@ abstract class _$LoginRequestSerializer implements Serializer<LoginRequest> {
   @override
   LoginRequest fromMap(Map map) {
     if (map == null) return null;
-    final obj = new LoginRequest(
+    final obj = LoginRequest(
         email: map['email'] as String ?? getJserDefault('email'),
         password: map['password'] as String ?? getJserDefault('password'));
     return obj;

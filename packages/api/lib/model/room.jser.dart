@@ -19,7 +19,7 @@ abstract class _$RoomSerializer implements Serializer<Room> {
   @override
   Room fromMap(Map map) {
     if (map == null) return null;
-    final obj = new Room(
+    final obj = Room(
         id: map['id'] as int ?? getJserDefault('id'),
         name: map['name'] as String ?? getJserDefault('name'));
     return obj;

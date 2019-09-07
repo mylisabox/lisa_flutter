@@ -23,7 +23,7 @@ abstract class _$SceneDataSerializer implements Serializer<SceneData> {
   @override
   SceneData fromMap(Map map) {
     if (map == null) return null;
-    final obj = new SceneData(
+    final obj = SceneData(
         sentences: codeNonNullIterable<String>(map['sentences'] as Iterable,
                 (val) => val as String, <String>[]) ??
             getJserDefault('sentences'),

@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:lisa_flutter/main.dart';
-import 'package:lisa_flutter/src/common/bloc/user_bloc.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
 import 'package:lisa_flutter/src/common/presentation/loading_button.dart';
+import 'package:lisa_flutter/src/common/stores/user_store.dart';
 import 'package:lisa_flutter/src/common/utils/hooks.dart';
-import 'package:lisa_flutter/src/login/bloc/login_bloc.dart';
-import 'package:lisa_flutter/src/preferences/bloc/preferences_bloc.dart';
+import 'package:lisa_flutter/src/login/stores/login_store.dart';
+import 'package:lisa_flutter/src/preferences/stores/preferences_store.dart';
 import 'package:provider/provider.dart';
 import 'package:proxy_layout/proxy_layout.dart';
 
@@ -21,13 +21,13 @@ class LoginScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final translations = CommonLocalizations.of(context);
-    final bloc = useMemoized(() => LoginBloc());
-    final userBloc = Provider.of<UserBloc>(context, listen: false);
+    final store = useMemoized(() => LoginStore());
+    final userStore = Provider.of<UserStore>(context, listen: false);
 
     useEffect(() {
-      bloc.init();
+      store.init();
       return null;
-    }, [bloc]);
+    }, [store]);
 
     final theme = Theme.of(context);
     final _primaryColor = theme.primaryColor;
@@ -76,11 +76,11 @@ class LoginScreen extends HookWidget {
                         child: Observer(
                           builder: (_) => HookBuilder(
                             builder: (_) {
-                              final controller = useTextEditingController(text: bloc.email);
+                              final controller = useTextEditingController(text: store.email);
                               return TextField(
                                 autofocus: true,
                                 controller: controller,
-                                onChanged: (value) => bloc.setEmail(value),
+                                onChanged: (value) => store.setEmail(value),
                                 onSubmitted: (_) {
                                   FocusScope.of(context).focusInDirection(TraversalDirection.down);
                                 },
@@ -89,7 +89,7 @@ class LoginScreen extends HookWidget {
                                 style: TextStyle(fontSize: 20),
                                 decoration: InputDecoration(
                                   labelText: translations.emailField,
-                                  errorText: bloc.emailError?.getMessage(context),
+                                  errorText: store.emailError?.getMessage(context),
                                   prefixIcon: Icon(
                                     Icons.person,
                                   ),
@@ -110,9 +110,9 @@ class LoginScreen extends HookWidget {
                               final isSuccessful = await showLoadingDialog(
                                 context,
                                 (_) => Text(translations.loginButton),
-                                () => bloc.login().then((_) => userBloc.init()),
-                                onError: (err) {
-                                  showErrorDialog(context, err, null);
+                                () => store.login().then((_) => userStore.init()),
+                                onError: (err, stack) {
+                                  showErrorDialog(context, err, stack);
                                 },
                                 barrierDismissible: true,
                               );
@@ -121,10 +121,10 @@ class LoginScreen extends HookWidget {
                               }
                             },
                             style: TextStyle(fontSize: 20),
-                            onChanged: (value) => bloc.setPassword(value),
+                            onChanged: (value) => store.setPassword(value),
                             decoration: InputDecoration(
                               labelText: translations.passwordField,
-                              errorText: bloc.passwordError?.getMessage(context),
+                              errorText: store.passwordError?.getMessage(context),
                               prefixIcon: Icon(
                                 Icons.lock_outline,
                               ),
@@ -137,7 +137,7 @@ class LoginScreen extends HookWidget {
                         onPressed: () async {
                           final url = await showPrompt(context, translations.externalUrl, hint: translations.externalUrlHint);
                           if (url != null) {
-                            Provider.of<PreferencesBloc>(context).setExternalUrl(url);
+                            Provider.of<PreferencesStore>(context).setExternalUrl(url);
                           }
                         },
                         child: Text(
@@ -156,7 +156,7 @@ class LoginScreen extends HookWidget {
                         child: Center(
                           child: ProgressButton(
                             padding: EdgeInsets.all(kNormalPadding),
-                            until: () => bloc.login().then((_) => userBloc.init()),
+                            until: () => store.login().then((_) => userStore.init()),
                             onError: (err, stack) {
                               showErrorDialog(context, err, stack);
                             },
@@ -167,7 +167,7 @@ class LoginScreen extends HookWidget {
                             elevation: 0,
                             child: Observer(
                               builder: (_) => Text(
-                                bloc.mode == AuthMode.login ? translations.loginButton.toUpperCase() : translations.signupButton.toUpperCase(),
+                                store.mode == AuthMode.login ? translations.loginButton.toUpperCase() : translations.signupButton.toUpperCase(),
                                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                               ),
                             ),
