@@ -3,6 +3,7 @@ import 'package:jaguar_serializer/jaguar_serializer.dart';
 part 'device.jser.dart';
 
 class Device {
+
   @Alias('id')
   final int id;
 
@@ -30,16 +31,23 @@ class Device {
   @Alias('favorite')
   final bool favorite;
 
+
   Device(
-      {this.id = null,
-      this.roomId = null,
-      this.name = null,
-      this.driver = null,
-      this.pluginName = null,
-      this.type = null,
-      this.template = const {},
-      this.data = const {},
-      this.favorite = null});
+
+
+{
+
+     this.id = null,   this.roomId = null,
+
+     this.name = null,
+     this.driver = null,
+     this.pluginName = null,
+     this.type = null,   this.template = const {},
+     this.data = const {},
+
+     this.favorite = null
+    }
+  );
 
   @override
   String toString() {
@@ -48,4 +56,7 @@ class Device {
 }
 
 @GenSerializer(nullableFields: false)
-class DeviceSerializer extends Serializer<Device> with _$DeviceSerializer {}
+class DeviceSerializer extends Serializer<Device> with _$DeviceSerializer {
+
+}
+

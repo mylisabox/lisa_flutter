@@ -18,8 +18,13 @@ abstract class _$PluginSerializer implements Serializer<Plugin> {
     setMapValueIfNotNull(ret, 'name', model.name);
     setMapValueIfNotNull(ret, 'description', model.description);
     setMapValueIfNotNull(ret, 'image', model.image);
-    setMapValueIfNotNull(ret, 'devicesSettings',
-        _deviceSettingsSerializer.toMap(model.devicesSettings));
+    setMapValueIfNotNull(
+        ret,
+        'devicesSettings',
+        codeNonNullIterable(
+            model.devicesSettings,
+            (val) => _deviceSettingsSerializer.toMap(val as DeviceSettings),
+            []));
     return ret;
   }
 
@@ -32,9 +37,11 @@ abstract class _$PluginSerializer implements Serializer<Plugin> {
         description:
             map['description'] as String ?? getJserDefault('description'),
         image: map['image'] as String ?? getJserDefault('image'),
-        devicesSettings:
-            _deviceSettingsSerializer.fromMap(map['devicesSettings'] as Map) ??
-                getJserDefault('devicesSettings'));
+        devicesSettings: codeNonNullIterable<DeviceSettings>(
+                map['devicesSettings'] as Iterable,
+                (val) => _deviceSettingsSerializer.fromMap(val as Map),
+                <DeviceSettings>[]) ??
+            getJserDefault('devicesSettings'));
     return obj;
   }
 }

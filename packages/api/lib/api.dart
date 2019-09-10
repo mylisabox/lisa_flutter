@@ -1,6 +1,6 @@
 library lisa_server_sdk.api;
 
-import 'package:http/http.dart';
+import 'package:http/io_client.dart';
 import 'package:jaguar_mimetype/jaguar_mimetype.dart';
 import 'package:jaguar_retrofit/jaguar_retrofit.dart';
 import 'package:jaguar_serializer/jaguar_serializer.dart';
@@ -35,204 +35,223 @@ import 'package:lisa_server_sdk/model/update_device_name_request.dart';
 import 'package:lisa_server_sdk/model/user.dart';
 import 'package:lisa_server_sdk/model/user_update.dart';
 
+
+
 final _jsonJaguarRepo = JsonRepo()
-  ..add(DashboardSerializer())
-  ..add(DeviceSerializer())
-  ..add(DeviceSettingsSerializer())
-  ..add(InteractRequestSerializer())
-  ..add(InteractResponseSerializer())
-  ..add(IsInitializedSerializer())
-  ..add(LoginRequestSerializer())
-  ..add(LoginResponseSerializer())
-  ..add(PairingDeviceSerializer())
-  ..add(PairingResponseSerializer())
-  ..add(PluginSerializer())
-  ..add(RoomSerializer())
-  ..add(SceneSerializer())
-  ..add(SceneDataSerializer())
-  ..add(UpdateDeviceNameRequestSerializer())
-  ..add(UserSerializer())
-  ..add(UserUpdateSerializer());
+..add(DashboardSerializer())
+..add(DeviceSerializer())
+..add(DeviceSettingsSerializer())
+..add(InteractRequestSerializer())
+..add(InteractResponseSerializer())
+..add(IsInitializedSerializer())
+..add(LoginRequestSerializer())
+..add(LoginResponseSerializer())
+..add(PairingDeviceSerializer())
+..add(PairingResponseSerializer())
+..add(PluginSerializer())
+..add(RoomSerializer())
+..add(SceneSerializer())
+..add(SceneDataSerializer())
+..add(UpdateDeviceNameRequestSerializer())
+..add(UserSerializer())
+..add(UserUpdateSerializer())
+;
 final Map<String, CodecRepo> _converters = {
-  MimeTypes.json: _jsonJaguarRepo,
+    MimeTypes.json: _jsonJaguarRepo,
 };
+
+
 
 final _defaultInterceptors = [OAuthInterceptor(), BasicAuthInterceptor(), ApiKeyAuthInterceptor()];
 
 class JaguarApiGen {
-  List<Interceptor> interceptors;
-  String basePath = "http://localhost:3000";
-  Route _baseRoute;
-  final Duration timeout;
+    List<Interceptor> interceptors;
+    String basePath = "http://localhost:3000";
+    Route _baseRoute;
+    final Duration timeout;
 
-  /**
+    /**
     * Add custom global interceptors, put overrideInterceptors to true to set your interceptors only (auth interceptors will not be added)
     */
-  JaguarApiGen({List<Interceptor> interceptors, bool overrideInterceptors = false, String baseUrl, this.timeout = const Duration(minutes: 2)}) {
-    _baseRoute = Route(baseUrl ?? basePath).withClient(globalClient ?? Client());
-    if (interceptors == null) {
-      this.interceptors = _defaultInterceptors;
-    } else if (overrideInterceptors) {
-      this.interceptors = interceptors;
-    } else {
-      this.interceptors = List.from(_defaultInterceptors)..addAll(interceptors);
+    JaguarApiGen({List<Interceptor> interceptors, bool overrideInterceptors = false, String baseUrl, this.timeout = const Duration(minutes: 2)}) {
+        _baseRoute = Route(baseUrl ?? basePath).withClient(globalClient ?? IOClient());
+        if(interceptors == null) {
+            this.interceptors = _defaultInterceptors;
+        }
+        else if(overrideInterceptors){
+            this.interceptors = interceptors;
+        }
+        else {
+            this.interceptors = List.from(_defaultInterceptors)..addAll(interceptors);
+        }
+
+        this.interceptors.forEach((interceptor) {
+            _baseRoute.before(interceptor.before);
+            _baseRoute.after(interceptor.after);
+        });
     }
 
-    this.interceptors.forEach((interceptor) {
-      _baseRoute.before(interceptor.before);
-      _baseRoute.after(interceptor.after);
-    });
-  }
+    void setOAuthToken(String name, String token) {
+        (_defaultInterceptors[0] as OAuthInterceptor).tokens[name] = token;
+    }
 
-  void setOAuthToken(String name, String token) {
-    (_defaultInterceptors[0] as OAuthInterceptor).tokens[name] = token;
-  }
+    void setBasicAuth(String name, String username, String password) {
+        (_defaultInterceptors[1] as BasicAuthInterceptor).authInfo[name] = BasicAuthInfo(username, password);
+    }
 
-  void setBasicAuth(String name, String username, String password) {
-    (_defaultInterceptors[1] as BasicAuthInterceptor).authInfo[name] = BasicAuthInfo(username, password);
-  }
+    void setApiKey(String name, String apiKey) {
+        (_defaultInterceptors[2] as ApiKeyAuthInterceptor).apiKeys[name] = apiKey;
+    }
 
-  void setApiKey(String name, String apiKey) {
-    (_defaultInterceptors[2] as ApiKeyAuthInterceptor).apiKeys[name] = apiKey;
-  }
 
-  /**
+    /**
     * Get ChatbotApi instance, base route and serializer can be overridden by a given but be careful,
     * by doing that all interceptors will not be executed
     */
-  ChatbotApi getChatbotApi({Route base, Map<String, CodecRepo> converters}) {
-    if (base == null) {
-      base = _baseRoute;
+    ChatbotApi getChatbotApi({Route base, Map<String, CodecRepo> converters}) {
+        if(base == null) {
+            base = _baseRoute;
+        }
+        if(converters == null) {
+            converters = _converters;
+        }
+        return ChatbotApi(base: base, converters: converters, timeout: timeout);
     }
-    if (converters == null) {
-      converters = _converters;
-    }
-    return ChatbotApi(base: base, converters: converters, timeout: timeout);
-  }
 
-  /**
+
+    /**
     * Get ConfigApi instance, base route and serializer can be overridden by a given but be careful,
     * by doing that all interceptors will not be executed
     */
-  ConfigApi getConfigApi({Route base, Map<String, CodecRepo> converters}) {
-    if (base == null) {
-      base = _baseRoute;
+    ConfigApi getConfigApi({Route base, Map<String, CodecRepo> converters}) {
+        if(base == null) {
+            base = _baseRoute;
+        }
+        if(converters == null) {
+            converters = _converters;
+        }
+        return ConfigApi(base: base, converters: converters, timeout: timeout);
     }
-    if (converters == null) {
-      converters = _converters;
-    }
-    return ConfigApi(base: base, converters: converters, timeout: timeout);
-  }
 
-  /**
+
+    /**
     * Get DashboardApi instance, base route and serializer can be overridden by a given but be careful,
     * by doing that all interceptors will not be executed
     */
-  DashboardApi getDashboardApi({Route base, Map<String, CodecRepo> converters}) {
-    if (base == null) {
-      base = _baseRoute;
+    DashboardApi getDashboardApi({Route base, Map<String, CodecRepo> converters}) {
+        if(base == null) {
+            base = _baseRoute;
+        }
+        if(converters == null) {
+            converters = _converters;
+        }
+        return DashboardApi(base: base, converters: converters, timeout: timeout);
     }
-    if (converters == null) {
-      converters = _converters;
-    }
-    return DashboardApi(base: base, converters: converters, timeout: timeout);
-  }
 
-  /**
+
+    /**
     * Get DeviceApi instance, base route and serializer can be overridden by a given but be careful,
     * by doing that all interceptors will not be executed
     */
-  DeviceApi getDeviceApi({Route base, Map<String, CodecRepo> converters}) {
-    if (base == null) {
-      base = _baseRoute;
+    DeviceApi getDeviceApi({Route base, Map<String, CodecRepo> converters}) {
+        if(base == null) {
+            base = _baseRoute;
+        }
+        if(converters == null) {
+            converters = _converters;
+        }
+        return DeviceApi(base: base, converters: converters, timeout: timeout);
     }
-    if (converters == null) {
-      converters = _converters;
-    }
-    return DeviceApi(base: base, converters: converters, timeout: timeout);
-  }
 
-  /**
+
+    /**
     * Get FavoriteApi instance, base route and serializer can be overridden by a given but be careful,
     * by doing that all interceptors will not be executed
     */
-  FavoriteApi getFavoriteApi({Route base, Map<String, CodecRepo> converters}) {
-    if (base == null) {
-      base = _baseRoute;
+    FavoriteApi getFavoriteApi({Route base, Map<String, CodecRepo> converters}) {
+        if(base == null) {
+            base = _baseRoute;
+        }
+        if(converters == null) {
+            converters = _converters;
+        }
+        return FavoriteApi(base: base, converters: converters, timeout: timeout);
     }
-    if (converters == null) {
-      converters = _converters;
-    }
-    return FavoriteApi(base: base, converters: converters, timeout: timeout);
-  }
 
-  /**
+
+    /**
     * Get LoginApi instance, base route and serializer can be overridden by a given but be careful,
     * by doing that all interceptors will not be executed
     */
-  LoginApi getLoginApi({Route base, Map<String, CodecRepo> converters}) {
-    if (base == null) {
-      base = _baseRoute;
+    LoginApi getLoginApi({Route base, Map<String, CodecRepo> converters}) {
+        if(base == null) {
+            base = _baseRoute;
+        }
+        if(converters == null) {
+            converters = _converters;
+        }
+        return LoginApi(base: base, converters: converters, timeout: timeout);
     }
-    if (converters == null) {
-      converters = _converters;
-    }
-    return LoginApi(base: base, converters: converters, timeout: timeout);
-  }
 
-  /**
+
+    /**
     * Get PluginApi instance, base route and serializer can be overridden by a given but be careful,
     * by doing that all interceptors will not be executed
     */
-  PluginApi getPluginApi({Route base, Map<String, CodecRepo> converters}) {
-    if (base == null) {
-      base = _baseRoute;
+    PluginApi getPluginApi({Route base, Map<String, CodecRepo> converters}) {
+        if(base == null) {
+            base = _baseRoute;
+        }
+        if(converters == null) {
+            converters = _converters;
+        }
+        return PluginApi(base: base, converters: converters, timeout: timeout);
     }
-    if (converters == null) {
-      converters = _converters;
-    }
-    return PluginApi(base: base, converters: converters, timeout: timeout);
-  }
 
-  /**
+
+    /**
     * Get RoomApi instance, base route and serializer can be overridden by a given but be careful,
     * by doing that all interceptors will not be executed
     */
-  RoomApi getRoomApi({Route base, Map<String, CodecRepo> converters}) {
-    if (base == null) {
-      base = _baseRoute;
+    RoomApi getRoomApi({Route base, Map<String, CodecRepo> converters}) {
+        if(base == null) {
+            base = _baseRoute;
+        }
+        if(converters == null) {
+            converters = _converters;
+        }
+        return RoomApi(base: base, converters: converters, timeout: timeout);
     }
-    if (converters == null) {
-      converters = _converters;
-    }
-    return RoomApi(base: base, converters: converters, timeout: timeout);
-  }
 
-  /**
+
+    /**
     * Get SceneApi instance, base route and serializer can be overridden by a given but be careful,
     * by doing that all interceptors will not be executed
     */
-  SceneApi getSceneApi({Route base, Map<String, CodecRepo> converters}) {
-    if (base == null) {
-      base = _baseRoute;
+    SceneApi getSceneApi({Route base, Map<String, CodecRepo> converters}) {
+        if(base == null) {
+            base = _baseRoute;
+        }
+        if(converters == null) {
+            converters = _converters;
+        }
+        return SceneApi(base: base, converters: converters, timeout: timeout);
     }
-    if (converters == null) {
-      converters = _converters;
-    }
-    return SceneApi(base: base, converters: converters, timeout: timeout);
-  }
 
-  /**
+
+    /**
     * Get UserApi instance, base route and serializer can be overridden by a given but be careful,
     * by doing that all interceptors will not be executed
     */
-  UserApi getUserApi({Route base, Map<String, CodecRepo> converters}) {
-    if (base == null) {
-      base = _baseRoute;
+    UserApi getUserApi({Route base, Map<String, CodecRepo> converters}) {
+        if(base == null) {
+            base = _baseRoute;
+        }
+        if(converters == null) {
+            converters = _converters;
+        }
+        return UserApi(base: base, converters: converters, timeout: timeout);
     }
-    if (converters == null) {
-      converters = _converters;
-    }
-    return UserApi(base: base, converters: converters, timeout: timeout);
-  }
+
+
 }

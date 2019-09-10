@@ -21,8 +21,11 @@ abstract class _$DeviceSettingsSerializer
     setMapValueIfNotNull(
         ret,
         'settings',
-        codeNonNullMap(model.settings, (val) => passProcessor.serialize(val),
-            <String, dynamic>{}));
+        codeNonNullIterable(
+            model.settings,
+            (val) => codeNonNullMap(val as Map<String, dynamic>,
+                (val) => passProcessor.serialize(val), <String, dynamic>{}),
+            []));
     return ret;
   }
 
@@ -37,10 +40,13 @@ abstract class _$DeviceSettingsSerializer
         pluginName: map['pluginName'] as String ?? getJserDefault('pluginName'),
         description:
             map['description'] as String ?? getJserDefault('description'),
-        settings: codeNonNullMap<Object>(
-                map['settings'] as Map,
-                (val) => passProcessor.deserialize(val) as Object,
-                <String, Object>{}) ??
+        settings: codeNonNullIterable<Map<String, Object>>(
+                map['settings'] as Iterable,
+                (val) => codeNonNullMap<Object>(
+                    val as Map,
+                    (val) => passProcessor.deserialize(val) as Object,
+                    <String, Object>{}),
+                <Map<String, Object>>[]) ??
             getJserDefault('settings'));
     return obj;
   }

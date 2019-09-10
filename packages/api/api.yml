@@ -435,24 +435,10 @@ components:
       type: object
       required:
         - step
+      additionalProperties:
+        type: object
       properties:
-        singleChoice:
-          type: boolean
-        devices:
-          $ref: '#/components/schemas/PairingDevice'
         step:
-          type: string
-    PairingDevice:
-      type: object
-      required:
-        - name
-        - ìd
-      properties:
-        name:
-          type: string
-        image:
-          type: string
-        id:
           type: string
     Plugin:
       type: object
@@ -470,7 +456,9 @@ components:
         image:
           type: string
         devicesSettings:
-          $ref: '#/components/schemas/DeviceSettings'
+          type: array
+          items:
+            $ref: '#/components/schemas/DeviceSettings'
     DeviceSettings:
       type: object
       properties:
@@ -487,9 +475,11 @@ components:
         description:
           type: string
         settings:
-          type: object
-          additionalProperties:
+          type: array
+          items:
             type: object
+            additionalProperties:
+              type: object
     Dashboard:
       type: object
       required:

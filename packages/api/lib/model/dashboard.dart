@@ -4,6 +4,7 @@ import 'package:lisa_server_sdk/model/device.dart';
 part 'dashboard.jser.dart';
 
 class Dashboard {
+
   @Alias('id')
   final int id;
 
@@ -16,7 +17,18 @@ class Dashboard {
   @Alias('widgets')
   final List<Device> widgets;
 
-  Dashboard({this.id = null, this.roomId = null, this.userId = null, this.widgets = const []});
+
+  Dashboard(
+
+
+{
+
+     this.id = null,
+     this.roomId = null,
+     this.userId = null,
+     this.widgets = const []
+    }
+  );
 
   @override
   String toString() {
@@ -25,4 +37,7 @@ class Dashboard {
 }
 
 @GenSerializer(nullableFields: false)
-class DashboardSerializer extends Serializer<Dashboard> with _$DashboardSerializer {}
+class DashboardSerializer extends Serializer<Dashboard> with _$DashboardSerializer {
+
+}
+

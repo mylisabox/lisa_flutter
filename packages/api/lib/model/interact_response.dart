@@ -3,6 +3,7 @@ import 'package:jaguar_serializer/jaguar_serializer.dart';
 part 'interact_response.jser.dart';
 
 class InteractResponse {
+
   @Alias('action')
   final String action;
 
@@ -21,7 +22,20 @@ class InteractResponse {
   @Alias('responses')
   final List<String> responses;
 
-  InteractResponse({this.action = null, this.lang = null, this.userId = null, this.userSentence = null, this.response = null, this.responses = const []});
+
+  InteractResponse(
+
+
+{
+
+     this.action = null,
+     this.lang = null,
+     this.userId = null,
+     this.userSentence = null,
+     this.response = null,
+     this.responses = const []
+    }
+  );
 
   @override
   String toString() {
@@ -30,4 +44,7 @@ class InteractResponse {
 }
 
 @GenSerializer(nullableFields: false)
-class InteractResponseSerializer extends Serializer<InteractResponse> with _$InteractResponseSerializer {}
+class InteractResponseSerializer extends Serializer<InteractResponse> with _$InteractResponseSerializer {
+
+}
+

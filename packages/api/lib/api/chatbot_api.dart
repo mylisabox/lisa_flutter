@@ -10,21 +10,26 @@ part 'chatbot_api.jretro.dart';
 
 @GenApiClient()
 class ChatbotApi extends ApiClient with _$ChatbotApiClient {
-  final Route base;
-  final Map<String, CodecRepo> converters;
-  final Duration timeout;
+    final Route base;
+    final Map<String, CodecRepo> converters;
+    final Duration timeout;
 
-  ChatbotApi({this.base, this.converters, this.timeout = const Duration(minutes: 2)});
+    ChatbotApi({this.base, this.converters, this.timeout = const Duration(minutes: 2)});
 
-  ///
-  ///
-  ///
-  @PostReq(path: "/api/v1/chatbot/interact", metadata: {
-    "auth": [
-      {"type": "apiKey", "name": "Bearer", "keyName": "Authorization", "where": "header"}
-    ]
-  })
-  Future<InteractResponse> interact(@AsJson() InteractRequest interactRequest) {
-    return super.interact(interactRequest).timeout(timeout);
-  }
+    ///
+    ///
+    ///
+    @PostReq(path: "/api/v1/chatbot/interact", metadata: {"auth": [ {"type": "apiKey", "name": "Bearer", "keyName": "Authorization", "where": "header" }]})
+    Future<InteractResponse> interact(
+
+             @AsJson() InteractRequest interactRequest
+        ) {
+        return super.interact(
+
+
+        interactRequest
+        ).timeout(timeout);
+    }
+
+
 }
