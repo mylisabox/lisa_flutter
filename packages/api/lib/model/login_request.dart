@@ -5,10 +5,10 @@ part 'login_request.jser.dart';
 
 class LoginRequest {
   
-  @Alias('email')
+  @Alias('email', isNullable: false,  )
   final String email;
   
-  @Alias('password')
+  @Alias('password', isNullable: false,  )
   final String password;
   
 

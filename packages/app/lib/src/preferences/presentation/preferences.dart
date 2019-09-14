@@ -55,7 +55,7 @@ class PreferencesWidget extends HookWidget {
               onTap: () async {
                 final url = await showPrompt(context, translations.externalUrl, hint: translations.externalUrlHint);
                 if (url != null) {
-                  Provider.of<PreferencesStore>(context).setExternalUrl(url);
+                  Provider.of<PreferencesStore>(context, listen: false).setExternalUrl(url);
                 }
               },
               leading: Icon(Icons.settings_remote),

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -8,8 +10,11 @@ import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
 import 'package:lisa_flutter/src/common/presentation/refresh_no_scroll_content.dart';
+import 'package:lisa_flutter/src/common/utils/hooks.dart';
 import 'package:lisa_flutter/src/devices/stores/device_store.dart';
+import 'package:lisa_flutter/src/rooms/presentation/room_selector.dart';
 import 'package:lisa_server_sdk/model/device.dart';
+import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:remote_color_picker/remote_color_picker.dart';
 import 'package:remote_image_button/remote_image_button.dart';
@@ -120,13 +125,52 @@ class Dashboard extends HookWidget {
   }
 }
 
-class _DashboardWidget extends StatelessWidget {
+class _DashboardWidget extends HookWidget {
   final Device device;
 
   const _DashboardWidget({Key key, this.device}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final mode = useState(_DeviceState.idle);
+    final deviceWidget = useMemoized(
+      () => mode.value == _DeviceState.idle ? _DeviceIdle(device: device) : _DeviceEdition(device: device),
+      [device, mode.value],
+    );
+    return ListenableProvider.value(
+      value: mode,
+      child: AnimatedSwitcher(
+        duration: Duration(milliseconds: 500),
+        child: deviceWidget,
+        transitionBuilder: (child, animation) {
+          return AnimatedBuilder(
+            child: child,
+            animation: animation,
+            builder: (context, child) {
+              final transform = Matrix4.identity();
+              //transform.setEntry(3, 2, 0.001);//FIXME 3D effect but look weird
+              transform.rotateY((1 - animation.value) * pi / 2);
+              return Transform(
+                transform: transform,
+                alignment: Alignment.center,
+                child: child,
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _DeviceIdle extends StatelessWidget {
+  final Device device;
+
+  const _DeviceIdle({Key key, this.device}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final translations = CommonLocalizations.of(context);
     return Card(
       child: Column(
         mainAxisSize: MainAxisSize.max,
@@ -134,11 +178,12 @@ class _DashboardWidget extends StatelessWidget {
         children: <Widget>[
           Row(
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(kSmallPadding),
-                child: Text(device.name),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(kSmallPadding),
+                  child: Text(device.name),
+                ),
               ),
-              Spacer(),
               ClipRect(
                 child: InkWell(
                   child: Padding(
@@ -149,11 +194,55 @@ class _DashboardWidget extends StatelessWidget {
                     ),
                   ),
                   onTap: () {
-                    final store = Provider.of<DeviceStore>(context);
-                    store.toggleFavorite(device.id, device.favorite).catchError((err, stack) {
-                      showErrorDialog(context, err, stack);
-                    });
+                    final store = Provider.of<DeviceStore>(context, listen: false);
+                    store.toggleFavorite(device.id, device.favorite).catchError(
+                      (err, stack) {
+                        showErrorDialog(context, err, stack);
+                      },
+                    );
                   },
+                ),
+              ),
+              ClipRect(
+                child: PopupMenuButton<_DeviceAction>(
+                  onSelected: (action) async {
+                    final store = Provider.of<DeviceStore>(context, listen: false);
+                    if (action == _DeviceAction.delete) {
+                      final confirm = await showConfirm(context, translations.deleteItem(device.name), translations.deleteConfirm);
+                      if (confirm) {
+                        showLoadingDialog(context, (_) => Text(translations.deleting), () => store.deleteDevice(device.id));
+                      }
+                    } else if (action == _DeviceAction.rename) {
+                      Provider.of<ValueNotifier<_DeviceState>>(context).value = _DeviceState.edition;
+                    }
+                  },
+                  itemBuilder: (_) => [
+                    PopupMenuItem(
+                      child: Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(right: kNormalPadding),
+                            child: Icon(Icons.edit, semanticLabel: translations.rename),
+                          ),
+                          Expanded(child: Text(translations.rename)),
+                        ],
+                      ),
+                      value: _DeviceAction.rename,
+                    ),
+                    PopupMenuDivider(),
+                    PopupMenuItem(
+                      child: Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(right: kNormalPadding),
+                            child: Icon(Icons.delete, semanticLabel: translations.delete),
+                          ),
+                          Expanded(child: Text(translations.delete)),
+                        ],
+                      ),
+                      value: _DeviceAction.delete,
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -173,4 +262,87 @@ class _DashboardWidget extends StatelessWidget {
       ),
     );
   }
+}
+
+class _DeviceEdition extends HookWidget {
+  final Device device;
+
+  const _DeviceEdition({Key key, this.device}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final translations = CommonLocalizations.of(context);
+    final controller = useTextEditingController(text: device.name);
+    return Card(
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: kSmallPadding),
+                  child: TextField(
+                    controller: controller,
+                  ),
+                ),
+              ),
+              IconButton(
+                tooltip: translations.cancel,
+                icon: Icon(
+                  Icons.cancel,
+                  semanticLabel: translations.cancel,
+                ),
+                onPressed: () {
+                  Provider.of<ValueNotifier<_DeviceState>>(context, listen: false).value = _DeviceState.idle;
+                },
+              ),
+            ],
+          ),
+          Divider(height: 1),
+          Padding(
+            padding: const EdgeInsets.all(kNormalPadding),
+            child: Scrollbar(
+              child: SingleChildScrollView(
+                child: HookBuilder(
+                  builder: (context) {
+                    final selectedRoom = useState(device.roomId);
+                    return Column(
+                      children: <Widget>[
+                        RoomSelector(
+                          isExpanded: true,
+                          selected: selectedRoom.value,
+                          onRoomSelected: (room) {
+                            selectedRoom.value = room.id;
+                          },
+                        ),
+                        RaisedButton(
+                          textColor: Colors.white,
+                          onPressed: () {
+                            Provider.of<DeviceStore>(context, listen: false).saveDevice(device, name: controller.text, roomId: selectedRoom.value);
+                          },
+                          child: Text(translations.save),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+enum _DeviceAction {
+  rename,
+  delete,
+}
+
+enum _DeviceState {
+  idle,
+  edition,
 }

@@ -17,7 +17,7 @@ abstract class _DrawerStore with Store {
   _DrawerStore({RoomApi roomApi}) : _roomApi = roomApi ?? BackendApiProvider().api.getRoomApi();
 
   @observable
-  List<Room> rooms = [];
+  ObservableList<Room> rooms = ObservableList();
 
   @observable
   String currentSelectedRoute = FavoritesWidget.route;
@@ -34,9 +34,9 @@ abstract class _DrawerStore with Store {
   }
 
   @action
-  Future loadRooms({force: false}) async {
+  Future loadRooms({bool force: false}) async {
     if (rooms.isEmpty || force) {
-      rooms = await _roomApi.getRooms();
+      rooms = ObservableList.of(await _roomApi.getRooms());
     }
   }
 
@@ -46,6 +46,20 @@ abstract class _DrawerStore with Store {
       await _roomApi.addRoom(Room(name: name)).catchError(handleCaughtError);
       await loadRooms(force: true);
     }
+  }
+
+  @action
+  Future renameRoom(Room room, String name) async {
+    if (name != null && name.length > 3) {
+      await _roomApi.saveRoom(room.id, Room(id: room.id, name: name)).catchError(handleCaughtError);
+      await loadRooms(force: true);
+    }
+  }
+
+  @action
+  Future deleteRoom(int id) async {
+    await _roomApi.deleteRoom(id).catchError(handleCaughtError);
+    rooms.remove(rooms.firstWhere((item) => item.id == id));
   }
 
   @action

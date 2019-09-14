@@ -156,13 +156,13 @@ class SceneWidget extends HookWidget {
     if (text != null || text.isNotEmpty) {
       switch (type) {
         case _SceneEntryType.command:
-          store.addCommand(text);
+          store.commands.add(text);
           break;
         case _SceneEntryType.sentence:
-          store.addSentence(text);
+          store.sentences.add(text);
           break;
         case _SceneEntryType.response:
-          store.addResponse(text);
+          store.responses.add(text);
           break;
       }
     }
@@ -171,13 +171,13 @@ class SceneWidget extends HookWidget {
   void askForRemoval(BuildContext context, SceneStore store, _SceneEntryType type, int index) {
     switch (type) {
       case _SceneEntryType.command:
-        store.removeCommand(index);
+        store.commands.removeAt(index);
         break;
       case _SceneEntryType.sentence:
-        store.removeSentence(index);
+        store.sentences.removeAt(index);
         break;
       case _SceneEntryType.response:
-        store.removeResponse(index);
+        store.responses.removeAt(index);
         break;
     }
   }

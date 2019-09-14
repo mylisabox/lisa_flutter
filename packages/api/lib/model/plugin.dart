@@ -1,36 +1,38 @@
 import 'package:jaguar_serializer/jaguar_serializer.dart';
+
+
 import 'package:lisa_server_sdk/model/device_settings.dart';
 
 part 'plugin.jser.dart';
 
 class Plugin {
-
-  @Alias('id')
+  
+  @Alias('id', isNullable: false,  )
   final String id;
-
-  @Alias('name')
+  
+  @Alias('name', isNullable: false,  )
   final String name;
-
-  @Alias('description')
+  
+  @Alias('description', isNullable: false,  )
   final String description;
-
-  @Alias('image')
+  
+  @Alias('image', isNullable: false,  )
   final String image;
-
-  @Alias('devicesSettings')
+  
+  @Alias('devicesSettings', isNullable: false,  )
   final List<DeviceSettings> devicesSettings;
-
+  
 
   Plugin(
-
+      
 
 {
-
-     this.id = null,
-     this.name = null,
-     this.description = null,   this.image = null,
-     this.devicesSettings = const []
-
+    
+     this.id = null,  
+     this.name = null,  
+     this.description = null,   this.image = null,  
+     this.devicesSettings = const [] 
+    
     }
   );
 

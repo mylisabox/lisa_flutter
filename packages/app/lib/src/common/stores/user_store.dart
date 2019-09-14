@@ -15,10 +15,10 @@ class UserStore = _UserStore with _$UserStore;
 
 abstract class _UserStore with Store {
   final Preferences _preferences;
-  final JaguarApiGen _api;
+  final LisaServerSdk _api;
 
   _UserStore({
-    JaguarApiGen api,
+    LisaServerSdk api,
     Preferences prefs,
   })  : _api = api ?? BackendApiProvider().api,
         _preferences = prefs ?? PreferencesProvider().prefs;

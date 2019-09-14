@@ -5,7 +5,7 @@ part 'is_initialized.jser.dart';
 
 class IsInitialized {
   
-  @Alias('initialized')
+  @Alias('initialized', isNullable: false,  )
   final bool initialized;
   
 

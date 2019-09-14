@@ -1,8 +1,9 @@
-import 'dart:async';
-
 import 'package:jaguar_retrofit/annotations/annotations.dart';
 import 'package:jaguar_retrofit/jaguar_retrofit.dart';
 import 'package:jaguar_serializer/jaguar_serializer.dart';
+import 'package:jaguar_mimetype/jaguar_mimetype.dart';
+import 'dart:async';
+
 import 'package:lisa_server_sdk/model/device.dart';
 
 part 'favorite_api.jretro.dart';
@@ -15,9 +16,9 @@ class FavoriteApi extends ApiClient with _$FavoriteApiClient {
 
     FavoriteApi({this.base, this.converters, this.timeout = const Duration(minutes: 2)});
 
+    /// 
     ///
-    ///
-    ///
+    /// 
     @PutReq(path: "/api/v1/favorite/:deviceId", metadata: {"auth": [ {"type": "apiKey", "name": "Bearer", "keyName": "Authorization", "where": "header" }]})
     Future<void> addToFavorite(
             @PathParam("deviceId") int deviceId
@@ -28,9 +29,9 @@ class FavoriteApi extends ApiClient with _$FavoriteApiClient {
         ).timeout(timeout);
     }
 
+    /// 
     ///
-    ///
-    ///
+    /// 
     @DeleteReq(path: "/api/v1/favorite/:deviceId", metadata: {"auth": [ {"type": "apiKey", "name": "Bearer", "keyName": "Authorization", "where": "header" }]})
     Future<void> deleteFromFavorite(
             @PathParam("deviceId") int deviceId
@@ -41,9 +42,9 @@ class FavoriteApi extends ApiClient with _$FavoriteApiClient {
         ).timeout(timeout);
     }
 
+    /// 
     ///
-    ///
-    ///
+    /// 
     @GetReq(path: "/api/v1/favorite", metadata: {"auth": [ {"type": "apiKey", "name": "Bearer", "keyName": "Authorization", "where": "header" }]})
     Future<List<Device>> getFavorites(
         ) {

@@ -1,32 +1,34 @@
 import 'package:jaguar_serializer/jaguar_serializer.dart';
+
+
 import 'package:lisa_server_sdk/model/device.dart';
 
 part 'dashboard.jser.dart';
 
 class Dashboard {
-
-  @Alias('id')
+  
+  @Alias('id', isNullable: false,  )
   final int id;
-
-  @Alias('roomId')
+  
+  @Alias('roomId', isNullable: false,  )
   final int roomId;
-
-  @Alias('userId')
+  
+  @Alias('userId', isNullable: false,  )
   final int userId;
-
-  @Alias('widgets')
+  
+  @Alias('widgets', isNullable: false,  )
   final List<Device> widgets;
-
+  
 
   Dashboard(
-
+      
 
 {
-
-     this.id = null,
-     this.roomId = null,
-     this.userId = null,
-     this.widgets = const []
+    
+     this.id = null,  
+     this.roomId = null,  
+     this.userId = null,  
+     this.widgets = const [] 
     }
   );
 

@@ -35,7 +35,7 @@ class AppDrawer extends StatelessWidget {
                   icon: Icons.star_border,
                   onTap: () {
                     if (drawerStore.currentSelectedRoute != FavoritesWidget.route) {
-                      Provider.of<GlobalKey<NavigatorState>>(context).currentState.pushNamed(FavoritesWidget.route);
+                      Provider.of<GlobalKey<NavigatorState>>(context, listen: false).currentState.pushNamed(FavoritesWidget.route);
                       _closeDrawer(context);
                       drawerStore.selectRoute(FavoritesWidget.route);
                     }
@@ -62,7 +62,7 @@ class AppDrawer extends StatelessWidget {
                   icon: Icons.filter_frames,
                   onTap: () {
                     if (drawerStore.currentSelectedRoute != ScenesWidget.route) {
-                      Provider.of<GlobalKey<NavigatorState>>(context).currentState.pushNamed(ScenesWidget.route);
+                      Provider.of<GlobalKey<NavigatorState>>(context, listen: false).currentState.pushNamed(ScenesWidget.route);
                       _closeDrawer(context);
                       drawerStore.selectRoute(ScenesWidget.route);
                     }
@@ -74,7 +74,7 @@ class AppDrawer extends StatelessWidget {
                   icon: Icons.settings,
                   onTap: () {
                     if (drawerStore.currentSelectedRoute != PreferencesWidget.route) {
-                      Provider.of<GlobalKey<NavigatorState>>(context).currentState.pushNamed(PreferencesWidget.route);
+                      Provider.of<GlobalKey<NavigatorState>>(context, listen: false).currentState.pushNamed(PreferencesWidget.route);
                       _closeDrawer(context);
                       drawerStore.selectRoute(PreferencesWidget.route);
                     }
@@ -87,10 +87,12 @@ class AppDrawer extends StatelessWidget {
                   onTap: () async {
                     final logout = await showConfirm(context, translations.menuLogout, translations.logoutConfirm);
                     if (logout) {
-                      //FIXME show loading
-                      await Provider.of<UserStore>(context).logout();
-                      Navigator.of(context, rootNavigator: true).popUntil((_) => true);
-                      Navigator.of(context, rootNavigator: true).pushReplacement(MaterialPageRoute(builder: (context) => LoginScreen()));
+                      final success =
+                          await showLoadingDialog(context, (_) => Text(translations.menuLogout), () => Provider.of<UserStore>(context, listen: false).logout());
+                      if (success) {
+                        Navigator.of(context, rootNavigator: true).popUntil((_) => true);
+                        Navigator.of(context, rootNavigator: true).pushReplacement(MaterialPageRoute(builder: (context) => LoginScreen()));
+                      }
                     }
                   },
                 ),

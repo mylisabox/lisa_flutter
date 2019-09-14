@@ -75,7 +75,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PairingResponse'
+               $ref: '#/components/schemas/PairingResponse'
           description: ""
       tags:
         - plugin
@@ -184,12 +184,12 @@ paths:
       tags:
         - device
     patch:
-      operationId: saveDeviceName
+      operationId: saveDeviceInfo
       requestBody:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/UpdateDeviceNameRequest"
+              "$ref": "#/components/schemas/UpdateDeviceInfoRequest"
       responses:
         200:
           description: ""
@@ -220,6 +220,30 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Device"
+          description: ""
+      tags:
+        - device
+  /api/v1/devices/group/{roomId}/{groupId}:
+    parameters:
+      - name: roomId
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: integer
+    post:
+      operationId: updateGroup
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/UpdateDeviceDataRequest"
+      responses:
+        200:
           description: ""
       tags:
         - device
@@ -433,13 +457,8 @@ components:
             type: string
     PairingResponse:
       type: object
-      required:
-        - step
       additionalProperties:
         type: object
-      properties:
-        step:
-          type: string
     Plugin:
       type: object
       required:
@@ -534,13 +553,15 @@ components:
             type: object
         favorite:
           type: boolean
-    UpdateDeviceNameRequest:
+    UpdateDeviceInfoRequest:
       type: object
       required:
         - name
       properties:
         name:
           type: string
+        roomId:
+          type: integer
     UpdateDeviceDataRequest:
       type: object
       additionalProperties:

@@ -5,13 +5,13 @@ part 'scene_data.jser.dart';
 
 class SceneData {
   
-  @Alias('sentences')
+  @Alias('sentences', isNullable: false,  )
   final List<String> sentences;
   
-  @Alias('responses')
+  @Alias('responses', isNullable: false,  )
   final List<String> responses;
   
-  @Alias('commands')
+  @Alias('commands', isNullable: false,  )
   final List<String> commands;
   
 

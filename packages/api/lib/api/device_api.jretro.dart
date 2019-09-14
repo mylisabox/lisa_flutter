@@ -26,8 +26,8 @@ abstract class _$DeviceApiClient implements ApiClient {
     await req.go(throwOnErr: true);
   }
 
-  Future<void> saveDeviceName(
-      int deviceId, UpdateDeviceNameRequest updateDeviceNameRequest) async {
+  Future<void> saveDeviceInfo(
+      int deviceId, UpdateDeviceInfoRequest updateDeviceInfoRequest) async {
     var req = base.patch
         .metadata({
           "auth": [
@@ -42,7 +42,7 @@ abstract class _$DeviceApiClient implements ApiClient {
         .path(basePath)
         .path("/api/v1/device/:deviceId")
         .pathParams("deviceId", deviceId)
-        .json(jsonConverter.to(updateDeviceNameRequest));
+        .json(jsonConverter.to(updateDeviceInfoRequest));
     await req.go(throwOnErr: true);
   }
 
@@ -65,5 +65,26 @@ abstract class _$DeviceApiClient implements ApiClient {
         .pathParams("pluginName", pluginName)
         .json(jsonConverter.to(requestBody));
     return req.go(throwOnErr: true).map(decodeOne);
+  }
+
+  Future<void> updateGroup(
+      int roomId, int groupId, Map<String, Object> requestBody) async {
+    var req = base.post
+        .metadata({
+          "auth": [
+            {
+              "type": "apiKey",
+              "name": "Bearer",
+              "keyName": "Authorization",
+              "where": "header",
+            }
+          ],
+        })
+        .path(basePath)
+        .path("/api/v1/devices/group/:roomId/:groupId")
+        .pathParams("roomId", roomId)
+        .pathParams("groupId", groupId)
+        .json(jsonConverter.to(requestBody));
+    await req.go(throwOnErr: true);
   }
 }

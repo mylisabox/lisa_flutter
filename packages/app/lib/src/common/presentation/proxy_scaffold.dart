@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
+import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
+import 'package:lisa_flutter/src/common/utils/platform_detector/platform_detector.dart';
 import 'package:lisa_flutter/src/config/routes.dart';
+import 'package:lisa_flutter/src/devices/presentation/add_device.dart';
 import 'package:lisa_flutter/src/drawer/stores/drawer_store.dart';
 import 'package:lisa_flutter/src/favorites/presentation/favorites.dart';
 import 'package:lisa_flutter/src/orphans/presentation/orphans.dart';
@@ -37,7 +40,7 @@ class ProxyScaffold extends HookWidget {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         titleState.value = title;
       });
-      Provider.of<DrawerStore>(context).selectRoute(route);
+      Provider.of<DrawerStore>(context, listen: false).selectRoute(route);
     };
     final onCanPopChange = (canPop) {
       canPopState.value = canPop;
@@ -61,7 +64,7 @@ class ProxyScaffold extends HookWidget {
                 key: navigatorKey,
               ),
             ),
-            appBar: _getAppBar(context, titleState.value, canPopState.value, navigatorKey),
+            appBar: _getAppBar(context, titleState.value, canPopState.value && !isMobileView(context), navigatorKey),
             floatingActionButton: floatingActionButton,
           );
         },
@@ -110,6 +113,7 @@ class ProxyScaffold extends HookWidget {
   }
 
   AppBar _getAppBar(BuildContext context, String title, bool canPop, GlobalKey<NavigatorState> navigatorKey) {
+    final translations = CommonLocalizations.of(context);
     return AppBar(
       leading: canPop
           ? IconButton(
@@ -121,6 +125,23 @@ class ProxyScaffold extends HookWidget {
             )
           : null,
       title: Text(title),
+      actions: <Widget>[
+        if (kIsMobile())
+          IconButton(
+            icon: Icon(
+              Icons.add,
+              semanticLabel: translations.addDevice,
+            ),
+            tooltip: translations.addDevice,
+            onPressed: () {
+              if (DeviceProxy.isTablet(context)) {
+                showPlatformDialog(context, (_) => AddDeviceDialog(room: ModalRoute.of(context).settings.arguments));
+              } else {
+                Navigator.of(context, rootNavigator: true).pushNamed(AddDeviceScreen.route, arguments: ModalRoute.of(context).settings.arguments);
+              }
+            },
+          ),
+      ],
     );
   }
 }

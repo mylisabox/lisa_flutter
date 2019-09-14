@@ -14,7 +14,7 @@ Method | HTTP request | Description
 
 
 # **pairing**
-> PairingResponse pairing(pluginName, driver, requestBody)
+> Map<String, Object> pairing(pluginName, driver, requestBody)
 
 
 
@@ -49,7 +49,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**PairingResponse**](PairingResponse.md)
+[**Map<String, Object>**](Object.md)
 
 ### Authorization
 

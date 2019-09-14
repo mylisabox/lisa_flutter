@@ -7,13 +7,13 @@ part 'scene.jser.dart';
 
 class Scene {
   
-  @Alias('name')
+  @Alias('name', isNullable: false,  )
   final String name;
   
-  @Alias('displayName')
+  @Alias('displayName', isNullable: false,  )
   final String displayName;
   
-  @Alias('data')
+  @Alias('data', isNullable: false,  )
   final SceneData data;
   
 

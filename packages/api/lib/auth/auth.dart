@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:jaguar_retrofit/jaguar_retrofit.dart';
 
 abstract class AuthInterceptor extends Interceptor {

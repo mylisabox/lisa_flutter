@@ -283,7 +283,11 @@ Future<bool> showLoadingDialog(
                 }).catchError((err, stack) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     Navigator.of(mainContext).pop(false);
-                    onError(err, stack);
+                    if (onError == null) {
+                      showErrorDialog(context, err, stack);
+                    } else {
+                      onError(err, stack);
+                    }
                   });
                 });
                 return null;

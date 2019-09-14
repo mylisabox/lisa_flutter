@@ -22,7 +22,7 @@ class LoginScreen extends HookWidget {
   Widget build(BuildContext context) {
     final translations = CommonLocalizations.of(context);
     final store = useMemoized(() => LoginStore());
-    final userStore = Provider.of<UserStore>(context, listen: false);
+    final userStore = Provider.of<UserStore>(context);
 
     useEffect(() {
       store.init();
@@ -73,11 +73,11 @@ class LoginScreen extends HookWidget {
                       Container(
                         padding: const EdgeInsets.all(kNormalPadding),
                         color: Colors.white.withOpacity(_opacity),
-                        child: Observer(
-                          builder: (_) => HookBuilder(
-                            builder: (_) {
-                              final controller = useTextEditingController(text: store.email);
-                              return TextField(
+                        child: HookBuilder(
+                          builder: (_) {
+                            final controller = useTextEditingController(text: store.email);
+                            return Observer(
+                              builder: (_) => TextField(
                                 autofocus: true,
                                 controller: controller,
                                 onChanged: (value) => store.setEmail(value),
@@ -94,9 +94,9 @@ class LoginScreen extends HookWidget {
                                     Icons.person,
                                   ),
                                 ),
-                              );
-                            },
-                          ),
+                              ),
+                            );
+                          },
                         ),
                       ),
                       Divider(color: Colors.transparent, height: 2),
@@ -137,7 +137,7 @@ class LoginScreen extends HookWidget {
                         onPressed: () async {
                           final url = await showPrompt(context, translations.externalUrl, hint: translations.externalUrlHint);
                           if (url != null) {
-                            Provider.of<PreferencesStore>(context).setExternalUrl(url);
+                            Provider.of<PreferencesStore>(context, listen: false).setExternalUrl(url);
                           }
                         },
                         child: Text(

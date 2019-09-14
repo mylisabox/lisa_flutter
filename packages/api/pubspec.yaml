@@ -9,5 +9,4 @@ dependencies:
 dev_dependencies:
     jaguar_retrofit_gen: ^2.8.10
     jaguar_serializer_cli: ^2.2.8
-    build_runner: ^1.6.7
-
+    build_runner: ^1.6.5

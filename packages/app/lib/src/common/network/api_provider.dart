@@ -2,11 +2,14 @@ import 'dart:async';
 
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:jaguar_retrofit/jaguar_retrofit.dart';
 import 'package:lisa_flutter/src/common/config.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/network/local_server_provider.dart';
+import 'package:lisa_flutter/src/common/utils/page_route_builders.dart';
+import 'package:lisa_flutter/src/login/presentation/login_screen.dart';
 import 'package:lisa_flutter/src/preferences/preferences_provider.dart';
 import 'package:lisa_server_sdk/api.dart';
 import 'package:logging/logging.dart';
@@ -125,36 +128,44 @@ class LogInterceptor extends Interceptor {
 }
 
 class LogoutInterceptor extends Interceptor {
-  LogoutInterceptor();
+  final GlobalKey<NavigatorState> navigatorKey;
+
+  LogoutInterceptor(this.navigatorKey);
 
   @override
   FutureOr after(StringResponse response) {
     //backend tell us our token is not good anymore, let's logout in that case
     if (response.statusCode == 401) {
       BackendApiProvider().api.setApiKey('Authorization', null);
+      navigatorKey.currentState.pushAndRemoveUntil(
+          FromBottomPageRoute(
+            builder: (_) => LoginScreen(),
+            settings: RouteSettings(name: LoginScreen.route),
+          ),
+          (route) => true);
     }
 
     return response;
   }
 }
 
-List<Interceptor> getInterceptors() =>
-    kNetworkDebug ? [HostInterceptor(), LogInterceptor(), LogoutInterceptor()] : <Interceptor>[HostInterceptor(), LogoutInterceptor()];
+List<Interceptor> getInterceptors({GlobalKey<NavigatorState> navigatorKey}) =>
+    kNetworkDebug ? [HostInterceptor(), LogInterceptor(), LogoutInterceptor(navigatorKey)] : <Interceptor>[HostInterceptor(), LogoutInterceptor(navigatorKey)];
 
 class BackendApiProvider {
   static const connectionTimeout = 30;
   static const httpTimeout = Duration(minutes: 2);
-  final JaguarApiGen api;
+  final LisaServerSdk api;
   final List<Interceptor> interceptors;
 
   factory BackendApiProvider() => _singleton;
 
-  BackendApiProvider._(this.interceptors, String baseUrl) : api = JaguarApiGen(baseUrl: baseUrl, interceptors: interceptors, timeout: httpTimeout);
+  BackendApiProvider._(this.interceptors, String baseUrl) : api = LisaServerSdk(baseUrl: baseUrl, interceptors: interceptors, timeout: httpTimeout);
 
   // ignore: prefer_constructors_over_static_methods
-  static BackendApiProvider setup({String baseUrl, List<Interceptor> interceptors}) {
+  static BackendApiProvider setup(GlobalKey<NavigatorState> navigatorKey, {String baseUrl, List<Interceptor> interceptors}) {
     baseUrl ??= Config.kUrl;
-    interceptors ??= getInterceptors();
+    interceptors ??= getInterceptors(navigatorKey: navigatorKey);
 
     globalClient = http.Client();
 

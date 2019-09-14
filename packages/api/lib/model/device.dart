@@ -1,51 +1,52 @@
 import 'package:jaguar_serializer/jaguar_serializer.dart';
 
+
 part 'device.jser.dart';
 
 class Device {
-
-  @Alias('id')
+  
+  @Alias('id', isNullable: false,  )
   final int id;
-
-  @Alias('roomId')
+  
+  @Alias('roomId', isNullable: false,  )
   final int roomId;
-
-  @Alias('name')
+  
+  @Alias('name', isNullable: false,  )
   final String name;
-
-  @Alias('driver')
+  
+  @Alias('driver', isNullable: false,  )
   final String driver;
-
-  @Alias('pluginName')
+  
+  @Alias('pluginName', isNullable: false,  )
   final String pluginName;
-
-  @Alias('type')
+  
+  @Alias('type', isNullable: false,  )
   final String type;
-
-  @Alias('template')
+  
+  @Alias('template', isNullable: false,  )
   final Map<String, Object> template;
-
-  @Alias('data')
+  
+  @Alias('data', isNullable: false,  )
   final Map<String, Object> data;
-
-  @Alias('favorite')
+  
+  @Alias('favorite', isNullable: false,  )
   final bool favorite;
-
+  
 
   Device(
-
+      
 
 {
-
-     this.id = null,   this.roomId = null,
-
-     this.name = null,
-     this.driver = null,
-     this.pluginName = null,
-     this.type = null,   this.template = const {},
-     this.data = const {},
-
-     this.favorite = null
+    
+     this.id = null,   this.roomId = null,  
+    
+     this.name = null,  
+     this.driver = null,  
+     this.pluginName = null,  
+     this.type = null,   this.template = const {},  
+     this.data = const {},  
+    
+     this.favorite = null 
     }
   );
 

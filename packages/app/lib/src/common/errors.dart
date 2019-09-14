@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:io';
-
 import 'package:flutter/widgets.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/l10n/error_localizations.dart';
@@ -14,7 +12,7 @@ ErrorResultException handleError(error, stackTrace) {
     return error;
   } else {
     var result = ErrorResultException(ErrorResult.internal);
-    if (error is TimeoutException || error is SocketException) {
+    if (error is TimeoutException /* || error is SocketException*/) {
       result = ErrorResultException(ErrorResult.noNetwork);
     }
     kDebugLogger.severe('handleError: Future error from $error forwarded to $result', error, stackTrace);

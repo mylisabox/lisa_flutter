@@ -15,7 +15,7 @@ class LoginStore = _LoginStore with _$LoginStore;
 
 abstract class _LoginStore with Store {
   static const keyLastEmail = 'last_email';
-  final JaguarApiGen _api;
+  final LisaServerSdk _api;
   final Preferences _preferences;
   final Validator _validator;
 
@@ -34,7 +34,7 @@ abstract class _LoginStore with Store {
   ErrorResult passwordError;
 
   _LoginStore({
-    JaguarApiGen api,
+    LisaServerSdk api,
     Preferences prefs,
     Validator validator,
   })  : _api = api ?? BackendApiProvider().api,

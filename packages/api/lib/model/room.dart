@@ -5,10 +5,10 @@ part 'room.jser.dart';
 
 class Room {
   
-  @Alias('id')
+  @Alias('id', isNullable: false,  )
   final int id;
   
-  @Alias('name')
+  @Alias('name', isNullable: false,  )
   final String name;
   
 

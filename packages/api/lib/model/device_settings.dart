@@ -1,43 +1,44 @@
 import 'package:jaguar_serializer/jaguar_serializer.dart';
 
+
 part 'device_settings.jser.dart';
 
 class DeviceSettings {
-
-  @Alias('name')
+  
+  @Alias('name', isNullable: false,  )
   final String name;
-
-  @Alias('driver')
+  
+  @Alias('driver', isNullable: false,  )
   final String driver;
-
-  @Alias('image')
+  
+  @Alias('image', isNullable: false,  )
   final String image;
-
-  @Alias('pairing')
+  
+  @Alias('pairing', isNullable: false,  )
   final String pairing;
-
-  @Alias('pluginName')
+  
+  @Alias('pluginName', isNullable: false,  )
   final String pluginName;
-
-  @Alias('description')
+  
+  @Alias('description', isNullable: false,  )
   final String description;
-
-  @Alias('settings')
+  
+  @Alias('settings', isNullable: false,  )
   final List<Map<String, Object>> settings;
-
+  
 
   DeviceSettings(
-
+      
 
 {
-     this.name = null,
-     this.driver = null,
-     this.image = null,
-     this.pairing = null,
-     this.pluginName = null,
-     this.description = null,
-     this.settings = const []
-
+     this.name = null,  
+     this.driver = null,  
+     this.image = null,  
+     this.pairing = null,  
+     this.pluginName = null,  
+     this.description = null,  
+     this.settings = const [] 
+    
     }
   );
 

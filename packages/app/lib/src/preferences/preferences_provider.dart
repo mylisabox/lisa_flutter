@@ -1,6 +1,6 @@
 import 'package:crypted_preferences/crypted_preferences.dart';
 import 'package:flutter/foundation.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:lisa_flutter/src/common/utils/directory_provider/directory_provider.dart';
 
 class PreferencesProvider {
   static const keyExternalUrl = 'externalUrl';
@@ -18,12 +18,7 @@ class PreferencesProvider {
   Preferences get prefs => _prefs;
 
   Future<void> setup() async {
-    String appDocPath = '.';
-    if (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.android) {
-      final appDocDir = await getApplicationDocumentsDirectory();
-      appDocPath = appDocDir.path;
-    }
-
+    String appDocPath = await kGetMainDirectory();
     _prefs = await Preferences.preferences(path: '$appDocPath/prefs.json');
   }
 }

@@ -87,7 +87,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **roomId** | **int**|  | [default to null]
- **requestBody** | [**List&lt;int&gt;**](List.md)|  | [optional] 
+ **requestBody** | [**List&lt;int&gt;**](int.md)|  | [optional] 
 
 ### Return type
 

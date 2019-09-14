@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lisa_flutter/src/common/stores/user_store.dart';
@@ -20,28 +22,38 @@ class AvatarFieldWeb extends AvatarField {
   Widget build(BuildContext context) {
     final userStore = Provider.of<UserStore>(context);
     ImageProvider avatarImage = userStore.avatar == null ? null : NetworkImage(userStore.avatar);
+    final uploadElement = useMemoized(() => FileUploadInputElement());
+    uploadElement.id = 'profileAvatar';
+    uploadElement.className = 'profileAvatar';
+    uploadElement.setAttribute('style', '''
+      height: 60px;
+      width: 60px;
+      opacity: 0;''');
 
     useEffect(() {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        print('TEST FILE UPLOAD');
-        /*
-        final _upload = FileUploadInputElement();
-        _upload.onChange.listen((e) {
-          //File file = (e.target as dynamic).files[0];
-          //if (file != null) {}
-        });
-        if (ui.platformViewRegistry.registerViewFactory('btn-upload', (int viewId) => _upload)) {
-          print('TEST FILE UPLOAD REGISTERED');
-        } else {
-          print('TEST FILE UPLOAD NOT REGISTERED');
-        }*/
+      uploadElement.onChange.listen((e) {
+        File file = (e.target as dynamic).files[0];
+        if (file != null) {
+          final reader = FileReader();
+          reader.onLoad.listen((e) {
+            print(reader.result);
+            onFileSelected(reader.result, file.name);
+          });
+          reader.onError.listen((e) {
+            print(e);
+          });
+          reader.readAsArrayBuffer(file);
+        }
+      });
+      ui.platformViewRegistry.registerViewFactory('btn-upload', (int viewId) {
+        return uploadElement;
       });
       return null;
-    }, const []);
+    }, [uploadElement]);
 
     return CircleAvatar(
       radius: 30,
-      backgroundColor: Colors.red,
+      backgroundColor: Theme.of(context).primaryColor,
       backgroundImage: avatarImage,
       child: Material(
         color: Colors.transparent,

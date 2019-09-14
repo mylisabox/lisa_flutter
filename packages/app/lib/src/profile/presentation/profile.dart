@@ -60,7 +60,7 @@ class _ProfileFormController {
   });
 
   Future<void> save(BuildContext context) {
-    final userStore = Provider.of<UserStore>(context);
+    final userStore = Provider.of<UserStore>(context, listen: false);
     return userStore.updateUser(
       email: email.text,
       firstName: firstName.text.isEmpty ? null : firstName.text,

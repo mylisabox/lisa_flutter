@@ -26,6 +26,12 @@ class CommonLocalizations {
 
   String get appTitle => Intl.message('L.I.S.A.', name: 'appTitle', desc: 'Action bar title on main screen.');
 
+  String get rename => Intl.message('Rename', name: 'rename', desc: 'Rename action.');
+
+  String get renaming => Intl.message('Renaming...', name: 'renaming', desc: 'Rename action.');
+
+  String get delete => Intl.message('Delete', name: 'delete', desc: 'Delete action.');
+
   String get finished => Intl.message('Finished', name: 'finished', desc: 'Applied to buttons.');
 
   String get addDevice => Intl.message('Add new device...', name: 'addDevice', desc: 'Add device popup title.');
@@ -53,6 +59,8 @@ class CommonLocalizations {
   String get continueButton => Intl.message('Continue', name: 'continueButton', desc: 'Applied to buttons.');
 
   String get emptyList => Intl.message('Nothing to show.', name: 'emptyList', desc: 'Displayed when a list is empty and nothing is to display');
+
+  String get selectAll => Intl.message('Select all', name: 'selectAll', desc: 'Select all in checkbox lists');
 
   String get pleaseWait => Intl.message('Please wait.', name: 'pleaseWait', desc: 'Something\'s going on!');
 
@@ -150,6 +158,9 @@ class CommonLocalizations {
   String get sceneAddSentence => Intl.message('Add sentence', name: 'sceneAddSentence');
   String get sceneAddResponse => Intl.message('Add response', name: 'sceneAddResponse');
   String get sceneAddCommand => Intl.message('Add command', name: 'sceneAddCommand');
+  String get deleteConfirm => Intl.message('Are you sure you want to delete this item ?', name: 'deleteConfirm');
+  String deleteItem(String name) => Intl.message('Delete $name', args: [name], name: 'deleteItem');
+  String get selectRoom => Intl.message('Select room', name: 'selectRoom');
 }
 
 class CommonLocalizationsDelegate extends LocalizationsDelegate<CommonLocalizations> {

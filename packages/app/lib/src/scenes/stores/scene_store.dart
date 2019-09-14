@@ -21,13 +21,13 @@ abstract class _SceneStore with Store {
   String name = '';
 
   @observable
-  List<String> sentences = [];
+  ObservableList<String> sentences = ObservableList();
 
   @observable
-  List<String> responses = [];
+  ObservableList<String> responses = ObservableList();
 
   @observable
-  List<String> commands = [];
+  ObservableList<String> commands = ObservableList();
 
   @computed
   bool get canSave => commands.isNotEmpty && responses.isNotEmpty && sentences.isNotEmpty && name.isNotEmpty;
@@ -44,45 +44,10 @@ abstract class _SceneStore with Store {
     _scene = scene;
     if (scene != null) {
       name = scene.displayName;
-      commands = scene.data.commands;
-      sentences = scene.data.sentences;
-      responses = scene.data.responses;
+      commands = ObservableList.of(scene.data.commands);
+      sentences = ObservableList.of(scene.data.sentences);
+      responses = ObservableList.of(scene.data.responses);
     }
-  }
-
-  @action
-  void setName(String name) {
-    this.name = name;
-  }
-
-  @action
-  void addCommand(String command) {
-    commands = commands..add(command);
-  }
-
-  @action
-  void removeCommand(int index) {
-    commands = commands..removeAt(index);
-  }
-
-  @action
-  void addResponse(String response) {
-    responses = responses..add(response);
-  }
-
-  @action
-  void removeResponse(int index) {
-    responses = responses..removeAt(index);
-  }
-
-  @action
-  void addSentence(String sentence) {
-    sentences = sentences..add(sentence);
-  }
-
-  @action
-  void removeSentence(int index) {
-    sentences = sentences..removeAt(index);
   }
 
   @action

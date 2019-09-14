@@ -14,6 +14,7 @@ import 'package:lisa_flutter/src/common/presentation/speech_button.dart';
 import 'package:lisa_flutter/src/common/stores/speech_store.dart';
 import 'package:lisa_flutter/src/common/stores/user_store.dart';
 import 'package:lisa_flutter/src/common/utils/logging.dart';
+import 'package:lisa_flutter/src/common/utils/platform_detector/platform_detector.dart';
 import 'package:lisa_flutter/src/config/routes.dart';
 import 'package:lisa_flutter/src/drawer/presentation/drawer.dart';
 import 'package:lisa_flutter/src/drawer/stores/drawer_store.dart';
@@ -26,18 +27,22 @@ import 'package:toast/toast.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if (true || !kIsMobile()) {
+  if (!kIsMobile()) {
     platform.debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia; //FIXME remove when desktop/web are detected and supported
   }
   await PreferencesProvider().setup();
-  BackendApiProvider.setup();
+  final navigatorKey = GlobalKey<NavigatorState>();
+  BackendApiProvider.setup(navigatorKey);
   initLogger();
 
-  runApp(MyApp());
+  runApp(MyApp(navigatorKey: navigatorKey));
 }
 
 class MyApp extends HookWidget {
   static const _primaryColor = Color(0xff1bbc9b);
+  final GlobalKey<NavigatorState> navigatorKey;
+
+  MyApp({this.navigatorKey});
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +91,7 @@ class MyApp extends HookWidget {
               accentColorBrightness: Brightness.dark,
               buttonColor: _primaryColor,
               primaryColor: _primaryColor,
-              primaryColorLight: _primaryColor,
+              primaryColorLight: _primaryColor.withOpacity(0.2),
               primaryColorDark: _primaryColor,
               accentColor: _primaryColor,
               cursorColor: _primaryColor,
@@ -95,6 +100,7 @@ class MyApp extends HookWidget {
               textSelectionHandleColor: _primaryColor,
             ),
             initialRoute: SplashScreen.route,
+            navigatorKey: navigatorKey,
             onGenerateRoute: Router().onGenerateRoute,
           );
         },

@@ -5,7 +5,6 @@ import 'package:jaguar_mimetype/jaguar_mimetype.dart';
 import 'dart:async';
 
 import 'package:lisa_server_sdk/model/plugin.dart';
-import 'package:lisa_server_sdk/model/pairing_response.dart';
 
 part 'plugin_api.jretro.dart';
 
@@ -21,7 +20,7 @@ class PluginApi extends ApiClient with _$PluginApiClient {
     ///
     /// 
     @PostReq(path: "/api/v1/plugin/:pluginName/drivers/:driver/pairing", metadata: {"auth": [ {"type": "apiKey", "name": "Bearer", "keyName": "Authorization", "where": "header" }]})
-    Future<PairingResponse> pairing(
+    Future<Map<String, Object>> pairing(
             @PathParam("pluginName") String pluginName, 
             @PathParam("driver") String driver
             ,

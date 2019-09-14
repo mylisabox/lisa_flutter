@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lisa_flutter/main.dart';
 import 'package:lisa_flutter/src/common/stores/user_store.dart';
+import 'package:lisa_flutter/src/common/utils/page_route_builders.dart';
 import 'package:lisa_flutter/src/login/presentation/login_screen.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
@@ -24,9 +25,9 @@ class SplashScreen extends HookWidget {
         endAnimation: 'finished',
         onSuccess: (data) {
           if (userStore.user == null) {
-            Navigator.of(context).pushReplacementNamed(LoginScreen.route);
+            Navigator.of(context).pushReplacement(FadePageRoute(builder: (_) => LoginScreen(), settings: RouteSettings(name: LoginScreen.route)));
           } else {
-            Navigator.of(context).pushReplacementNamed(MyHomePage.route);
+            Navigator.of(context).pushReplacement(FadePageRoute(builder: (_) => MyHomePage(), settings: RouteSettings(name: MyHomePage.route)));
           }
         },
         until: () async {
@@ -34,7 +35,7 @@ class SplashScreen extends HookWidget {
         },
         onError: (error, stacktrace) {
           _logger.severe('Can\t init the app because  of $error', error, stacktrace);
-          Navigator.of(context).pushReplacementNamed(LoginScreen.route);
+          Navigator.of(context).pushReplacement(FadePageRoute(builder: (_) => LoginScreen(), settings: RouteSettings(name: LoginScreen.route)));
         },
       ),
     );

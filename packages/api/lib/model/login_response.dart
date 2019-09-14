@@ -7,10 +7,10 @@ part 'login_response.jser.dart';
 
 class LoginResponse {
   
-  @Alias('token')
+  @Alias('token', isNullable: false,  )
   final String token;
   
-  @Alias('user')
+  @Alias('user', isNullable: false,  )
   final User user;
   
 

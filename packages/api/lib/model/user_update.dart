@@ -1,41 +1,50 @@
 import 'package:jaguar_serializer/jaguar_serializer.dart';
 
+
 part 'user_update.jser.dart';
 
 class UserUpdate {
-  @Alias('id')
+  
+  @Alias('id', isNullable: false,  )
   final int id;
-
-  @Alias('email')
+  
+  @Alias('email', isNullable: false,  )
   final String email;
-
-  @Alias('firstname')
+  
+  @Alias('firstname', isNullable: false,  )
   final String firstname;
-
-  @Alias('lang')
+  
+  @Alias('lang', isNullable: false,  )
   final String lang;
-
-  @Alias('lastname')
+  
+  @Alias('lastname', isNullable: false,  )
   final String lastname;
-
-  @Alias('mobile')
+  
+  @Alias('mobile', isNullable: false,  )
   final String mobile;
-
-  @Alias('password')
+  
+  @Alias('password', isNullable: false,  )
   final String password;
-
-  @Alias('avatar')
+  
+  @Alias('avatar', isNullable: false,  )
   final List<int> avatar;
+  
 
   UserUpdate(
-      {this.id = null,
-      this.email = null,
-      this.firstname = null,
-      this.lang = null,
-      this.lastname = null,
-      this.mobile = null,
-      this.password = null,
-      this.avatar = null});
+      
+
+{
+     this.id = null,  
+     this.email = null,  
+     this.firstname = null,  
+     this.lang = null,  
+     this.lastname = null,  
+     this.mobile = null,  
+     this.password = null,  
+     this.avatar = null 
+    
+    }
+  );
 
   @override
   String toString() {
@@ -44,4 +53,7 @@ class UserUpdate {
 }
 
 @GenSerializer(nullableFields: false)
-class UserUpdateSerializer extends Serializer<UserUpdate> with _$UserUpdateSerializer {}
+class UserUpdateSerializer extends Serializer<UserUpdate> with _$UserUpdateSerializer {
+
+}
+

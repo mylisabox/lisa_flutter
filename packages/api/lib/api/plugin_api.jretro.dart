@@ -8,7 +8,7 @@ part of 'plugin_api.dart';
 
 abstract class _$PluginApiClient implements ApiClient {
   final String basePath = "";
-  Future<PairingResponse> pairing(
+  Future<Map<String, Object>> pairing(
       String pluginName, String driver, Map<String, Object> requestBody) async {
     var req = base.post
         .metadata({
@@ -26,7 +26,9 @@ abstract class _$PluginApiClient implements ApiClient {
         .pathParams("pluginName", pluginName)
         .pathParams("driver", driver)
         .json(jsonConverter.to(requestBody));
-    return req.go(throwOnErr: true).map(decodeOne);
+    return req
+        .go()
+        .map((r) => jsonConverter.decode(r.body).cast<String, int>());
   }
 
   Future<List<Plugin>> searchPlugins(String query, bool activated) async {

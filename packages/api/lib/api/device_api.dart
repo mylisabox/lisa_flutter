@@ -4,7 +4,7 @@ import 'package:jaguar_serializer/jaguar_serializer.dart';
 import 'package:jaguar_mimetype/jaguar_mimetype.dart';
 import 'dart:async';
 
-import 'package:lisa_server_sdk/model/update_device_name_request.dart';
+import 'package:lisa_server_sdk/model/update_device_info_request.dart';
 import 'package:lisa_server_sdk/model/device.dart';
 
 part 'device_api.jretro.dart';
@@ -34,16 +34,16 @@ class DeviceApi extends ApiClient with _$DeviceApiClient {
     ///
     /// 
     @PatchReq(path: "/api/v1/device/:deviceId", metadata: {"auth": [ {"type": "apiKey", "name": "Bearer", "keyName": "Authorization", "where": "header" }]})
-    Future<void> saveDeviceName(
+    Future<void> saveDeviceInfo(
             @PathParam("deviceId") int deviceId
             ,
-             @AsJson() UpdateDeviceNameRequest updateDeviceNameRequest
+             @AsJson() UpdateDeviceInfoRequest updateDeviceInfoRequest
         ) {
-        return super.saveDeviceName(
+        return super.saveDeviceInfo(
         deviceId
 
         ,
-        updateDeviceNameRequest
+        updateDeviceInfoRequest
         ).timeout(timeout);
     }
 
@@ -60,6 +60,25 @@ class DeviceApi extends ApiClient with _$DeviceApiClient {
         return super.updateDevice(
         deviceId, 
         pluginName
+
+        ,
+        requestBody
+        ).timeout(timeout);
+    }
+
+    /// 
+    ///
+    /// 
+    @PostReq(path: "/api/v1/devices/group/:roomId/:groupId", metadata: {"auth": [ {"type": "apiKey", "name": "Bearer", "keyName": "Authorization", "where": "header" }]})
+    Future<void> updateGroup(
+            @PathParam("roomId") int roomId, 
+            @PathParam("groupId") int groupId
+            ,
+             @AsJson() Map<String, Object> requestBody
+        ) {
+        return super.updateGroup(
+        roomId, 
+        groupId
 
         ,
         requestBody

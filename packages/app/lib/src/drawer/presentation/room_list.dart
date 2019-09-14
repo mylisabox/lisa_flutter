@@ -5,11 +5,13 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
+import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
 import 'package:lisa_flutter/src/common/presentation/proxy_scaffold.dart';
 import 'package:lisa_flutter/src/common/utils/hooks.dart';
 import 'package:lisa_flutter/src/drawer/presentation/drawer.dart';
 import 'package:lisa_flutter/src/drawer/stores/drawer_store.dart';
 import 'package:lisa_flutter/src/rooms/presentation/room_dashboard.dart';
+import 'package:lisa_server_sdk/model/room.dart';
 import 'package:provider/provider.dart';
 
 class RoomList extends HookWidget {
@@ -63,22 +65,7 @@ class RoomList extends HookWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      for (var room in drawerStore.rooms) ...[
-                        DrawerEntry(
-                          text: room.name,
-                          onTap: () {
-                            final route = '${RoomDashboard.route}/${room.id}';
-                            if (drawerStore.currentSelectedRoute != route) {
-                              Provider.of<GlobalKey<NavigatorState>>(context).currentState.pushNamed(RoomDashboard.route, arguments: room);
-                              _closeDrawer(context);
-                              drawerStore.selectRoute(route);
-                            }
-                          },
-                        ),
-                        Divider(
-                          height: 1,
-                        ),
-                      ],
+                      for (var room in drawerStore.rooms) ...[_RoomListEntry(room: room)],
                       Padding(
                         padding: const EdgeInsets.only(left: kNormalPadding),
                         child: HookBuilder(
@@ -120,10 +107,178 @@ class RoomList extends HookWidget {
       },
     );
   }
+}
+
+class _RoomListEntry extends HookWidget {
+  final Room room;
+
+  const _RoomListEntry({Key key, this.room}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final roomWidgetState = useState(_RoomState.idle);
+    final roomWidget = useMemoized(
+        () => roomWidgetState.value == _RoomState.idle
+            ? _RoomIdle(room: room)
+            : _RoomEdition(
+                room: room,
+              ),
+        [room, roomWidgetState.value]);
+
+    return ListenableProvider.value(
+      value: roomWidgetState,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          AnimatedSwitcher(
+            duration: Duration(milliseconds: 500),
+            child: roomWidget,
+          ),
+          Divider(
+            height: 1,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _RoomIdle extends StatelessWidget {
+  final Room room;
+
+  const _RoomIdle({Key key, this.room}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final translations = CommonLocalizations.of(context);
+    final drawerStore = Provider.of<DrawerStore>(context);
+    return InkWell(
+      child: Container(
+        height: DrawerEntry.height,
+        child: Row(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: kHugePadding),
+                child: Text(
+                  room.name.toUpperCase(),
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                ),
+              ),
+            ),
+            PopupMenuButton<_RoomAction>(
+              onSelected: (action) async {
+                if (action == _RoomAction.delete) {
+                  final confirm = await showConfirm(context, translations.deleteItem(room.name), translations.deleteConfirm);
+                  if (confirm) {
+                    showLoadingDialog(context, (_) => Text(translations.deleting), () => Provider.of<DrawerStore>(context, listen: false).deleteRoom(room.id));
+                  }
+                } else if (action == _RoomAction.rename) {
+                  Provider.of<ValueNotifier<_RoomState>>(context, listen: false).value = _RoomState.edition;
+                }
+              },
+              itemBuilder: (_) => [
+                PopupMenuItem(
+                  child: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: kNormalPadding),
+                        child: Icon(Icons.edit, semanticLabel: translations.rename),
+                      ),
+                      Expanded(child: Text(translations.rename)),
+                    ],
+                  ),
+                  value: _RoomAction.rename,
+                ),
+                PopupMenuDivider(),
+                PopupMenuItem(
+                  child: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: kNormalPadding),
+                        child: Icon(Icons.delete, semanticLabel: translations.delete),
+                      ),
+                      Expanded(child: Text(translations.delete)),
+                    ],
+                  ),
+                  value: _RoomAction.delete,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      onTap: () {
+        final route = '${RoomDashboard.route}/${room.id}';
+        if (drawerStore.currentSelectedRoute != route) {
+          Provider.of<GlobalKey<NavigatorState>>(context, listen: false).currentState.pushNamed(RoomDashboard.route, arguments: room);
+          _closeDrawer(context);
+          drawerStore.selectRoute(route);
+        }
+      },
+    );
+  }
 
   void _closeDrawer(BuildContext context) {
     if (ProxyScaffold.isMobileView(context)) {
       Navigator.of(context).pop();
     }
   }
+}
+
+class _RoomEdition extends HookWidget {
+  final Room room;
+
+  const _RoomEdition({Key key, this.room}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final translations = CommonLocalizations.of(context);
+    final controller = useTextEditingController(text: room.name);
+    final drawerStore = Provider.of<DrawerStore>(context);
+    return Container(
+      padding: EdgeInsets.only(left: kSmallPadding),
+      height: DrawerEntry.height,
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: TextField(
+              controller: controller,
+              autofocus: true,
+              decoration: InputDecoration(
+                suffixIcon: IconButton(
+                  tooltip: translations.continueButton,
+                  icon: Icon(Icons.send, semanticLabel: translations.continueButton),
+                  onPressed: () {
+                    Provider.of<ValueNotifier<_RoomState>>(context, listen: false).value = _RoomState.idle;
+                    drawerStore.renameRoom(room, controller.text);
+                  },
+                ),
+              ),
+            ),
+          ),
+          IconButton(
+            tooltip: translations.cancel,
+            icon: Icon(
+              Icons.cancel,
+              semanticLabel: translations.cancel,
+            ),
+            onPressed: () {
+              Provider.of<ValueNotifier<_RoomState>>(context, listen: false).value = _RoomState.idle;
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+enum _RoomAction {
+  rename,
+  delete,
+}
+
+enum _RoomState {
+  idle,
+  edition,
 }

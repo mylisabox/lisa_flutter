@@ -7,6 +7,7 @@ import 'package:lisa_server_sdk/api/device_api.dart';
 import 'package:lisa_server_sdk/api/favorite_api.dart';
 import 'package:lisa_server_sdk/model/dashboard.dart';
 import 'package:lisa_server_sdk/model/device.dart';
+import 'package:lisa_server_sdk/model/update_device_info_request.dart';
 import 'package:logging/logging.dart';
 import 'package:mobx/mobx.dart';
 
@@ -29,7 +30,7 @@ abstract class _DeviceStore with Store {
         _dashboardApi = dashboardApi ?? BackendApiProvider().api.getDashboardApi();
 
   @observable
-  List<Device> devices;
+  ObservableList<Device> devices;
 
   @observable
   ErrorResultException error;
@@ -41,27 +42,44 @@ abstract class _DeviceStore with Store {
   Future loadDevices({int roomId, List<Device> devices}) async {
     _roomId = roomId;
     if (devices != null) {
-      this.devices = devices;
+      this.devices = ObservableList.of(devices);
       return;
     }
 
     try {
       _dashboard = await _dashboardApi.getDashboard(roomId).catchError(handleCaughtError);
-      this.devices = _dashboard.widgets;
+      this.devices = ObservableList.of(_dashboard.widgets);
+      error = null;
     } on ErrorResultException catch (ex) {
       error = ex;
     }
   }
 
   @action
-  Future deviceChange(String key, dynamic value, {associatedData}) async {
+  Future<void> saveDevice(Device device, {String name, int roomId}) async {
+    await _deviceApi.saveDeviceInfo(device.id, UpdateDeviceInfoRequest(name: name, roomId: roomId)).catchError(handleCaughtError);
+    await loadDevices(roomId: _roomId);
+  }
+
+  @action
+  Future<void> deleteDevice(int id) async {
+    await _deviceApi.deleteDevice(id);
+    devices.remove(devices.firstWhere((item) => item.id == id));
+  }
+
+  @action
+  Future deviceChange(String key, dynamic value, {dynamic associatedData}) async {
     final device = associatedData as Device;
-    await _deviceApi.updateDevice(device.id, device.pluginName, {'key': key, 'value': value});
+    if (device.pluginName == null) {
+      await _deviceApi.updateGroup(_roomId, device.id, {'key': key, 'value': value});
+    } else {
+      await _deviceApi.updateDevice(device.id, device.pluginName, {'key': key, 'value': value});
+    }
   }
 
   @action
   Future toggleFavorite(int deviceId, bool isFavorite) async {
-    if (isFavorite) {
+    if (isFavorite ?? false) {
       await _favoriteApi.deleteFromFavorite(deviceId);
     } else {
       await _favoriteApi.addToFavorite(deviceId);
