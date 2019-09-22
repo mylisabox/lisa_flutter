@@ -22,6 +22,5 @@ jobs:
         cd packages/app
         flutter pub get
         flutter pub pub run build_runner build
-        flutter build ios
-        flutter build apk
+        flutter test
         flutter build macos
