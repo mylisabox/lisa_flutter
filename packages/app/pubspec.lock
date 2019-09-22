@@ -236,7 +236,7 @@ packages:
       name: flutter_colorpicker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.5"
+    version: "0.2.6"
   flutter_crashlytics:
     dependency: "direct main"
     description:
@@ -600,38 +600,38 @@ packages:
   remote_color_picker:
     dependency: "direct main"
     description:
-      path: "../../../remote_ui/packages/remote_color_picker"
-      relative: true
-    source: path
-    version: "0.0.1"
+      name: remote_color_picker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
   remote_form:
     dependency: "direct main"
     description:
-      path: "../../../remote_ui/packages/remote_form"
-      relative: true
-    source: path
+      name: remote_form
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "0.0.1"
   remote_image_button:
     dependency: "direct main"
     description:
-      path: "../../../remote_ui/packages/remote_image_button"
-      relative: true
-    source: path
-    version: "0.0.2"
+      name: remote_image_button
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.3"
   remote_ip_camera:
     dependency: "direct main"
     description:
-      path: "../../../remote_ui/packages/remote_ip_camera"
-      relative: true
-    source: path
-    version: "1.0.0"
+      name: remote_ip_camera
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   remote_ui:
     dependency: "direct main"
     description:
-      path: "../../../remote_ui/packages/remote_ui"
-      relative: true
-    source: path
-    version: "0.0.4"
+      name: remote_ui
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.5"
   shelf:
     dependency: transitive
     description:
