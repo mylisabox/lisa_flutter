@@ -17,10 +17,11 @@ jobs:
       with:
         flutter-version: '1.10.x'
         channel: 'dev'
-    - run: |
+    - name: Build
+      run: |
         cd packages/app
         flutter pub get
         flutter pub pub run build_runner build
-        flutter build apk
         flutter build ios
+        flutter build apk
         flutter build macos
