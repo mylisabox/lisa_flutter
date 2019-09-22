@@ -13,10 +13,13 @@ import 'package:mobx/mobx.dart';
 
 part 'device_store.g.dart';
 
+enum _DeviceLoadingMode { orphan, room }
+
 class DeviceStore = _DeviceStore with _$DeviceStore;
 
 abstract class _DeviceStore with Store {
   final _log = Logger('DeviceStore');
+  _DeviceLoadingMode _mode;
   final DeviceApi _deviceApi;
   final FavoriteApi _favoriteApi;
   final DashboardApi _dashboardApi;
@@ -39,16 +42,35 @@ abstract class _DeviceStore with Store {
   int _roomId;
 
   @action
-  Future loadDevices({int roomId, List<Device> devices}) async {
-    _roomId = roomId;
-    if (devices != null) {
-      this.devices = ObservableList.of(devices);
-      return;
-    }
+  Future loadDevices({int roomId}) async {
+    _mode = _DeviceLoadingMode.room;
+    _roomId ??= roomId;
 
     try {
-      _dashboard = await _dashboardApi.getDashboard(roomId).catchError(handleCaughtError);
+      _dashboard = await _dashboardApi.getDashboard(_roomId).catchError(handleCaughtError);
       this.devices = ObservableList.of(_dashboard.widgets);
+      error = null;
+    } on ErrorResultException catch (ex) {
+      error = ex;
+    }
+  }
+
+  @action
+  Future refreshDevices() async {
+    if (_mode == _DeviceLoadingMode.orphan) {
+      await loadOrphans();
+    } else {
+      await loadDevices();
+    }
+  }
+
+  @action
+  Future loadOrphans() async {
+    _mode = _DeviceLoadingMode.orphan;
+
+    try {
+      _dashboard = null;
+      this.devices = ObservableList.of(await _deviceApi.getDevices('null').catchError(handleCaughtError));
       error = null;
     } on ErrorResultException catch (ex) {
       error = ex;
@@ -58,7 +80,7 @@ abstract class _DeviceStore with Store {
   @action
   Future<void> saveDevice(Device device, {String name, int roomId}) async {
     await _deviceApi.saveDeviceInfo(device.id, UpdateDeviceInfoRequest(name: name, roomId: roomId)).catchError(handleCaughtError);
-    await loadDevices(roomId: _roomId);
+    await refreshDevices();
   }
 
   @action

@@ -29,8 +29,8 @@ class Router {
 
   Route onGenerateRoute(RouteSettings settings) {
     if (MyHomePage.route == settings.name) {
-      return MaterialPageRoute(builder: routes[settings.name], settings: settings);
+      return MaterialPageRoute(builder: routes[settings.name], settings: settings.copyWith(isInitialRoute: true));
     }
-    return CupertinoPageRoute(builder: routes[settings.name], settings: settings);
+    return MaterialPageRoute(builder: routes[settings.name], settings: settings);
   }
 }

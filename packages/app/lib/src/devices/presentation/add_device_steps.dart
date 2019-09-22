@@ -4,10 +4,8 @@ class AddDeviceImageStep extends HookWidget with BaseUrlProvider {
   @override
   Widget build(BuildContext context) {
     final store = Provider.of<AddDeviceStore>(context);
-    final translations = CommonLocalizations.of(context);
-
     return Image.network(
-      baseApiUrl + store.currentCustomStep['image'],
+      prefixHostIfNeeded(store.currentCustomStep['image']),
     );
   }
 }

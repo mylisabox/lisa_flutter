@@ -20,6 +20,7 @@ class AvatarFieldWeb extends AvatarField {
 
   @override
   Widget build(BuildContext context) {
+    //TODO test that this stuff is working ^^
     final userStore = Provider.of<UserStore>(context);
     ImageProvider avatarImage = userStore.avatar == null ? null : NetworkImage(userStore.avatar);
     final uploadElement = useMemoized(() => FileUploadInputElement());

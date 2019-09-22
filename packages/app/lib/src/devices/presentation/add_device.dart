@@ -6,6 +6,7 @@ import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
 import 'package:lisa_flutter/src/common/utils/base_url_provider.dart';
 import 'package:lisa_flutter/src/devices/stores/add_device_store.dart';
+import 'package:lisa_flutter/src/devices/stores/device_store.dart';
 import 'package:lisa_server_sdk/model/device_settings.dart';
 import 'package:lisa_server_sdk/model/room.dart';
 import 'package:provider/provider.dart';
@@ -50,7 +51,7 @@ class AddDeviceScreen extends StatelessWidget {
                       FlatButton(
                           onPressed: () {
                             if (store.back()) {
-                              Navigator.of(context).pop();
+                              Navigator.of(context).pop(false);
                             }
                           },
                           child: Text(translations.cancel)),
@@ -60,7 +61,7 @@ class AddDeviceScreen extends StatelessWidget {
                             onPressed: store.canContinue && !store.isLoading
                                 ? () async {
                                     if (await store.next()) {
-                                      Navigator.of(context).pop();
+                                      Navigator.of(context).pop(true);
                                     }
                                   }
                                 : null,
@@ -135,7 +136,7 @@ class AddDeviceDialog extends StatelessWidget {
                 text: translations.cancel,
                 callback: (context) {
                   if (store.back()) {
-                    Navigator.of(context).pop();
+                    Navigator.of(context).pop(false);
                   }
                 },
               ),
@@ -147,7 +148,7 @@ class AddDeviceDialog extends StatelessWidget {
                         final store = Provider.of<AddDeviceStore>(context, listen: false);
                         final isFinish = await store.next();
                         if (isFinish) {
-                          Navigator.of(context).pop();
+                          Navigator.of(context).pop(true);
                         }
                       }
                     : null,
@@ -168,11 +169,18 @@ class AddDeviceFloatingButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-      onPressed: () {
+      onPressed: () async {
+        var needRefresh = false;
         if (DeviceProxy.isTablet(context)) {
-          showPlatformDialog(context, (_) => AddDeviceDialog(room: room));
+          needRefresh = await showPlatformDialog(context, (_) => AddDeviceDialog(room: room), barrierDismissible: false) ?? false;
+          if (needRefresh) {
+            Provider.of<DeviceStore>(context).loadDevices();
+          }
         } else {
-          Navigator.of(context, rootNavigator: true).pushNamed(AddDeviceScreen.route, arguments: room);
+          needRefresh = await Navigator.of(context, rootNavigator: true).pushNamed(AddDeviceScreen.route, arguments: room) ?? false;
+        }
+        if (needRefresh) {
+          Provider.of<DeviceStore>(context).loadDevices();
         }
       },
       child: Icon(Icons.add),

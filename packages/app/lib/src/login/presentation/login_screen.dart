@@ -70,6 +70,9 @@ class LoginScreen extends HookWidget {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
+                      Image.asset(
+                        'assets/images/logo.png',
+                      ),
                       Container(
                         padding: const EdgeInsets.all(kNormalPadding),
                         color: Colors.white.withOpacity(_opacity),

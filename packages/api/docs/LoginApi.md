@@ -11,7 +11,7 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**login**](LoginApi.md#login) | **Post** /api/v1/auth/local | 
 [**logout**](LoginApi.md#logout) | **Get** /api/v1/auth/logout | 
-[**register**](LoginApi.md#register) | **Post** /api/v1/auth/register | 
+[**register**](LoginApi.md#register) | **Post** /api/v1/auth/local/register | 
 
 
 # **login**

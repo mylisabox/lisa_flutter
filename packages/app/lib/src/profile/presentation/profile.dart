@@ -121,10 +121,16 @@ class ProfileScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final profileManager = useProfileManager(context);
+    final translations = CommonLocalizations.of(context);
 
-    return Provider.value(
-      value: profileManager,
-      child: _ProfileWidget(),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(translations.profile),
+      ),
+      body: Provider.value(
+        value: profileManager,
+        child: _ProfileWidget(),
+      ),
     );
   }
 }

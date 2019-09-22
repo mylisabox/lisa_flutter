@@ -1,6 +1,7 @@
 import 'package:lisa_flutter/src/common/errors.dart';
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
 import 'package:lisa_flutter/src/favorites/presentation/favorites.dart';
+import 'package:lisa_flutter/src/preferences/preferences_provider.dart';
 import 'package:lisa_server_sdk/api/room_api.dart';
 import 'package:lisa_server_sdk/model/room.dart';
 import 'package:logging/logging.dart';
@@ -11,10 +12,16 @@ part 'drawer_store.g.dart';
 class DrawerStore = _DrawerStore with _$DrawerStore;
 
 abstract class _DrawerStore with Store {
+  final PreferencesProvider _preferencesProvider;
   final RoomApi _roomApi;
+  static const String _keyRoomListOpened = 'roomListOpened';
   final _log = Logger('DrawerStore');
 
-  _DrawerStore({RoomApi roomApi}) : _roomApi = roomApi ?? BackendApiProvider().api.getRoomApi();
+  _DrawerStore({
+    RoomApi roomApi,
+    PreferencesProvider preferencesProvider,
+  })  : _roomApi = roomApi ?? BackendApiProvider().api.getRoomApi(),
+        _preferencesProvider = preferencesProvider ?? PreferencesProvider();
 
   @observable
   ObservableList<Room> rooms = ObservableList();
@@ -31,12 +38,14 @@ abstract class _DrawerStore with Store {
   @action
   void toggleListOpened() {
     isRoomListOpened = !isRoomListOpened;
+    _preferencesProvider.prefs.setBool(_keyRoomListOpened, isRoomListOpened);
   }
 
   @action
   Future loadRooms({bool force: false}) async {
     if (rooms.isEmpty || force) {
       rooms = ObservableList.of(await _roomApi.getRooms());
+      isRoomListOpened = _preferencesProvider.prefs.getBool(_keyRoomListOpened) ?? false;
     }
   }
 
@@ -65,5 +74,6 @@ abstract class _DrawerStore with Store {
   @action
   void selectRoute(String route) {
     currentSelectedRoute = route;
+    _preferencesProvider.prefs.setString(PreferencesProvider.keyLastRoute, route);
   }
 }

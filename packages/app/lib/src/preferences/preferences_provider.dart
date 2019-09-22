@@ -4,6 +4,7 @@ import 'package:lisa_flutter/src/common/utils/directory_provider/directory_provi
 
 class PreferencesProvider {
   static const keyExternalUrl = 'externalUrl';
+  static const keyLastRoute = 'lastRoute';
   static const keyToken = 'token';
   static PreferencesProvider _singleton;
 

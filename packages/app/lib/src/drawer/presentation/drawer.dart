@@ -10,6 +10,7 @@ import 'package:lisa_flutter/src/drawer/presentation/room_list.dart';
 import 'package:lisa_flutter/src/drawer/stores/drawer_store.dart';
 import 'package:lisa_flutter/src/favorites/presentation/favorites.dart';
 import 'package:lisa_flutter/src/login/presentation/login_screen.dart';
+import 'package:lisa_flutter/src/orphans/presentation/orphans.dart';
 import 'package:lisa_flutter/src/preferences/presentation/preferences.dart';
 import 'package:lisa_flutter/src/preferences/stores/preferences_store.dart';
 import 'package:lisa_flutter/src/scenes/presentation/scenes.dart';
@@ -43,7 +44,6 @@ class AppDrawer extends StatelessWidget {
                 ),
                 Divider(height: 1),
                 RoomList(),
-                /*
                 Divider(height: 1),
                 DrawerEntry(
                   text: translations.menuOrphans,
@@ -55,7 +55,7 @@ class AppDrawer extends StatelessWidget {
                       drawerStore.selectRoute(OrphansWidget.route);
                     }
                   },
-                ),*/
+                ),
                 Divider(height: 1),
                 DrawerEntry(
                   text: translations.menuScenes,

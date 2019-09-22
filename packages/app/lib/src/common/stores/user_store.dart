@@ -35,6 +35,8 @@ abstract class _UserStore with Store {
   @computed
   String get fullName => user?.firstname == null ? user?.email ?? '' : user.firstname;
 
+  String get lastRoute => _preferences.getString(PreferencesProvider.keyLastRoute);
+
   @action
   Future init() async {
     final token = _preferences.getString(PreferencesProvider.keyToken);
@@ -86,12 +88,17 @@ abstract class _UserStore with Store {
           password,
           avatarData == null ? null : MultipartFile(avatarData, filename: basename(avatarName)),
         );
+
     setUser(result);
   }
 
   @action
   Future logout() async {
-    await _api.getLoginApi().logout();
+    try {
+      await _api.getLoginApi().logout();
+    } catch (ex) {
+      //shallow errors as token might be expired
+    }
     await _preferences.remove(PreferencesProvider.keyToken);
     setUser(null);
   }

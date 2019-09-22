@@ -70,7 +70,8 @@ abstract class _LoginStore with Store {
       throw ErrorResultException(emailError ?? passwordError);
     } else {
       try {
-        final response = await _api.getLoginApi().login(LoginRequest(email: email, password: password));
+        final method = mode == AuthMode.login ? _api.getLoginApi().login : _api.getLoginApi().register;
+        final response = await method(LoginRequest(email: email, password: password));
         _preferences.setString(PreferencesProvider.keyToken, response.token);
         _preferences.setString(keyLastEmail, email);
         _api.setApiKey('Bearer', 'JWT ${response.token}');

@@ -80,6 +80,7 @@ Class | Method | HTTP request | Description
 *DashboardApi* | [**getDashboard**](docs//DashboardApi.md#getdashboard) | **Get** /api/v1/dashboard/room/:roomId | 
 *DashboardApi* | [**saveDashboard**](docs//DashboardApi.md#savedashboard) | **Post** /api/v1/dashboard/room/:roomId | 
 *DeviceApi* | [**deleteDevice**](docs//DeviceApi.md#deletedevice) | **Delete** /api/v1/device/:deviceId | 
+*DeviceApi* | [**getDevices**](docs//DeviceApi.md#getdevices) | **Get** /api/v1/device/ | 
 *DeviceApi* | [**saveDeviceInfo**](docs//DeviceApi.md#savedeviceinfo) | **Patch** /api/v1/device/:deviceId | 
 *DeviceApi* | [**updateDevice**](docs//DeviceApi.md#updatedevice) | **Post** /api/v1/plugins/:pluginName/:deviceId | 
 *DeviceApi* | [**updateGroup**](docs//DeviceApi.md#updategroup) | **Post** /api/v1/devices/group/:roomId/:groupId | 
@@ -88,7 +89,7 @@ Class | Method | HTTP request | Description
 *FavoriteApi* | [**getFavorites**](docs//FavoriteApi.md#getfavorites) | **Get** /api/v1/favorite | 
 *LoginApi* | [**login**](docs//LoginApi.md#login) | **Post** /api/v1/auth/local | 
 *LoginApi* | [**logout**](docs//LoginApi.md#logout) | **Get** /api/v1/auth/logout | 
-*LoginApi* | [**register**](docs//LoginApi.md#register) | **Post** /api/v1/auth/register | 
+*LoginApi* | [**register**](docs//LoginApi.md#register) | **Post** /api/v1/auth/local/register | 
 *PluginApi* | [**pairing**](docs//PluginApi.md#pairing) | **Post** /api/v1/plugin/:pluginName/drivers/:driver/pairing | 
 *PluginApi* | [**searchPlugins**](docs//PluginApi.md#searchplugins) | **Get** /api/v1/plugin/search | 
 *RoomApi* | [**addRoom**](docs//RoomApi.md#addroom) | **Post** /api/v1/room | 

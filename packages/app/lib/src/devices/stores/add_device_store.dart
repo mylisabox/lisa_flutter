@@ -107,7 +107,7 @@ abstract class _AddDeviceStore with Store, BaseUrlProvider {
   void _manageSettingsStep(settings) {}
 
   void _manageImageStep(String image) {
-    currentCustomStep['image'] = getPluginImageUrl(selectedPlugin.name, image);
+    currentCustomStep['image'] = getPluginImageUrl(selectedPlugin.id, image);
   }
 
   Future<void> _getDevicesList() async {

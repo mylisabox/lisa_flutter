@@ -32,23 +32,25 @@ void main() async {
   }
   await PreferencesProvider().setup();
   final navigatorKey = GlobalKey<NavigatorState>();
-  BackendApiProvider.setup(navigatorKey);
+  UserStore userStore;
+  BackendApiProvider.setup(navigatorKey, () => userStore);
   initLogger();
+  userStore = UserStore();
 
-  runApp(MyApp(navigatorKey: navigatorKey));
+  runApp(MyApp(navigatorKey: navigatorKey, userStore: userStore));
 }
 
 class MyApp extends HookWidget {
   static const _primaryColor = Color(0xff1bbc9b);
   final GlobalKey<NavigatorState> navigatorKey;
+  final UserStore userStore;
 
-  MyApp({this.navigatorKey});
+  MyApp({this.navigatorKey, this.userStore});
 
   @override
   Widget build(BuildContext context) {
     final prefStore = useMemoized(() => PreferencesStore());
     final drawerStore = useMemoized(() => DrawerStore());
-    final userStore = useMemoized(() => UserStore());
 
     useEffect(() {
       prefStore.init();
@@ -117,6 +119,7 @@ class MyHomePage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final store = useMemoized(() => SpeechStore());
+    final userStore = Provider.of<UserStore>(context);
     return ProxyScaffold(
       floatingActionButton: kIsMobile()
           ? SpeechButton(
@@ -127,7 +130,7 @@ class MyHomePage extends HookWidget {
             )
           : null,
       builderDrawer: (context) => AppDrawer(),
-      initialRoute: FavoritesWidget.route,
+      initialRoute: userStore.lastRoute ?? FavoritesWidget.route,
     );
   }
 }

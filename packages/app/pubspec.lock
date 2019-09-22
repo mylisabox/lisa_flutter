@@ -63,7 +63,7 @@ packages:
       name: build_daemon
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.1.0"
   build_resolvers:
     dependency: transitive
     description:
@@ -77,14 +77,14 @@ packages:
       name: build_runner
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.6.7"
+    version: "1.7.1"
   build_runner_core:
     dependency: transitive
     description:
       name: build_runner_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.9"
+    version: "4.0.0"
   built_collection:
     dependency: transitive
     description:
@@ -262,14 +262,14 @@ packages:
       name: flutter_mjpeg
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.1"
+    version: "1.2.2"
   flutter_mobx:
     dependency: "direct main"
     description:
       name: flutter_mobx
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.2"
+    version: "0.3.3+1"
   flutter_speech:
     dependency: "direct main"
     description:
@@ -477,14 +477,14 @@ packages:
       name: mobx
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.7"
+    version: "0.3.8+1"
   mobx_codegen:
     dependency: "direct dev"
     description:
       name: mobx_codegen
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.8"
+    version: "0.3.9+1"
   multicast_lock:
     dependency: "direct main"
     description:
@@ -575,7 +575,7 @@ packages:
       name: proxy_layout
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.0.1"
   pub_semver:
     dependency: transitive
     description:
@@ -601,6 +601,13 @@ packages:
     dependency: "direct main"
     description:
       path: "../../../remote_ui/packages/remote_color_picker"
+      relative: true
+    source: path
+    version: "0.0.1"
+  remote_form:
+    dependency: "direct main"
+    description:
+      path: "../../../remote_ui/packages/remote_form"
       relative: true
     source: path
     version: "0.0.1"

@@ -264,34 +264,34 @@ Future<T> showAppDialog<T>(BuildContext context, WidgetBuilder title, WidgetBuil
 }
 
 Future<bool> showLoadingDialog(
-  BuildContext context,
+  BuildContext mainContext,
   WidgetBuilder title,
   Future Function() until, {
   void Function(dynamic error, dynamic stack) onError,
   bool barrierDismissible = false,
 }) {
   return showAppDialog<bool>(
-      context,
+      mainContext,
       title,
-      (mainContext) => HookBuilder(
+      (dialogContext) => HookBuilder(
             builder: (context) {
               useEffect(() {
                 until().then((_) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
-                    Navigator.of(mainContext).pop(true);
+                    Navigator.of(dialogContext).pop(true);
                   });
                 }).catchError((err, stack) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
-                    Navigator.of(mainContext).pop(false);
+                    Navigator.of(dialogContext).pop(false);
                     if (onError == null) {
-                      showErrorDialog(context, err, stack);
+                      showErrorDialog(mainContext, err, stack);
                     } else {
                       onError(err, stack);
                     }
                   });
                 });
                 return null;
-              });
+              }, const []);
 
               return Center(child: CircularProgressIndicator());
             },

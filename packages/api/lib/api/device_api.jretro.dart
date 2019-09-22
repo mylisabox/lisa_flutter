@@ -26,6 +26,24 @@ abstract class _$DeviceApiClient implements ApiClient {
     await req.go(throwOnErr: true);
   }
 
+  Future<List<Device>> getDevices(String roomId) async {
+    var req = base.get
+        .metadata({
+          "auth": [
+            {
+              "type": "apiKey",
+              "name": "Bearer",
+              "keyName": "Authorization",
+              "where": "header",
+            }
+          ],
+        })
+        .path(basePath)
+        .path("/api/v1/device/")
+        .query("roomId", roomId);
+    return req.go(throwOnErr: true).map(decodeList);
+  }
+
   Future<void> saveDeviceInfo(
       int deviceId, UpdateDeviceInfoRequest updateDeviceInfoRequest) async {
     var req = base.patch

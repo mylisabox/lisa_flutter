@@ -25,101 +25,89 @@ class Dashboard extends HookWidget {
   static const _widgetWidthSize = 300.0; //min size in DPI for a widget
   static const _widgetWidthUnit = 8; // width unit in grid for a widget 1 = 8
   static const _widgetHeightUnit = 5; // height unit in grid for a widget 1 = 4
-  final List<Device> devices;
   final int roomId;
 
-  const Dashboard({Key key, this.devices, this.roomId})
-      : assert(!(devices != null && roomId != null), 'Can\'t have both roomId and device list'),
-        super(key: key);
+  const Dashboard({Key key, this.roomId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final translations = CommonLocalizations.of(context);
-    final store = useMemoized(() => DeviceStore());
+    final store = Provider.of<DeviceStore>(context);
     final callback = useMemoized(
       () => (String key, value, {associatedData}) => store.deviceChange(key, value, associatedData: associatedData).catchError(
             (err, stack) {
               showErrorDialog(context, err, stack);
             },
           ),
+      [store],
     );
 
-    useEffect(() {
-      store.loadDevices(roomId: roomId, devices: devices).catchError((err, stack) {
-        showErrorDialog(context, err, stack);
-      });
-      return null;
-    }, [store, roomId]);
-
-    return Provider.value(
-      value: store,
-      child: RemoteManagerWidget(
-        parsers: [
-          RemoteColorPickerFactory(),
-          RemoteIpCameraFactory(),
-          RemoteImageButtonFactory(baseUrlProvider: () {
-            final HostInterceptor interceptor = BackendApiProvider().interceptors.first; //get host interceptor
-            return interceptor.host;
-          })
-        ],
-        onChanges: callback,
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return RefreshIndicator(
-              onRefresh: () {
-                return store.loadDevices(roomId: roomId, devices: devices);
-              },
-              child: Observer(
-                builder: (context) {
-                  if (store.error != null) {
-                    return RefreshIndicatorContent(
-                      child: Center(
-                        child: Text(
-                          store.error.cause.twoLiner(context),
-                          style: TextStyle(color: Theme.of(context).errorColor),
-                        ),
+    return RemoteManagerWidget(
+      parsers: [
+        RemoteColorPickerFactory(),
+        RemoteIpCameraFactory(),
+        RemoteImageButtonFactory(baseUrlProvider: () {
+          final HostInterceptor interceptor = BackendApiProvider().interceptors.first; //get host interceptor
+          return interceptor.host;
+        })
+      ],
+      onChanges: callback,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return RefreshIndicator(
+            onRefresh: () {
+              return store.refreshDevices();
+            },
+            child: Observer(
+              builder: (context) {
+                if (store.error != null) {
+                  return RefreshIndicatorContent(
+                    child: Center(
+                      child: Text(
+                        store.error.cause.twoLiner(context),
+                        style: TextStyle(color: Theme.of(context).errorColor),
                       ),
-                    );
-                  }
-
-                  if (store.devices == null) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  if (store.devices.length == 0) {
-                    return RefreshIndicatorContent(
-                      child: Center(child: Text(translations.emptyList)),
-                    );
-                  }
-                  return AnimationLimiter(
-                    child: StaggeredGridView.countBuilder(
-                      crossAxisCount: (constraints.maxWidth / _widgetWidthSize).floor() * _widgetWidthUnit,
-                      itemCount: store.devices.length,
-                      staggeredTileBuilder: (int index) {
-                        final device = store.devices[index];
-                        final int width = device?.template['widgetWidth'] ?? 1;
-                        final int height = device?.template['widgetHeight'] ?? 1;
-                        return StaggeredTile.count(width * _widgetWidthUnit, height * _widgetHeightUnit);
-                      },
-                      mainAxisSpacing: kSmallPadding,
-                      crossAxisSpacing: kSmallPadding,
-                      itemBuilder: (context, index) {
-                        final device = store.devices[index];
-                        return AnimationConfiguration.staggeredList(
-                          position: index,
-                          duration: const Duration(milliseconds: 450),
-                          child: SlideAnimation(
-                            verticalOffset: 70.0,
-                            child: FadeInAnimation(child: _DashboardWidget(device: device)),
-                          ),
-                        );
-                      },
                     ),
                   );
-                },
-              ),
-            );
-          },
-        ),
+                }
+
+                if (store.devices == null) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (store.devices.length == 0) {
+                  return RefreshIndicatorContent(
+                    child: Center(child: Text(translations.emptyList)),
+                  );
+                }
+                return AnimationLimiter(
+                  child: StaggeredGridView.countBuilder(
+                    crossAxisCount: (constraints.maxWidth / _widgetWidthSize).floor() * _widgetWidthUnit,
+                    itemCount: store.devices.length,
+                    staggeredTileBuilder: (int index) {
+                      final device = store.devices[index];
+                      final int width = device?.template['widgetWidth'] ?? 1;
+                      final int height = device?.template['widgetHeight'] ?? 1;
+                      return StaggeredTile.count(width * _widgetWidthUnit, height * _widgetHeightUnit);
+                    },
+                    mainAxisSpacing: kSmallPadding,
+                    crossAxisSpacing: kSmallPadding,
+                    itemBuilder: (context, index) {
+                      final device = store.devices[index];
+                      return AnimationConfiguration.staggeredList(
+                        position: index,
+                        duration: const Duration(milliseconds: 450),
+                        child: SlideAnimation(
+                          verticalOffset: 70.0,
+                          child: FadeInAnimation(child: _DashboardWidget(device: device)),
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+          );
+        },
       ),
     );
   }

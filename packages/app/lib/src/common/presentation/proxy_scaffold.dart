@@ -115,7 +115,7 @@ class ProxyScaffold extends HookWidget {
   AppBar _getAppBar(BuildContext context, String title, bool canPop, GlobalKey<NavigatorState> navigatorKey) {
     final translations = CommonLocalizations.of(context);
     return AppBar(
-      leading: canPop
+      leading: canPop && !isMobileView(context)
           ? IconButton(
               icon: const BackButtonIcon(),
               tooltip: MaterialLocalizations.of(context).backButtonTooltip,

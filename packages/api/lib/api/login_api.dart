@@ -46,7 +46,7 @@ class LoginApi extends ApiClient with _$LoginApiClient {
     /// 
     ///
     /// 
-    @PostReq(path: "/api/v1/auth/register")
+    @PostReq(path: "/api/v1/auth/local/register")
     Future<LoginResponse> register(
             
              @AsJson() LoginRequest loginRequest

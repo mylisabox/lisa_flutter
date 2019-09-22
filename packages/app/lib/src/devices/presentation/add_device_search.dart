@@ -131,7 +131,7 @@ class _PluginDevice extends StatelessWidget with BaseUrlProvider {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Image.network(
-                baseApiUrl + settings.image,
+                prefixHostIfNeeded(settings.image),
                 width: 120,
                 height: 130,
               ),

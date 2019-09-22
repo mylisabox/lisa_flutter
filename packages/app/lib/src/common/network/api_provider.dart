@@ -8,6 +8,7 @@ import 'package:jaguar_retrofit/jaguar_retrofit.dart';
 import 'package:lisa_flutter/src/common/config.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/network/local_server_provider.dart';
+import 'package:lisa_flutter/src/common/stores/user_store.dart';
 import 'package:lisa_flutter/src/common/utils/page_route_builders.dart';
 import 'package:lisa_flutter/src/login/presentation/login_screen.dart';
 import 'package:lisa_flutter/src/preferences/preferences_provider.dart';
@@ -129,14 +130,15 @@ class LogInterceptor extends Interceptor {
 
 class LogoutInterceptor extends Interceptor {
   final GlobalKey<NavigatorState> navigatorKey;
+  final UserStore Function() userStore;
 
-  LogoutInterceptor(this.navigatorKey);
+  LogoutInterceptor(this.navigatorKey, this.userStore);
 
   @override
-  FutureOr after(StringResponse response) {
+  Future after(StringResponse response) async {
     //backend tell us our token is not good anymore, let's logout in that case
-    if (response.statusCode == 401) {
-      BackendApiProvider().api.setApiKey('Authorization', null);
+    if (response.statusCode == 401 && !response.request.url.path.contains('logout')) {
+      await userStore().logout();
       navigatorKey.currentState.pushAndRemoveUntil(
           FromBottomPageRoute(
             builder: (_) => LoginScreen(),
@@ -149,8 +151,9 @@ class LogoutInterceptor extends Interceptor {
   }
 }
 
-List<Interceptor> getInterceptors({GlobalKey<NavigatorState> navigatorKey}) =>
-    kNetworkDebug ? [HostInterceptor(), LogInterceptor(), LogoutInterceptor(navigatorKey)] : <Interceptor>[HostInterceptor(), LogoutInterceptor(navigatorKey)];
+List<Interceptor> getInterceptors({GlobalKey<NavigatorState> navigatorKey, UserStore Function() userStore}) => kNetworkDebug
+    ? [HostInterceptor(), LogInterceptor(), LogoutInterceptor(navigatorKey, userStore)]
+    : <Interceptor>[HostInterceptor(), LogoutInterceptor(navigatorKey, userStore)];
 
 class BackendApiProvider {
   static const connectionTimeout = 30;
@@ -163,9 +166,9 @@ class BackendApiProvider {
   BackendApiProvider._(this.interceptors, String baseUrl) : api = LisaServerSdk(baseUrl: baseUrl, interceptors: interceptors, timeout: httpTimeout);
 
   // ignore: prefer_constructors_over_static_methods
-  static BackendApiProvider setup(GlobalKey<NavigatorState> navigatorKey, {String baseUrl, List<Interceptor> interceptors}) {
+  static BackendApiProvider setup(GlobalKey<NavigatorState> navigatorKey, UserStore Function() userStore, {String baseUrl, List<Interceptor> interceptors}) {
     baseUrl ??= Config.kUrl;
-    interceptors ??= getInterceptors(navigatorKey: navigatorKey);
+    interceptors ??= getInterceptors(navigatorKey: navigatorKey, userStore: userStore);
 
     globalClient = http.Client();
 

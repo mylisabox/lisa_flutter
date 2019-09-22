@@ -75,7 +75,7 @@ class AppDrawerHeader extends StatelessWidget {
       if (DeviceProxy.isTablet(context)) {
         showPlatformDialog(context, (context) => ProfileDialog());
       } else {
-        Provider.of<GlobalKey<NavigatorState>>(context, listen: false).currentState.pushNamed(ProfileScreen.route);
+        Navigator.of(context, rootNavigator: true).pushNamed(ProfileScreen.route);
         drawerStore.selectRoute(ProfileScreen.route);
       }
     }

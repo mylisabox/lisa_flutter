@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
+import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
 import 'package:lisa_flutter/src/common/utils/platform_detector/platform_detector.dart';
 import 'package:lisa_flutter/src/devices/presentation/add_device.dart';
 import 'package:lisa_flutter/src/devices/presentation/dashboard.dart';
+import 'package:lisa_flutter/src/devices/stores/device_store.dart';
 import 'package:lisa_server_sdk/model/room.dart';
+import 'package:provider/provider.dart';
 
 class RoomDashboard extends HookWidget {
   static const route = '/room';
@@ -14,10 +17,22 @@ class RoomDashboard extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RoomContainer(
-      room: room,
-      child: Dashboard(
-        roomId: room.id,
+    final store = useMemoized(() => DeviceStore());
+
+    useEffect(() {
+      store.loadDevices(roomId: room.id).catchError((err, stack) {
+        showErrorDialog(context, err, stack);
+      });
+      return null;
+    }, [store]);
+
+    return Provider.value(
+      value: store,
+      child: RoomContainer(
+        room: room,
+        child: Dashboard(
+          roomId: room.id,
+        ),
       ),
     );
   }

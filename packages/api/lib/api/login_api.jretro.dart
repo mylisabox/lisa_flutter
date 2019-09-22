@@ -36,7 +36,7 @@ abstract class _$LoginApiClient implements ApiClient {
   Future<LoginResponse> register(LoginRequest loginRequest) async {
     var req = base.post
         .path(basePath)
-        .path("/api/v1/auth/register")
+        .path("/api/v1/auth/local/register")
         .json(jsonConverter.to(loginRequest));
     return req.go(throwOnErr: true).map(decodeOne);
   }
