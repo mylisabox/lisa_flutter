@@ -23,4 +23,3 @@ jobs:
         flutter pub get
         flutter pub pub run build_runner build
         flutter test
-        flutter build macos
