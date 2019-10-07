@@ -17,7 +17,7 @@ jobs:
       with:
         flutter-version: '1.10.x'
         channel: 'dev'
-    - name: Build
+    - name: Build and test
       run: |
         cd packages/app
         flutter pub get

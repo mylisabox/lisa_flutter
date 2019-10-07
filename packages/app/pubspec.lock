@@ -203,14 +203,14 @@ packages:
       name: flare_dart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.4.6"
+    version: "1.4.8"
   flare_flutter:
     dependency: "direct main"
     description:
       name: flare_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.5.8"
+    version: "1.5.12"
   flare_loading:
     dependency: transitive
     description:
@@ -436,6 +436,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.19"
+  keyboard_avoider:
+    dependency: "direct main"
+    description:
+      name: keyboard_avoider
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.2"
   lisa_server_sdk:
     dependency: "direct main"
     description:
@@ -575,7 +582,7 @@ packages:
       name: proxy_layout
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "2.1.0"
   pub_semver:
     dependency: transitive
     description:
@@ -610,7 +617,7 @@ packages:
       name: remote_form
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1"
+    version: "0.0.2"
   remote_image_button:
     dependency: "direct main"
     description:
@@ -631,7 +638,7 @@ packages:
       name: remote_ui
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.5"
+    version: "0.0.6"
   shelf:
     dependency: transitive
     description:

@@ -1,5 +1,4 @@
 import 'package:crypted_preferences/crypted_preferences.dart';
-import 'package:flutter/foundation.dart';
 import 'package:lisa_flutter/src/common/utils/directory_provider/directory_provider.dart';
 
 class PreferencesProvider {

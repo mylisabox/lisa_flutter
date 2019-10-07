@@ -8,8 +8,6 @@ import 'package:lisa_flutter/src/common/utils/hooks.dart';
 import 'package:lisa_flutter/src/scenes/stores/scene_store.dart';
 import 'package:lisa_server_sdk/model/scene.dart';
 
-enum _SceneEntryType { sentence, response, command }
-
 class SceneWidget extends HookWidget {
   static const route = '/scenes/scene';
   final Scene scene;
@@ -48,10 +46,10 @@ class SceneWidget extends HookWidget {
                       decoration: InputDecoration(labelText: translations.nameField),
                       controller: nameController,
                       onChanged: (text) {
-                        store.setName(text);
+                        store.updateName(text);
                       },
                       onSubmitted: (text) {
-                        store.setName(text);
+                        store.updateName(text);
                       },
                     ),
                     ExpansionPanelList(
@@ -70,10 +68,10 @@ class SceneWidget extends HookWidget {
                           contentBuilder: () => store.sentences,
                           isExpanded: sentencesExpanded.value,
                           onAddClicked: () {
-                            askForEntry(context, store, _SceneEntryType.sentence);
+                            askForEntry(context, store, SceneEntryType.sentence);
                           },
                           onDeleteClicked: (index) {
-                            askForRemoval(context, store, _SceneEntryType.sentence, index);
+                            askForRemoval(context, store, SceneEntryType.sentence, index);
                           },
                         ),
                         _Section(
@@ -81,10 +79,10 @@ class SceneWidget extends HookWidget {
                           contentBuilder: () => store.responses,
                           isExpanded: responsesExpanded.value,
                           onAddClicked: () {
-                            askForEntry(context, store, _SceneEntryType.response);
+                            askForEntry(context, store, SceneEntryType.response);
                           },
                           onDeleteClicked: (index) {
-                            askForRemoval(context, store, _SceneEntryType.response, index);
+                            askForRemoval(context, store, SceneEntryType.response, index);
                           },
                         ),
                         _Section(
@@ -92,10 +90,10 @@ class SceneWidget extends HookWidget {
                           contentBuilder: () => store.commands,
                           isExpanded: commandsExpanded.value,
                           onDeleteClicked: (index) {
-                            askForRemoval(context, store, _SceneEntryType.command, index);
+                            askForRemoval(context, store, SceneEntryType.command, index);
                           },
                           onAddClicked: () {
-                            askForEntry(context, store, _SceneEntryType.command);
+                            askForEntry(context, store, SceneEntryType.command);
                           },
                         ),
                       ],
@@ -137,49 +135,29 @@ class SceneWidget extends HookWidget {
     );
   }
 
-  void askForEntry(BuildContext context, SceneStore store, _SceneEntryType type) async {
+  void askForEntry(BuildContext context, SceneStore store, SceneEntryType type) async {
     final translations = CommonLocalizations.of(context);
     String title;
     switch (type) {
-      case _SceneEntryType.command:
+      case SceneEntryType.command:
         title = translations.sceneAddCommand;
         break;
-      case _SceneEntryType.sentence:
+      case SceneEntryType.sentence:
         title = translations.sceneAddSentence;
         break;
-      case _SceneEntryType.response:
+      case SceneEntryType.response:
         title = translations.sceneAddResponse;
         break;
     }
     final text = await showPrompt(context, title);
 
     if (text != null || text.isNotEmpty) {
-      switch (type) {
-        case _SceneEntryType.command:
-          store.commands.add(text);
-          break;
-        case _SceneEntryType.sentence:
-          store.sentences.add(text);
-          break;
-        case _SceneEntryType.response:
-          store.responses.add(text);
-          break;
-      }
+      store.addSceneEntry(type, text);
     }
   }
 
-  void askForRemoval(BuildContext context, SceneStore store, _SceneEntryType type, int index) {
-    switch (type) {
-      case _SceneEntryType.command:
-        store.commands.removeAt(index);
-        break;
-      case _SceneEntryType.sentence:
-        store.sentences.removeAt(index);
-        break;
-      case _SceneEntryType.response:
-        store.responses.removeAt(index);
-        break;
-    }
+  void askForRemoval(BuildContext context, SceneStore store, SceneEntryType type, int index) {
+    store.removeSceneEntry(type, index);
   }
 }
 

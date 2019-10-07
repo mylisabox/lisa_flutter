@@ -64,7 +64,7 @@ class ProxyScaffold extends HookWidget {
                 key: navigatorKey,
               ),
             ),
-            appBar: _getAppBar(context, titleState.value, canPopState.value && !isMobileView(context), navigatorKey),
+            appBar: _getAppBar(context, titleState.value, canPopState.value, navigatorKey, observers),
             floatingActionButton: floatingActionButton,
           );
         },
@@ -72,7 +72,7 @@ class ProxyScaffold extends HookWidget {
           return OrientationProxy(
             landscapeBuilder: (context) {
               return Scaffold(
-                appBar: _getAppBar(context, titleState.value, canPopState.value, navigatorKey),
+                appBar: _getAppBar(context, titleState.value, canPopState.value, navigatorKey, observers),
                 floatingActionButton: floatingActionButton,
                 body: Row(
                   children: <Widget>[
@@ -96,7 +96,7 @@ class ProxyScaffold extends HookWidget {
             portraitBuilder: (context) {
               return Scaffold(
                 drawer: builderDrawer == null ? null : Drawer(child: builderDrawer(context)),
-                appBar: _getAppBar(context, titleState.value, canPopState.value, navigatorKey),
+                appBar: _getAppBar(context, titleState.value, canPopState.value, navigatorKey, observers),
                 floatingActionButton: floatingActionButton,
                 body: Navigator(
                   initialRoute: initialRoute,
@@ -112,7 +112,7 @@ class ProxyScaffold extends HookWidget {
     );
   }
 
-  AppBar _getAppBar(BuildContext context, String title, bool canPop, GlobalKey<NavigatorState> navigatorKey) {
+  AppBar _getAppBar(BuildContext context, String title, bool canPop, GlobalKey<NavigatorState> navigatorKey, List<NavigatorObserver> observers) {
     final translations = CommonLocalizations.of(context);
     return AppBar(
       leading: canPop && !isMobileView(context)
@@ -137,7 +137,8 @@ class ProxyScaffold extends HookWidget {
               if (DeviceProxy.isTablet(context)) {
                 showPlatformDialog(context, (_) => AddDeviceDialog(room: ModalRoute.of(context).settings.arguments));
               } else {
-                Navigator.of(context, rootNavigator: true).pushNamed(AddDeviceScreen.route, arguments: ModalRoute.of(context).settings.arguments);
+                final args = (observers.firstWhere((item) => item is HistoryNavigatorObserver) as HistoryNavigatorObserver).arguments;
+                Navigator.of(context, rootNavigator: true).pushNamed(AddDeviceScreen.route, arguments: args);
               }
             },
           ),
@@ -149,12 +150,14 @@ class ProxyScaffold extends HookWidget {
 class HistoryNavigatorObserver extends NavigatorObserver {
   final OnCanPopChange onCanPopChange;
   final List<String> _history = [];
+  dynamic arguments;
 
   HistoryNavigatorObserver(this.onCanPopChange);
 
   @override
   void didPop(Route route, Route previousRoute) {
     super.didPop(route, previousRoute);
+    arguments = route.settings.arguments;
     _history.removeLast();
     onCanPopChange(_history.length > 1);
   }
@@ -162,6 +165,7 @@ class HistoryNavigatorObserver extends NavigatorObserver {
   @override
   void didPush(Route route, Route previousRoute) {
     super.didPush(route, previousRoute);
+    arguments = route.settings.arguments;
     onCanPopChange(_history.isNotEmpty);
     _history.add(route.settings.name);
   }
@@ -196,7 +200,7 @@ class TitleNavigatorObserver extends NavigatorObserver {
       case OrphansWidget.route:
         return localizations.menuOrphans;
       case RoomDashboard.route:
-        return (arguments as Room).name;
+        return (arguments as Room)?.name ?? 'L.I.S.A.';
       case ScenesWidget.route:
         return localizations.menuScenes;
     }

@@ -18,14 +18,17 @@ abstract class _$DeviceSettingsSerializer
     setMapValueIfNotNull(ret, 'pairing', model.pairing);
     setMapValueIfNotNull(ret, 'pluginName', model.pluginName);
     setMapValueIfNotNull(ret, 'description', model.description);
+    setMapValueIfNotNull(ret, 'type', model.type);
+    setMapValueIfNotNull(
+        ret,
+        'template',
+        codeNonNullMap(model.template, (val) => passProcessor.serialize(val),
+            <String, dynamic>{}));
     setMapValueIfNotNull(
         ret,
         'settings',
-        codeNonNullIterable(
-            model.settings,
-            (val) => codeNonNullMap(val as Map<String, dynamic>,
-                (val) => passProcessor.serialize(val), <String, dynamic>{}),
-            []));
+        codeNonNullMap(model.settings, (val) => passProcessor.serialize(val),
+            <String, dynamic>{}));
     return ret;
   }
 
@@ -40,13 +43,16 @@ abstract class _$DeviceSettingsSerializer
         pluginName: map['pluginName'] as String ?? getJserDefault('pluginName'),
         description:
             map['description'] as String ?? getJserDefault('description'),
-        settings: codeNonNullIterable<Map<String, Object>>(
-                map['settings'] as Iterable,
-                (val) => codeNonNullMap<Object>(
-                    val as Map,
-                    (val) => passProcessor.deserialize(val) as Object,
-                    <String, Object>{}),
-                <Map<String, Object>>[]) ??
+        type: map['type'] as String ?? getJserDefault('type'),
+        template: codeNonNullMap<Object>(
+                map['template'] as Map,
+                (val) => passProcessor.deserialize(val) as Object,
+                <String, Object>{}) ??
+            getJserDefault('template'),
+        settings: codeNonNullMap<Object>(
+                map['settings'] as Map,
+                (val) => passProcessor.deserialize(val) as Object,
+                <String, Object>{}) ??
             getJserDefault('settings'));
     return obj;
   }

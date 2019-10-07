@@ -43,8 +43,8 @@ class Device {
      this.name = null,  
      this.driver = null,  
      this.pluginName = null,  
-     this.type = null,   this.template = const {},  
-     this.data = const {},  
+     this.type = null,  
+     this.template = const {},   this.data = const {},  
     
      this.favorite = null 
     }

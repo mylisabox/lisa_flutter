@@ -79,6 +79,7 @@ Class | Method | HTTP request | Description
 *ConfigApi* | [**isInitialized**](docs//ConfigApi.md#isinitialized) | **Get** /api/v1/initialized | 
 *DashboardApi* | [**getDashboard**](docs//DashboardApi.md#getdashboard) | **Get** /api/v1/dashboard/room/:roomId | 
 *DashboardApi* | [**saveDashboard**](docs//DashboardApi.md#savedashboard) | **Post** /api/v1/dashboard/room/:roomId | 
+*DeviceApi* | [**addDevice**](docs//DeviceApi.md#adddevice) | **Post** /api/v1/device/ | 
 *DeviceApi* | [**deleteDevice**](docs//DeviceApi.md#deletedevice) | **Delete** /api/v1/device/:deviceId | 
 *DeviceApi* | [**getDevices**](docs//DeviceApi.md#getdevices) | **Get** /api/v1/device/ | 
 *DeviceApi* | [**saveDeviceInfo**](docs//DeviceApi.md#savedeviceinfo) | **Patch** /api/v1/device/:deviceId | 

@@ -1,6 +1,9 @@
 import 'package:crypted_preferences/crypted_preferences.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:lisa_flutter/src/common/errors.dart';
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
+import 'package:lisa_flutter/src/common/presentation/loading_button.dart';
+import 'package:lisa_flutter/src/common/stores/user_store.dart';
 import 'package:lisa_flutter/src/common/utils/validator.dart';
 import 'package:lisa_flutter/src/preferences/preferences_provider.dart';
 import 'package:lisa_server_sdk/api.dart';
@@ -18,26 +21,32 @@ abstract class _LoginStore with Store {
   final LisaServerSdk _api;
   final Preferences _preferences;
   final Validator _validator;
+  final UserStore _userStore;
+
+  @observable
+  ProgressButtonState loginState = ProgressButtonState.idle;
 
   @observable
   AuthMode mode = AuthMode.login;
 
   @observable
-  String email = 'jimmy.aumard@gmail.com';
+  String email = '';
 
   @observable
   ErrorResult emailError;
 
-  String password = 'adminadmin';
+  String password = '';
 
   @observable
   ErrorResult passwordError;
 
   _LoginStore({
+    @required UserStore userStore,
     LisaServerSdk api,
     Preferences prefs,
     Validator validator,
   })  : _api = api ?? BackendApiProvider().api,
+        _userStore = userStore,
         _validator = validator ?? Validator(),
         _preferences = prefs ?? PreferencesProvider().prefs;
 
@@ -70,12 +79,16 @@ abstract class _LoginStore with Store {
       throw ErrorResultException(emailError ?? passwordError);
     } else {
       try {
+        loginState = ProgressButtonState.progress;
         final method = mode == AuthMode.login ? _api.getLoginApi().login : _api.getLoginApi().register;
         final response = await method(LoginRequest(email: email, password: password));
         _preferences.setString(PreferencesProvider.keyToken, response.token);
         _preferences.setString(keyLastEmail, email);
         _api.setApiKey('Bearer', 'JWT ${response.token}');
+        await _userStore.init();
+        loginState = ProgressButtonState.done;
       } catch (error, stackTrace) {
+        loginState = ProgressButtonState.idle;
         handleCaughtError(error, stackTrace);
       }
     }
@@ -99,10 +112,14 @@ abstract class _LoginStore with Store {
       throw ErrorResultException(emailError ?? passwordError); //todo generic form error ?
     } else {
       try {
+        loginState = ProgressButtonState.progress;
         final response = await _api.getLoginApi().register(LoginRequest(email: email, password: password));
         _preferences.setString(PreferencesProvider.keyToken, response.token);
         _api.setApiKey('Authorization', response.token);
+        await _userStore.init();
+        loginState = ProgressButtonState.done;
       } catch (error, stackTrace) {
+        loginState = ProgressButtonState.idle;
         handleCaughtError(error, stackTrace);
       }
     }

@@ -59,6 +59,9 @@ Future<String> showPrompt<T>(BuildContext context, String title, {TextEditingCon
               return TextField(
                 autofocus: true,
                 controller: fieldController,
+                onSubmitted: (_) {
+                  Navigator.of(context).pop(controller.text);
+                },
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.transparent,
@@ -273,28 +276,32 @@ Future<bool> showLoadingDialog(
   return showAppDialog<bool>(
       mainContext,
       title,
-      (dialogContext) => HookBuilder(
-            builder: (context) {
-              useEffect(() {
-                until().then((_) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    Navigator.of(dialogContext).pop(true);
-                  });
-                }).catchError((err, stack) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    Navigator.of(dialogContext).pop(false);
-                    if (onError == null) {
-                      showErrorDialog(mainContext, err, stack);
-                    } else {
-                      onError(err, stack);
-                    }
-                  });
-                });
-                return null;
-              }, const []);
+      (dialogContext) => IntrinsicHeight(
+            child: Center(
+              child: HookBuilder(
+                builder: (context) {
+                  useEffect(() {
+                    until().then((_) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        Navigator.of(dialogContext).pop(true);
+                      });
+                    }).catchError((err, stack) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        Navigator.of(dialogContext).pop(false);
+                        if (onError == null) {
+                          showErrorDialog(mainContext, err, stack);
+                        } else {
+                          onError(err, stack);
+                        }
+                      });
+                    });
+                    return null;
+                  }, const []);
 
-              return Center(child: CircularProgressIndicator());
-            },
+                  return CircularProgressIndicator();
+                },
+              ),
+            ),
           ),
       barrierDismissible: barrierDismissible);
 }

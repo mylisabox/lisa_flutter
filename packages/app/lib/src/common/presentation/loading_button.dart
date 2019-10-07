@@ -10,37 +10,87 @@ class ProgressButton extends HookWidget {
   final Color color;
   final Widget child;
   final double elevation;
+  final ProgressButtonState state;
+  final VoidCallback onTap;
   final Future Function() until;
   final Function(dynamic, dynamic) onError;
   final Function(dynamic) onSuccess;
 
-  ProgressButton({Key key, this.padding, this.color, this.child, this.elevation, this.until, this.onError, this.onSuccess}) : super(key: key);
+  ProgressButton.withFuture(
+      {Key key, this.padding, this.color, this.child, this.elevation, @required this.until, @required this.onError, @required this.onSuccess})
+      : state = null,
+        onTap = null,
+        super(key: key);
+
+  ProgressButton.withState({Key key, this.padding, this.color, this.child, this.elevation, @required this.onTap, @required this.state})
+      : until = null,
+        onError = null,
+        onSuccess = null,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final _globalKey = useMemoized(() => GlobalKey());
     final _width = useState(double.infinity);
     final _isPressed = useState(false);
-    final _state = useState(ProgressButtonState.idle);
+    final _state = useState(state ?? ProgressButtonState.idle);
     final _controller = useAnimationController(duration: Duration(milliseconds: 500));
+    final isFinish = useState<bool>(false);
     final _anim = useAnimation(Tween(begin: 0.0, end: 1.0).animate(_controller));
     final initialWidth = useState<double>(null);
     final height = useState<double>(null);
-    final isFinish = useState<bool>(false);
     final result = useState<dynamic>(null);
 
-    useEffect(() {
-      _controller.addStatusListener((status) {
-        if (status == AnimationStatus.completed && isFinish.value) {
-          WidgetsBinding.instance.addPostFrameCallback((duration) {
-            onSuccess(result.value);
-          });
+    final _onStart = (bool fromTap) async {
+      if (_state.value == ProgressButtonState.idle || initialWidth.value == null) {
+        initialWidth.value = _globalKey.currentContext.size.width;
+        height.value = _globalKey.currentContext.size.height;
+      }
+
+      _isPressed.value = true;
+
+      if (until == null) {
+        if (fromTap) {
+          onTap();
         }
-      });
-      return () {
-        reset(_state, _width, _isPressed, initialWidth);
-      };
-    }, [this]);
+      } else {
+        if (_state.value == ProgressButtonState.idle) {
+          _controller.forward();
+          _state.value = ProgressButtonState.progress;
+        }
+        try {
+          result.value = await until();
+          _state.value = ProgressButtonState.done;
+          isFinish.value = true;
+          if (_controller.isCompleted) {
+            onSuccess(result);
+          }
+        } catch (err, stacktrace) {
+          onError(err, stacktrace);
+          _controller.reverse();
+          reset(_state, _width, _isPressed, initialWidth);
+        }
+      }
+    };
+
+    useEffect(() {
+      if (state != null && _state.value != state) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          print(state);
+          _onStart(false);
+          if (state == ProgressButtonState.idle) {
+            _controller.reverse();
+            reset(_state, _width, _isPressed, initialWidth);
+          } else if (state == ProgressButtonState.progress) {
+            _controller.forward();
+          } else {
+            isFinish.value = true;
+          }
+          _state.value = state;
+        });
+      }
+      return null;
+    }, [state]);
 
     return Container(
       key: _globalKey,
@@ -55,26 +105,7 @@ class ProgressButton extends HookWidget {
         onPressed: _isPressed.value
             ? null
             : () async {
-                initialWidth.value = _globalKey.currentContext.size.width;
-                height.value = _globalKey.currentContext.size.height;
-
-                _isPressed.value = true;
-                if (_state.value == ProgressButtonState.idle) {
-                  _controller.forward();
-                  _state.value = ProgressButtonState.progress;
-                }
-                try {
-                  result.value = await until();
-                  _state.value = ProgressButtonState.done;
-                  isFinish.value = true;
-                  if (_controller.isCompleted) {
-                    onSuccess(result);
-                  }
-                } catch (err, stacktrace) {
-                  onError(err, stacktrace);
-                  _controller.reverse();
-                  reset(_state, _width, _isPressed, initialWidth);
-                }
+                _onStart(true);
               },
       ),
     );

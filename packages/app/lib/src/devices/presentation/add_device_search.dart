@@ -30,6 +30,18 @@ class AddDeviceSearch extends HookWidget {
                 builder: (context) {
                   final plugins = store.plugins;
 
+                  if (store.searchQueryError != null) {
+                    return Padding(
+                      padding: const EdgeInsets.all(kNormalPadding),
+                      child: Center(
+                        child: Text(
+                          store.searchQueryError.cause.twoLiner(context),
+                          style: TextStyle(color: Theme.of(context).errorColor),
+                        ),
+                      ),
+                    );
+                  }
+
                   if (plugins == null) {
                     return Padding(
                       padding: const EdgeInsets.all(kNormalPadding),

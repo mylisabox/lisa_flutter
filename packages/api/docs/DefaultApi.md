@@ -5,15 +5,15 @@
 import 'package:lisa_server_sdk/api.dart';
 ```
 
-All URIs are relative to *http://mylisabox:3000*
+All URIs are relative to *http://localhost:3000*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**deleteScene**](DefaultApi.md#deleteScene) | **Delete** /api/v1/chatbot/userBot/:scene | 
+[**addDevice**](DefaultApi.md#addDevice) | **Post** /api/v1/device/ | 
 
 
-# **deleteScene**
-> deleteScene(scene)
+# **addDevice**
+> List<Device> addDevice(device)
 
 
 
@@ -26,12 +26,13 @@ import 'package:lisa_server_sdk/api.dart';
 //lisa_server_sdk.api.Configuration.apiKeyPrefix{'Authorization'} = "Bearer";
 
 var api_instance = new DefaultApi();
-var scene = scene_example; // String | 
+var device = new Device(); // Device | 
 
 try { 
-    api_instance.deleteScene(scene);
+    var result = api_instance.addDevice(device);
+    print(result);
 } catch (e) {
-    print("Exception when calling DefaultApi->deleteScene: $e\n");
+    print("Exception when calling DefaultApi->addDevice: $e\n");
 }
 ```
 
@@ -39,11 +40,11 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **scene** | **String**|  | [default to null]
+ **device** | [**Device**](Device.md)|  | [optional] 
 
 ### Return type
 
-void (empty response body)
+[**List<Device>**](Device.md)
 
 ### Authorization
 
@@ -51,8 +52,8 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: Not defined
+ - **Content-Type**: application/json
+ - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

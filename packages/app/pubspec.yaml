@@ -8,6 +8,7 @@ environment:
 
 dependencies:
   flutter_staggered_animations: ^0.1.2
+  keyboard_avoider: ^0.1.2
   flutter_speech: ^1.0.0
   #path: '../../../flutter_speech_recognition'
   lisa_server_sdk:
@@ -23,12 +24,12 @@ dependencies:
   image_picker: ^0.6.1+4
   flutter_staggered_grid_view: ^0.3.0
   flutter_mobx: ^0.3.3+1
-  remote_ui: ^0.0.5
-  remote_form: ^0.0.1
+  remote_ui: ^0.0.6
+  remote_form: ^0.0.2
   remote_color_picker: ^0.0.2
   remote_ip_camera: ^1.0.1
   remote_image_button: ^0.0.3
-  proxy_layout: ^2.0.1
+  proxy_layout: ^2.1.0
   provider: ^3.1.0
   flare_splash_screen: ^2.1.3
     #path: '../../../../StudioProjects/flare_splash_screen'
@@ -37,7 +38,7 @@ dependencies:
   multicast_lock: ^0.0.5
   path_provider: ^1.3.0
   intl_translation: ^0.17.7
-  flare_flutter: ^1.5.8
+  flare_flutter: ^1.5.12
   toast: ^0.1.5
   #flutter_crashlytics: ^1.0.0
   #firebase_analytics: ^3.0.1
@@ -51,17 +52,24 @@ dev_dependencies:
     sdk: flutter
 
 dependency_overrides:
-#  remote_form:
-#    path: '../../../remote_ui/packages/remote_form'
-#  remote_color_picker:
-#    path: '../../../remote_ui/packages/remote_color_picker'
-#  remote_ip_camera:
-#    path: '../../../remote_ui/packages/remote_ip_camera'
-#  remote_image_button:
-#    path: '../../../remote_ui/packages/remote_image_button'
+  #remote_form:
+  #  path: '../../../remote_ui/packages/remote_form'
+  #remote_color_picker:
+  #  path: '../../../remote_ui/packages/remote_color_picker'
+  #remote_ip_camera:
+  #  path: '../../../remote_ui/packages/remote_ip_camera'
+  #remote_image_button:
+  #  path: '../../../remote_ui/packages/remote_image_button'
+  #remote_ui:
+  #  path: '../../../remote_ui/packages/remote_ui'
 
 
 flutter:
+  #module for android wear app
+  module:
+    androidX: true
+    androidPackage: com.mylisabox.lisa
+    iosBundleIdentifier: com.mylisabox.lisa
 
   uses-material-design: true
 

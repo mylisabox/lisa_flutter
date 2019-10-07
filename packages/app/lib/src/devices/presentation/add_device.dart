@@ -5,12 +5,14 @@ import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
 import 'package:lisa_flutter/src/common/utils/base_url_provider.dart';
+import 'package:lisa_flutter/src/common/utils/hooks.dart';
 import 'package:lisa_flutter/src/devices/stores/add_device_store.dart';
 import 'package:lisa_flutter/src/devices/stores/device_store.dart';
 import 'package:lisa_server_sdk/model/device_settings.dart';
 import 'package:lisa_server_sdk/model/room.dart';
 import 'package:provider/provider.dart';
 import 'package:proxy_layout/proxy_layout.dart';
+import 'package:remote_form/remote_form.dart';
 
 part 'add_device_search.dart';
 part 'add_device_steps.dart';
@@ -19,7 +21,7 @@ class AddDeviceScreen extends StatelessWidget {
   static const route = '/addDevice';
   final Room room;
 
-  AddDeviceScreen({Key key, this.room}) : super(key: key);
+  AddDeviceScreen({Key key, @required this.room}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +111,7 @@ class AddDeviceWidget extends HookWidget {
 class AddDeviceDialog extends StatelessWidget {
   final Room room;
 
-  const AddDeviceDialog({Key key, this.room}) : super(key: key);
+  const AddDeviceDialog({Key key, @required this.room}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

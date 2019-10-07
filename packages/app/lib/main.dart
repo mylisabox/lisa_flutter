@@ -37,15 +37,16 @@ void main() async {
   initLogger();
   userStore = UserStore();
 
-  runApp(MyApp(navigatorKey: navigatorKey, userStore: userStore));
+  runApp(MyApp(navigatorKey: navigatorKey, userStore: userStore, router: Router()));
 }
 
 class MyApp extends HookWidget {
   static const _primaryColor = Color(0xff1bbc9b);
   final GlobalKey<NavigatorState> navigatorKey;
   final UserStore userStore;
+  final Router router;
 
-  MyApp({this.navigatorKey, this.userStore});
+  MyApp({this.navigatorKey, this.userStore, this.router});
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +104,7 @@ class MyApp extends HookWidget {
             ),
             initialRoute: SplashScreen.route,
             navigatorKey: navigatorKey,
-            onGenerateRoute: Router().onGenerateRoute,
+            onGenerateRoute: router.onGenerateRoute,
           );
         },
       ),
@@ -120,17 +121,20 @@ class MyHomePage extends HookWidget {
   Widget build(BuildContext context) {
     final store = useMemoized(() => SpeechStore());
     final userStore = Provider.of<UserStore>(context);
-    return ProxyScaffold(
-      floatingActionButton: kIsMobile()
-          ? SpeechButton(
-              onResults: (text) async {
-                final response = await store.sendSentence(text, Localizations.localeOf(context).languageCode);
-                Toast.show(response, context, duration: Toast.LENGTH_LONG);
-              },
-            )
-          : null,
-      builderDrawer: (context) => AppDrawer(),
-      initialRoute: userStore.lastRoute ?? FavoritesWidget.route,
+    return ListenableProvider.value(
+      value: Router(),
+      child: ProxyScaffold(
+        floatingActionButton: kIsMobile()
+            ? SpeechButton(
+                onResults: (text) async {
+                  final response = await store.sendSentence(text, Localizations.localeOf(context).languageCode);
+                  Toast.show(response, context, duration: Toast.LENGTH_LONG);
+                },
+              )
+            : null,
+        builderDrawer: (context) => AppDrawer(),
+        initialRoute: FavoritesWidget.route, //FIXME why it doesn't work?? check routes.dart userStore.lastRoute ?? FavoritesWidget.route,
+      ),
     );
   }
 }

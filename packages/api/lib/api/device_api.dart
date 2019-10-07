@@ -20,6 +20,21 @@ class DeviceApi extends ApiClient with _$DeviceApiClient {
     /// 
     ///
     /// 
+    @PostReq(path: "/api/v1/device/", metadata: {"auth": [ {"type": "apiKey", "name": "Bearer", "keyName": "Authorization", "where": "header" }]})
+    Future<void> addDevice(
+            
+             @AsJson() Device device
+        ) {
+        return super.addDevice(
+
+        
+        device
+        ).timeout(timeout);
+    }
+
+    /// 
+    ///
+    /// 
     @DeleteReq(path: "/api/v1/device/:deviceId", metadata: {"auth": [ {"type": "apiKey", "name": "Bearer", "keyName": "Authorization", "where": "header" }]})
     Future<void> deleteDevice(
             @PathParam("deviceId") int deviceId

@@ -23,8 +23,14 @@ class DeviceSettings {
   @Alias('description', isNullable: false,  )
   final String description;
   
+  @Alias('type', isNullable: false,  )
+  final String type;
+  
+  @Alias('template', isNullable: false,  )
+  final Map<String, Object> template;
+  
   @Alias('settings', isNullable: false,  )
-  final List<Map<String, Object>> settings;
+  final Map<String, Object> settings;
   
 
   DeviceSettings(
@@ -37,14 +43,16 @@ class DeviceSettings {
      this.pairing = null,  
      this.pluginName = null,  
      this.description = null,  
-     this.settings = const [] 
+     this.type = null,  
+     this.template = const {},  
+     this.settings = const {} 
     
     }
   );
 
   @override
   String toString() {
-    return 'DeviceSettings[name=$name, driver=$driver, image=$image, pairing=$pairing, pluginName=$pluginName, description=$description, settings=$settings, ]';
+    return 'DeviceSettings[name=$name, driver=$driver, image=$image, pairing=$pairing, pluginName=$pluginName, description=$description, type=$type, template=$template, settings=$settings, ]';
   }
 }
 

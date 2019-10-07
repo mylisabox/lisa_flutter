@@ -170,13 +170,25 @@ paths:
       tags:
         - favorite
   /api/v1/device/:
-    parameters:
-      - name: roomId
-        in: query
-        required: true
-        schema:
-          type: string
+    post:
+      operationId: addDevice
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Device"
+      responses:
+        201:
+          description: ""
+      tags:
+        - device
     get:
+      parameters:
+        - name: roomId
+          in: query
+          required: true
+          schema:
+            type: string
       operationId: getDevices
       responses:
         200:
@@ -513,12 +525,16 @@ components:
           type: string
         description:
           type: string
-        settings:
-          type: array
-          items:
+        type:
+          type: string
+        template:
+          type: object
+          additionalProperties:
             type: object
-            additionalProperties:
-              type: object
+        settings:
+          type: object
+          additionalProperties:
+            type: object
     Dashboard:
       type: object
       required:
@@ -548,6 +564,7 @@ components:
         - name
         - driver
         - pluginName
+        - template
         - favorite
         - type
       properties:

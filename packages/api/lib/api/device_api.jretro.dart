@@ -8,6 +8,24 @@ part of 'device_api.dart';
 
 abstract class _$DeviceApiClient implements ApiClient {
   final String basePath = "";
+  Future<void> addDevice(Device device) async {
+    var req = base.post
+        .metadata({
+          "auth": [
+            {
+              "type": "apiKey",
+              "name": "Bearer",
+              "keyName": "Authorization",
+              "where": "header",
+            }
+          ],
+        })
+        .path(basePath)
+        .path("/api/v1/device/")
+        .json(jsonConverter.to(device));
+    await req.go(throwOnErr: true);
+  }
+
   Future<void> deleteDevice(int deviceId) async {
     var req = base.delete
         .metadata({

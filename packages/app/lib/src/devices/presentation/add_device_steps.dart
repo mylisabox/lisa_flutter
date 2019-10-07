@@ -13,11 +13,40 @@ class AddDeviceImageStep extends HookWidget with BaseUrlProvider {
 class AddDeviceSettingsStep extends HookWidget {
   @override
   Widget build(BuildContext context) {
+    final formValidatorKey = useMemoized(() => GlobalKey<RemoteFormValidatorProviderState>());
+    final controller = useTextEditingController();
     final store = Provider.of<AddDeviceStore>(context);
     final translations = CommonLocalizations.of(context);
 
-    return Column(
-      children: <Widget>[],
+    return Observer(
+      builder: (_) => Column(
+        children: <Widget>[
+          TextField(
+            controller: controller,
+            onChanged: (value) {
+              store.formUpdate('name', value, formValidatorKey.currentState.isFormValid());
+            },
+            onSubmitted: (_) {
+              FocusScope.of(context).nextFocus();
+            },
+            decoration: InputDecoration(labelText: translations.nameField + '*'),
+          ),
+          RemoteForm(
+            validatorKey: formValidatorKey,
+            data: store.formData,
+            onChanges: (key, value, {associatedData}) {
+              //delay form validation check on next frame to let the last change propagate, or we will have one step late on validation
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                store.formUpdate(key, value, formValidatorKey.currentState.isFormValid());
+              });
+            },
+            onSubmit: (formData, {associatedData}) {
+              //will never append
+            },
+            definition: store.deviceSettings,
+          ),
+        ],
+      ),
     );
   }
 }

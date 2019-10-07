@@ -14,7 +14,6 @@ import 'package:lisa_flutter/src/common/utils/hooks.dart';
 import 'package:lisa_flutter/src/devices/stores/device_store.dart';
 import 'package:lisa_flutter/src/rooms/presentation/room_selector.dart';
 import 'package:lisa_server_sdk/model/device.dart';
-import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:remote_color_picker/remote_color_picker.dart';
 import 'package:remote_image_button/remote_image_button.dart';
