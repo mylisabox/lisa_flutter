@@ -1,4 +1,4 @@
-name: CI
+name: L.I.S.A. CI
 
 on: [push, pull_request]
 
@@ -15,8 +15,9 @@ jobs:
         java-version: '12.x'
     - uses: subosito/flutter-action@v1
       with:
-        flutter-version: '1.10.x'
-        channel: 'dev'
+        flutter-version: '1.10.3'
+        channel: 'master'
+    - run: flutter config --no-analytics
     - name: Build and test
       run: |
         cd packages/app
