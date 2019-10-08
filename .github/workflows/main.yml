@@ -6,7 +6,7 @@ jobs:
   build:
     name: Build on Android, iOS and Mac OSX
 
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v1
@@ -28,7 +28,6 @@ jobs:
       run: |
         cd packages/app
         flutter clean
-        flutter pub pub run build_runner build --delete-conflicting-outputs
         flutter build apk --release --split-per-abi
     - name: Create a Release APK
       uses: ncipollo/release-action@v1
