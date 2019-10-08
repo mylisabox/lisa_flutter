@@ -28,7 +28,7 @@ jobs:
       run: |
         cd packages/app
         flutter clean
-        flutter pub pub run build_runner build
+        flutter pub pub run build_runner build --delete-conflicting-outputs
         flutter build apk --release --split-per-abi
     - name: Create a Release APK
       uses: ncipollo/release-action@v1
