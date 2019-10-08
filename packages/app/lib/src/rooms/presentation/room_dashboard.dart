@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
+import 'package:lisa_flutter/src/common/presentation/speech_button.dart';
+import 'package:lisa_flutter/src/common/stores/speech_store.dart';
 import 'package:lisa_flutter/src/common/utils/platform_detector/platform_detector.dart';
 import 'package:lisa_flutter/src/devices/presentation/add_device.dart';
 import 'package:lisa_flutter/src/devices/presentation/dashboard.dart';
 import 'package:lisa_flutter/src/devices/stores/device_store.dart';
 import 'package:lisa_server_sdk/model/room.dart';
 import 'package:provider/provider.dart';
+import 'package:toast/toast.dart';
 
 class RoomDashboard extends HookWidget {
   static const route = '/room';
@@ -38,7 +41,7 @@ class RoomDashboard extends HookWidget {
   }
 }
 
-class RoomContainer extends StatelessWidget {
+class RoomContainer extends HookWidget {
   final Widget child;
   final Room room;
 
@@ -46,9 +49,17 @@ class RoomContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final store = useMemoized(() => SpeechStore());
     return Scaffold(
       primary: false,
-      floatingActionButton: kIsMobile() ? null : AddDeviceFloatingButton(room: room),
+      floatingActionButton: kIsMobile()
+          ? SpeechButton(
+              onResults: (text) async {
+                final response = await store.sendSentence(text, Localizations.localeOf(context).languageCode);
+                Toast.show(response, context, duration: Toast.LENGTH_LONG);
+              },
+            )
+          : AddDeviceFloatingButton(room: room),
       body: Container(
         padding: EdgeInsets.all(kSmallPadding),
         child: child,

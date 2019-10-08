@@ -177,9 +177,11 @@ class _Section extends ExpansionPanel {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text(
-                    title,
-                    style: Theme.of(context).textTheme.title,
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: Theme.of(context).textTheme.title,
+                    ),
                   ),
                   IconButton(icon: Icon(Icons.add), onPressed: onAddClicked),
                 ],

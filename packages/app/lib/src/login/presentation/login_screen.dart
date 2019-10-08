@@ -67,23 +67,18 @@ class LoginScreen extends HookWidget {
               ),
               Container(
                 alignment: Alignment.center,
-                child: Container(
-                  margin: const EdgeInsets.all(kNormalPadding),
-                  constraints: BoxConstraints(maxWidth: 320),
-                  width: 320,
-                  child: KeyboardAvoider(
-                    autoScroll: true,
-                    child: OrientationProxy(
-                      landscapeBuilder: (context) {
-                        return DeviceProxy(
-                          tabletBuilder: (_) => _LoginPortrait(),
-                          mobileBuilder: (_) => _LoginLandscape(),
-                        );
-                      },
-                      portraitBuilder: (context) {
-                        return _LoginPortrait();
-                      },
-                    ),
+                child: KeyboardAvoider(
+                  autoScroll: true,
+                  child: OrientationProxy(
+                    landscapeBuilder: (context) {
+                      return DeviceProxy(
+                        tabletBuilder: (_) => _LoginPortrait(),
+                        mobileBuilder: (_) => _LoginLandscape(),
+                      );
+                    },
+                    portraitBuilder: (context) {
+                      return _LoginPortrait();
+                    },
                   ),
                 ),
               ),
@@ -113,7 +108,7 @@ abstract class _LoginFields extends HookWidget {
       },
       child: Text(
         translations.linkExternalUrl,
-        textAlign: TextAlign.end,
+        textAlign: TextAlign.center,
         style: TextStyle(
           color: Theme.of(context).primaryColor,
           fontWeight: FontWeight.bold,
@@ -223,38 +218,44 @@ abstract class _LoginFields extends HookWidget {
 class _LoginLandscape extends _LoginFields {
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            _getLogo(),
-            _getExternalUrlButtons(context),
-          ],
-        ),
-        VerticalDivider(
-          color: Colors.transparent,
-          width: kNormalPadding,
-        ),
-        Container(
-          constraints: BoxConstraints(maxWidth: 350),
-          alignment: Alignment.center,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              _getEmailField(context),
-              Divider(color: Colors.transparent, height: 2),
-              _getPasswordField(context),
-              Divider(color: Colors.transparent),
-              _getSubmitButton(context),
-            ],
+    return Padding(
+      padding: const EdgeInsets.all(kNormalPadding),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                _getLogo(),
+                _getExternalUrlButtons(context),
+              ],
+            ),
           ),
-        ),
-      ],
+          VerticalDivider(
+            color: Colors.transparent,
+            width: kNormalPadding,
+          ),
+          Container(
+            constraints: BoxConstraints(maxWidth: 350),
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                _getEmailField(context),
+                Divider(color: Colors.transparent, height: 2),
+                _getPasswordField(context),
+                Divider(color: Colors.transparent),
+                _getSubmitButton(context),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -262,18 +263,21 @@ class _LoginLandscape extends _LoginFields {
 class _LoginPortrait extends _LoginFields {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        _getLogo(),
-        _getEmailField(context),
-        Divider(color: Colors.transparent, height: 2),
-        _getPasswordField(context),
-        _getExternalUrlButtons(context),
-        Divider(color: Colors.transparent),
-        _getSubmitButton(context),
-      ],
+    return Container(
+      constraints: BoxConstraints(maxWidth: 320),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          _getLogo(),
+          _getEmailField(context),
+          Divider(color: Colors.transparent, height: 2),
+          _getPasswordField(context),
+          _getExternalUrlButtons(context),
+          Divider(color: Colors.transparent),
+          _getSubmitButton(context),
+        ],
+      ),
     );
   }
 }

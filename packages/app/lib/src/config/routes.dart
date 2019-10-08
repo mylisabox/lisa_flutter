@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lisa_flutter/main.dart';
+import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/devices/presentation/add_device.dart';
 import 'package:lisa_flutter/src/favorites/presentation/favorites.dart';
 import 'package:lisa_flutter/src/login/presentation/login_screen.dart';
@@ -13,13 +14,7 @@ import 'package:lisa_flutter/src/scenes/presentation/scenes.dart';
 import 'package:lisa_flutter/src/splash_screen/presentation/splash_screen.dart';
 import 'package:lisa_server_sdk/model/room.dart';
 
-class Router extends NavigatorObserver implements Listenable {
-  static Router _instance;
-  //final OnCanPopChange onCanPopChange;
-  final List<String> _history = [];
-  dynamic arguments;
-
-
+class Router {
   final Map<String, dynamic> routes = {
     LoginScreen.route: (_) => LoginScreen(),
     SplashScreen.route: (_) => SplashScreen(),
@@ -33,12 +28,6 @@ class Router extends NavigatorObserver implements Listenable {
     OrphansWidget.route: (_) => OrphansWidget(),
     MyHomePage.route: (_) => MyHomePage(),
   };
-
-  factory Router() {
-    return _instance ?? Router._create();
-  }
-
-  Router._create();
 
   Route onGenerateRoute(RouteSettings settings) {
     //FIXME doesn't work as arguments stay null for some reason... to be checked in flutter sources
@@ -58,40 +47,76 @@ class Router extends NavigatorObserver implements Listenable {
     }
     return MaterialPageRoute(builder: routes[settings.name], settings: settings);
   }
+}
+
+typedef OnTitleChange = void Function(String title, String route);
+typedef OnCanPopChange = void Function(bool canPop);
+
+class HistoryNavigatorObserver extends NavigatorObserver {
+  final OnCanPopChange onCanPopChange;
+  final List<String> _history = [];
+  dynamic arguments;
+  String get currentRoute => _history.isEmpty ? null : _history.last;
+
+  HistoryNavigatorObserver(this.onCanPopChange);
 
   @override
   void didPop(Route route, Route previousRoute) {
     super.didPop(route, previousRoute);
     arguments = route.settings.arguments;
     _history.removeLast();
-    //onCanPopChange(_history.length > 1);
-    notify();
+    onCanPopChange(_history.length > 1);
   }
 
   @override
   void didPush(Route route, Route previousRoute) {
     super.didPush(route, previousRoute);
     arguments = route.settings.arguments;
-    //onCanPopChange(_history.isNotEmpty);
+    onCanPopChange(_history.isNotEmpty);
     _history.add(route.settings.name);
-    notify();
   }
+}
 
-  final List<VoidCallback> _listeners = [];
+class TitleNavigatorObserver extends NavigatorObserver {
+  final OnTitleChange onTitleChange;
+  final CommonLocalizations localizations;
+
+  TitleNavigatorObserver(this.onTitleChange, this.localizations);
 
   @override
-  void addListener(listener) {
-    _listeners.add(listener);
+  void didPop(Route route, Route previousRoute) {
+    super.didPop(route, previousRoute);
+    onTitleChange(getTitle(previousRoute.settings.name, arguments: previousRoute.settings.arguments), getRoute(previousRoute));
   }
 
   @override
-  void removeListener(listener) {
-    _listeners.remove(listener);
+  void didPush(Route route, Route previousRoute) {
+    super.didPush(route, previousRoute);
+    onTitleChange(getTitle(route.settings.name, arguments: route.settings.arguments), getRoute(route));
   }
 
-  void notify() {
-    for(var listener in _listeners) {
-      listener();
+  String getTitle(String route, {arguments}) {
+    switch (route) {
+      case FavoritesWidget.route:
+        return localizations.menuFavorite;
+      case ProfileScreen.route:
+        return localizations.profile;
+      case PreferencesWidget.route:
+        return localizations.menuPreferences;
+      case OrphansWidget.route:
+        return localizations.menuOrphans;
+      case RoomDashboard.route:
+        return (arguments as Room)?.name ?? 'L.I.S.A.';
+      case ScenesWidget.route:
+        return localizations.menuScenes;
     }
+    return 'L.I.S.A.';
+  }
+
+  String getRoute(Route route) {
+    if (RoomDashboard.route == route.settings.name) {
+      return '${route.settings.name}/${(route.settings.arguments as Room).id}';
+    }
+    return route.settings.name;
   }
 }

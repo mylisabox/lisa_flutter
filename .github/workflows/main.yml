@@ -23,3 +23,12 @@ jobs:
         flutter pub get
         flutter pub pub run build_runner build
         flutter test
+    - name: Build apk
+      run: |
+        cd packages/app
+        flutter build apk --release --split-per-abi
+    - name: Create a Release APK
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/app/outputs/apk/release/*.apk"
+          token: ${{ secrets.TOKEN }}

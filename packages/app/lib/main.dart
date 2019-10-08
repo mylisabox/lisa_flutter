@@ -119,17 +119,8 @@ class MyHomePage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final store = useMemoized(() => SpeechStore());
     final userStore = Provider.of<UserStore>(context);
     return ProxyScaffold(
-      floatingActionButton: kIsMobile()
-          ? SpeechButton(
-              onResults: (text) async {
-                final response = await store.sendSentence(text, Localizations.localeOf(context).languageCode);
-                Toast.show(response, context, duration: Toast.LENGTH_LONG);
-              },
-            )
-          : null,
       builderDrawer: (context) => AppDrawer(),
       initialRoute: FavoritesWidget.route, //FIXME why it doesn't work?? check routes.dart userStore.lastRoute ?? FavoritesWidget.route,
     );
