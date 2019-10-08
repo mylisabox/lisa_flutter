@@ -15,7 +15,7 @@ jobs:
         java-version: '12.x'
     - uses: subosito/flutter-action@v1
       with:
-        flutter-version: '1.10.3-pre.19'
+        flutter-version: '1.10.x'
         channel: 'master'
     - run: flutter config --no-analytics
     - name: Build and test
