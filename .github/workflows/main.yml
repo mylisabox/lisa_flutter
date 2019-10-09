@@ -6,7 +6,7 @@ jobs:
   build:
     name: Build on Android, iOS and Mac OSX
 
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
     - uses: actions/checkout@v1
@@ -15,7 +15,7 @@ jobs:
         java-version: '12.x'
     - uses: subosito/flutter-action@v1
       with:
-        flutter-version: '1.10.3'
+        flutter-version: '1.10.5'
         channel: 'dev'
     - run: flutter config --no-analytics
     - name: Build and test
