@@ -48,7 +48,7 @@ class Dashboard extends HookWidget {
         RemoteIpCameraFactory(baseUrlProvider: () {
           final backend = BackendApiProvider();
           final HostInterceptor interceptor = backend.interceptors.first; //get host interceptor
-          final token = (backend.interceptors[2] as ApiKeyAuthInterceptor).apiKeys[kAuthKey].replaceFirst('JWT ', '');
+          final token = (backend.api.interceptors.firstWhere((item) => item is ApiKeyAuthInterceptor) as ApiKeyAuthInterceptor).apiKeys[kAuthKey].replaceFirst('JWT ', '');
           return interceptor.host + '/api/v1/camera/stream?token=$token&url=';
         }),
         RemoteImageButtonFactory(baseUrlProvider: () {
