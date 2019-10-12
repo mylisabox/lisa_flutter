@@ -37,6 +37,7 @@ class ScenesWidget extends HookWidget {
                   child: Text(
                     store.error.cause.twoLiner(context),
                     style: TextStyle(color: Theme.of(context).errorColor),
+                    textAlign: TextAlign.center,
                   ),
                 ),
               );

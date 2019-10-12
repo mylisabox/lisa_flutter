@@ -13,6 +13,7 @@ import 'package:lisa_flutter/src/common/presentation/refresh_no_scroll_content.d
 import 'package:lisa_flutter/src/common/utils/hooks.dart';
 import 'package:lisa_flutter/src/devices/stores/device_store.dart';
 import 'package:lisa_flutter/src/rooms/presentation/room_selector.dart';
+import 'package:lisa_server_sdk/auth/api_key_auth.dart';
 import 'package:lisa_server_sdk/model/device.dart';
 import 'package:provider/provider.dart';
 import 'package:remote_color_picker/remote_color_picker.dart';
@@ -44,7 +45,12 @@ class Dashboard extends HookWidget {
     return RemoteManagerWidget(
       parsers: [
         RemoteColorPickerFactory(),
-        RemoteIpCameraFactory(),
+        RemoteIpCameraFactory(baseUrlProvider: () {
+          final backend = BackendApiProvider();
+          final HostInterceptor interceptor = backend.interceptors.first; //get host interceptor
+          final token = (backend.interceptors[2] as ApiKeyAuthInterceptor).apiKeys['Authorization'].replaceFirst('JWT ', '');
+          return interceptor.host + '/api/v1/camera/stream?token=$token&url=';
+        }),
         RemoteImageButtonFactory(baseUrlProvider: () {
           final HostInterceptor interceptor = BackendApiProvider().interceptors.first; //get host interceptor
           return interceptor.host;
@@ -65,6 +71,7 @@ class Dashboard extends HookWidget {
                       child: Text(
                         store.error.cause.twoLiner(context),
                         style: TextStyle(color: Theme.of(context).errorColor),
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   );

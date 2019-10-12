@@ -45,6 +45,7 @@ class SceneWidget extends HookWidget {
                     TextField(
                       decoration: InputDecoration(labelText: translations.nameField),
                       controller: nameController,
+                      autofocus: true,
                       onChanged: (text) {
                         store.updateName(text);
                       },
@@ -151,7 +152,7 @@ class SceneWidget extends HookWidget {
     }
     final text = await showPrompt(context, title);
 
-    if (text != null || text.isNotEmpty) {
+    if (text != null && text.trim().isNotEmpty) {
       store.addSceneEntry(type, text);
     }
   }

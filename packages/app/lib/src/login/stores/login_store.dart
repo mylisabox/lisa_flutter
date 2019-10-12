@@ -115,7 +115,7 @@ abstract class _LoginStore with Store {
         loginState = ProgressButtonState.progress;
         final response = await _api.getLoginApi().register(LoginRequest(email: email, password: password));
         _preferences.setString(PreferencesProvider.keyToken, response.token);
-        _api.setApiKey('Authorization', response.token);
+        _api.setApiKey('Bearer', 'JWT ${response.token}');
         await _userStore.init();
         loginState = ProgressButtonState.done;
       } catch (error, stackTrace) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
 import 'package:lisa_flutter/src/common/utils/platform_detector/platform_detector.dart';
@@ -12,9 +13,8 @@ import 'package:proxy_layout/proxy_layout.dart';
 class ProxyScaffold extends HookWidget {
   final WidgetBuilder builderDrawer;
   final String initialRoute;
-  final Widget floatingActionButton;
 
-  const ProxyScaffold({Key key, this.builderDrawer, this.initialRoute, this.floatingActionButton}) : super(key: key);
+  const ProxyScaffold({Key key, this.builderDrawer, this.initialRoute}) : super(key: key);
 
   static bool isMobileView(BuildContext context) {
     return DeviceProxy.isMobile(context) || (DeviceProxy.isTablet(context) && OrientationProxy.isPortrait(context));
@@ -24,10 +24,12 @@ class ProxyScaffold extends HookWidget {
   Widget build(BuildContext context) {
     final localizations = CommonLocalizations.of(context);
     final titleState = useState('L.I.S.A.');
+    final currentRoute = useState('/');
     final canPopState = useState(false);
 
     final onTitleChange = (title, route) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        currentRoute.value = route;
         titleState.value = title;
       });
       Provider.of<DrawerStore>(context, listen: false).selectRoute(route);
@@ -54,16 +56,14 @@ class ProxyScaffold extends HookWidget {
                 key: navigatorKey,
               ),
             ),
-            appBar: _getAppBar(context, titleState.value, canPopState.value, navigatorKey, observers),
-            floatingActionButton: floatingActionButton,
+            appBar: _getAppBar(context, currentRoute.value, titleState.value, canPopState.value, navigatorKey, observers),
           );
         },
         tabletBuilder: (context) {
           return OrientationProxy(
             landscapeBuilder: (context) {
               return Scaffold(
-                appBar: _getAppBar(context, titleState.value, canPopState.value, navigatorKey, observers),
-                floatingActionButton: floatingActionButton,
+                appBar: _getAppBar(context, currentRoute.value, titleState.value, canPopState.value, navigatorKey, observers),
                 body: Row(
                   children: <Widget>[
                     if (builderDrawer != null) Expanded(child: builderDrawer(context), flex: 1),
@@ -86,8 +86,7 @@ class ProxyScaffold extends HookWidget {
             portraitBuilder: (context) {
               return Scaffold(
                 drawer: builderDrawer == null ? null : Drawer(child: builderDrawer(context)),
-                appBar: _getAppBar(context, titleState.value, canPopState.value, navigatorKey, observers),
-                floatingActionButton: floatingActionButton,
+                appBar: _getAppBar(context, currentRoute.value, titleState.value, canPopState.value, navigatorKey, observers),
                 body: Navigator(
                   initialRoute: initialRoute,
                   observers: observers,
@@ -102,8 +101,9 @@ class ProxyScaffold extends HookWidget {
     );
   }
 
-  AppBar _getAppBar(BuildContext context, String title, bool canPop, GlobalKey<NavigatorState> navigatorKey, List<NavigatorObserver> observers) {
+  AppBar _getAppBar(BuildContext context, String currentRoute, String title, bool canPop, GlobalKey<NavigatorState> navigatorKey, List<NavigatorObserver> observers) {
     final translations = CommonLocalizations.of(context);
+    kDebugLogger.info('Current route: $currentRoute');
     return AppBar(
       leading: canPop && !isMobileView(context) && navigatorKey.currentState.canPop()
           ? IconButton(
@@ -116,7 +116,7 @@ class ProxyScaffold extends HookWidget {
           : null,
       title: Text(title),
       actions: <Widget>[
-        if (kIsMobile() && (observers.firstWhere((item) => item is HistoryNavigatorObserver) as HistoryNavigatorObserver).currentRoute.contains('/room'))
+        if (kIsMobile() && currentRoute != null && currentRoute.contains('/room'))
           IconButton(
             icon: Icon(
               Icons.add,
