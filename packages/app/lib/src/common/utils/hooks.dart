@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_hooks/flutter_hooks.dart' as prefix0;
 
 TextEditingController useTextEditingController({text}) {
   final controller = useMemoized(() => TextEditingController(text: text ?? ''));

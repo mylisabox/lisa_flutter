@@ -1,5 +1,6 @@
 import 'package:crypted_preferences/crypted_preferences.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/errors.dart';
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
 import 'package:lisa_flutter/src/common/presentation/loading_button.dart';
@@ -84,7 +85,7 @@ abstract class _LoginStore with Store {
         final response = await method(LoginRequest(email: email, password: password));
         _preferences.setString(PreferencesProvider.keyToken, response.token);
         _preferences.setString(keyLastEmail, email);
-        _api.setApiKey('Bearer', 'JWT ${response.token}');
+        _api.setApiKey(kAuthKey, 'JWT ${response.token}');
         await _userStore.init();
         loginState = ProgressButtonState.done;
       } catch (error, stackTrace) {
@@ -115,7 +116,7 @@ abstract class _LoginStore with Store {
         loginState = ProgressButtonState.progress;
         final response = await _api.getLoginApi().register(LoginRequest(email: email, password: password));
         _preferences.setString(PreferencesProvider.keyToken, response.token);
-        _api.setApiKey('Bearer', 'JWT ${response.token}');
+        _api.setApiKey(kAuthKey, 'JWT ${response.token}');
         await _userStore.init();
         loginState = ProgressButtonState.done;
       } catch (error, stackTrace) {

@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:crypted_preferences/crypted_preferences.dart';
 import 'package:jaguar_retrofit/jaguar_retrofit.dart';
+import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
 import 'package:lisa_flutter/src/preferences/preferences_provider.dart';
 import 'package:lisa_server_sdk/api.dart';
@@ -41,7 +42,7 @@ abstract class _UserStore with Store {
   Future init() async {
     final token = _preferences.getString(PreferencesProvider.keyToken);
     if (token != null) {
-      _api.setApiKey('Bearer', 'JWT $token');
+      _api.setApiKey(kAuthKey, 'JWT $token');
       user = await _api.getUserApi().getProfile();
     }
   }

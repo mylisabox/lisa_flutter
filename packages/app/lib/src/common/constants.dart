@@ -5,6 +5,7 @@ import 'package:logging/logging.dart';
 const bool kIsProductionMode = bool.fromEnvironment('dart.vm.product');
 
 const kNetworkDebug = !kIsProductionMode;
+const kAuthKey = 'Bearer';
 
 final kDebugLogger = Logger('Lisa');
 

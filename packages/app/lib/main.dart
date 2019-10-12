@@ -10,8 +10,6 @@ import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/l10n/error_localizations.dart';
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
 import 'package:lisa_flutter/src/common/presentation/proxy_scaffold.dart';
-import 'package:lisa_flutter/src/common/presentation/speech_button.dart';
-import 'package:lisa_flutter/src/common/stores/speech_store.dart';
 import 'package:lisa_flutter/src/common/stores/user_store.dart';
 import 'package:lisa_flutter/src/common/utils/logging.dart';
 import 'package:lisa_flutter/src/common/utils/platform_detector/platform_detector.dart';
@@ -23,7 +21,6 @@ import 'package:lisa_flutter/src/preferences/preferences_provider.dart';
 import 'package:lisa_flutter/src/preferences/stores/preferences_store.dart';
 import 'package:lisa_flutter/src/splash_screen/presentation/splash_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:toast/toast.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
