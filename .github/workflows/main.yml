@@ -31,7 +31,7 @@ jobs:
     - name: Build apk
       run: |
         cd packages/app
-        flutter create . --org=com.mylisabox.lisa.lisa_flutter
+        flutter create . --org=com.mylisabox.lisa
         flutter clean
         flutter build apk --release --split-per-abi
     - name: Create a Release APK
