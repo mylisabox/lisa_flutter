@@ -3,7 +3,7 @@ name: L.I.S.A. release CI
 on:
   create:
     tags:
-      - v*
+      - 'v*'
 
 jobs:
   build:
