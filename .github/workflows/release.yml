@@ -1,9 +1,9 @@
 name: L.I.S.A. release CI
 
 on:
-  push:
-    branches:
-      - refs/tags/*
+  create:
+    tags:
+      - v*
 
 jobs:
   build:
