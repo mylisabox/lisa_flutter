@@ -94,3 +94,4 @@ fabric.properties
 
 **/.android/
 **/.ios/
+**/flutter_export_environment.sh
