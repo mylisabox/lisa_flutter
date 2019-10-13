@@ -1,7 +1,7 @@
 name: L.I.S.A. release CI
 
 on:
-  create:
+  push:
     tags:
       - 'v*'
 
