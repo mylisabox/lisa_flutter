@@ -40,7 +40,6 @@ dependencies:
   intl_translation: ^0.17.7
   flare_flutter: ^1.6.1
   toast: ^0.1.5
-  #flutter_crashlytics: ^1.0.0
   #firebase_analytics: ^3.0.1
 
   cupertino_icons: ^0.1.2
@@ -67,7 +66,7 @@ dependency_overrides:
 flutter:
   #module for android wear app
   module:
-    androidX: true
+    androidX: false
     androidPackage: com.mylisabox.lisa
     iosBundleIdentifier: com.mylisabox.lisa
 
