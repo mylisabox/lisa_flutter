@@ -1,9 +1,6 @@
 name: L.I.S.A. release CI
 
-on:
-  push:
-    tags:
-      - '*'
+on: [push, pull_request]
 
 jobs:
   build:
