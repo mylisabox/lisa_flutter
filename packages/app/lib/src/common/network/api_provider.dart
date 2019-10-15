@@ -49,6 +49,10 @@ class HostInterceptor extends Interceptor {
     }
   }
 
+  void clearHost() {
+    _host = null;
+  }
+
   @override
   FutureOr<void> before(RouteBase route) async {
     final url = route.getUrl;
@@ -60,7 +64,7 @@ class HostInterceptor extends Interceptor {
           _setExternalUrl(route, prefExternalUrl);
         } else if (connectivityResult == ConnectivityResult.wifi) {
           final localServer = await _serverProvider.search().catchError((err) {
-            return 'http://localhost:3000'; //FIXME don't return dev value ^^
+            return null;
           });
           _log.info('lisa host found at $localServer');
           if (localServer == null) {

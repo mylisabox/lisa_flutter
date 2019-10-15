@@ -2,14 +2,7 @@ PODS:
   - connectivity (0.0.1):
     - Flutter
     - Reachability
-  - Crashlytics (3.13.1):
-    - Fabric (~> 1.10.1)
-  - Fabric (1.10.1)
   - Flutter (1.0.0)
-  - flutter_crashlytics (0.0.1):
-    - Crashlytics
-    - Fabric
-    - Flutter
   - flutter_speech (0.0.1):
     - Flutter
   - image_picker (0.0.1):
@@ -23,7 +16,6 @@ PODS:
 DEPENDENCIES:
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
   - Flutter (from `.symlinks/flutter/ios`)
-  - flutter_crashlytics (from `.symlinks/plugins/flutter_crashlytics/ios`)
   - flutter_speech (from `.symlinks/plugins/flutter_speech/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
   - multicast_lock (from `.symlinks/plugins/multicast_lock/ios`)
@@ -31,8 +23,6 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
-    - Crashlytics
-    - Fabric
     - Reachability
 
 EXTERNAL SOURCES:
@@ -40,8 +30,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/connectivity/ios"
   Flutter:
     :path: ".symlinks/flutter/ios"
-  flutter_crashlytics:
-    :path: ".symlinks/plugins/flutter_crashlytics/ios"
   flutter_speech:
     :path: ".symlinks/plugins/flutter_speech/ios"
   image_picker:
@@ -53,10 +41,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   connectivity: c72716e202a1225ec4810740d5cb56b8ae3bf4cc
-  Crashlytics: 5aa8e90dcbf2f34898b4f5a0037787531246cca0
-  Fabric: f6f21452846788bb44595d73e9909d79d328e617
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
-  flutter_crashlytics: 7b5bba7233066381c8e18343435342ba05f3053c
   flutter_speech: dfa314b1f47e8e680a029c3705b3de22ddfceaf1
   image_picker: 16e5fec1fbc87fd3b297c53e4048521eaf17cd06
   multicast_lock: f49c108bd10d66af4ea6f4f5a8273315fa0999e4

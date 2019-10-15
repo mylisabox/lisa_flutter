@@ -1,5 +1,5 @@
 name: lisa_flutter
-description: A new Flutter project.
+description: L.I.S.A. cross platform application
 
 version: 0.0.1+2
 
@@ -10,8 +10,8 @@ dependencies:
   sentry: ^2.2.0
   flutter_staggered_animations: ^0.1.2
   keyboard_avoider: ^0.1.2
-  flutter_speech: ^1.0.0
-  #path: '../../../flutter_speech_recognition'
+  flutter_speech: ^1.1.0
+    #path: '../../../flutter_speech_recognition'
   lisa_server_sdk:
     path: '../api'
   flutter:

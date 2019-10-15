@@ -101,9 +101,10 @@ abstract class _LoginFields extends HookWidget {
     final translations = CommonLocalizations.of(context);
     return FlatButton(
       onPressed: () async {
-        final url = await showPrompt(context, translations.externalUrl, hint: translations.externalUrlHint);
+        final bloc = Provider.of<PreferencesStore>(context, listen: false);
+        final url = await showPrompt(context, translations.externalUrl, hint: translations.externalUrlHint, initialValue: bloc.externalBaseUrl);
         if (url != null) {
-          Provider.of<PreferencesStore>(context, listen: false).setExternalUrl(url);
+          bloc.setExternalUrl(url);
         }
       },
       child: Text(

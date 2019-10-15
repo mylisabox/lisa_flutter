@@ -53,9 +53,10 @@ class PreferencesWidget extends HookWidget {
             Divider(height: 1),
             ListTile(
               onTap: () async {
-                final url = await showPrompt(context, translations.externalUrl, hint: translations.externalUrlHint);
+                final bloc = Provider.of<PreferencesStore>(context, listen: false);
+                final url = await showPrompt(context, translations.externalUrl, hint: translations.externalUrlHint, initialValue: bloc.externalBaseUrl);
                 if (url != null) {
-                  Provider.of<PreferencesStore>(context, listen: false).setExternalUrl(url);
+                  bloc.setExternalUrl(url);
                 }
               },
               leading: Icon(Icons.settings_remote),
