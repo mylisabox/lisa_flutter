@@ -1,7 +1,9 @@
 name: L.I.S.A. release CI
 
-on: [push, pull_request]
-
+on:
+  push:
+    tags:
+      - '*'
 jobs:
   build:
     name: Build on Android, iOS and Mac OSX
