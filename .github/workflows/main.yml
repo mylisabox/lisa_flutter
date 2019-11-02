@@ -10,6 +10,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+      path: lisa_flutter/
     - uses: actions/setup-java@v1
       with:
         java-version: '12.x'
@@ -19,12 +20,10 @@ jobs:
         channel: 'dev'
     - run: flutter config --no-analytics
     - name: Checkout FDE
-      run: |
-        cd ..
-        git checkout https://github.com/google/flutter-desktop-embedding
+      run: git checkout https://github.com/google/flutter-desktop-embedding
     - name: Build and test
       run: |
-        cd packages/app
+        cd lisa_flutter/packages/app
         flutter pub get
         flutter pub pub run build_runner build
         flutter test
