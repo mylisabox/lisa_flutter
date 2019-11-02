@@ -10,7 +10,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-      path: lisa_flutter/
+      with:
+        path: lisa_flutter/
     - uses: actions/setup-java@v1
       with:
         java-version: '12.x'
