@@ -25,6 +25,7 @@ jobs:
     - name: Build and test
       run: |
         cd packages/app
+        sed -i '' "s|../../../|../../|g" pubspec.yaml
         flutter pub get
         flutter pub pub run build_runner build
         flutter test
