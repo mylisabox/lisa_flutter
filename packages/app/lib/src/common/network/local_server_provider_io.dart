@@ -14,10 +14,6 @@ class LocalServerProviderIO extends LocalServerProvider {
   final _log = Logger('LocalServerProvider');
 
   Future<String> search() async {
-    if (kIsWeb) {
-      return Future.value('http://localhost:3000');
-    }
-
     MulticastLock multicastLock;
     if (defaultTargetPlatform == TargetPlatform.android) {
       multicastLock = MulticastLock();

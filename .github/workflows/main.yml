@@ -18,6 +18,10 @@ jobs:
         flutter-version: '1.10.14'
         channel: 'dev'
     - run: flutter config --no-analytics
+    - name: Checkout FDE
+      run: |
+        cd ..
+        git checkout https://github.com/google/flutter-desktop-embedding
     - name: Build and test
       run: |
         cd packages/app

@@ -85,7 +85,7 @@ class HostInterceptor extends Interceptor {
     } else {
       _setExternalUrl(route, _host);
     }
-
+    _log.info('lisa host set to $_host');
     return null;
   }
 

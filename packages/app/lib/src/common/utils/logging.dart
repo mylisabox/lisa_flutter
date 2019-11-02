@@ -39,6 +39,14 @@ void _memLog(LogRecord record) {
   }
 
   _logs.add('${_memLogDateFormatter.format(DateTime.now())} $level/${record.loggerName} ${record.message}');
+
+  if(record.error) {
+    _logs.add(record.error.toString());
+  }
+
+  if(record.stackTrace != null && record.level == Level.SEVERE) {
+    _logs.add(record.stackTrace.toString());
+  }
 }
 
 

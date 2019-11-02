@@ -3,7 +3,7 @@ name: L.I.S.A. release CI
 on:
   push:
     tags:
-      - '*'
+      - v*
 jobs:
   build:
     name: Build on Android, iOS and Mac OSX
