@@ -21,7 +21,7 @@ jobs:
         channel: 'dev'
     - run: flutter config --no-analytics
     - name: Checkout FDE
-      run: git checkout https://github.com/google/flutter-desktop-embedding
+      run: git clone https://github.com/google/flutter-desktop-embedding
     - name: Build and test
       run: |
         cd lisa_flutter/packages/app
