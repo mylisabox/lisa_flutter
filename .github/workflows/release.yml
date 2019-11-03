@@ -27,6 +27,7 @@ jobs:
         run: |
           cd packages/app
           flutter clean
+          flutter pub get
           flutter build apk --release --split-per-abi
       - name: Create a Release APK
         uses: ncipollo/release-action@v1
