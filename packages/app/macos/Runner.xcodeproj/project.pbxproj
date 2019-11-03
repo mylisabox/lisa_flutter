@@ -310,7 +310,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh",
-				"${PODS_ROOT}/../Flutter/ephemeral/.symlinks/flutter/darwin-x64-release/FlutterMacOS.framework",
+				"${PODS_ROOT}/../Flutter/ephemeral/.symlinks/flutter/darwin-x64/FlutterMacOS.framework",
 				"${BUILT_PRODUCTS_DIR}/flutter_speech/flutter_speech.framework",
 				"${BUILT_PRODUCTS_DIR}/path_provider_fde/path_provider_fde.framework",
 			);

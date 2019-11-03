@@ -16,15 +16,31 @@ import Cocoa
 import FlutterMacOS
 
 class MainFlutterWindow: NSWindow {
-  override func awakeFromNib() {
-    let flutterViewController = FlutterViewController.init()
-    let windowFrame = self.frame
-    self.contentViewController = flutterViewController
-    self.setFrame(windowFrame, display: true)
-
-    RegisterGeneratedPlugins(registry: flutterViewController)
-
-    super.awakeFromNib()
-  }
+    let key = "FrameKey"
+    
+    override func awakeFromNib() {
+        let flutterViewController = FlutterViewController.init()
+        
+        let data = UserDefaults.standard.data(forKey: key)
+        let frame: NSRect
+        if data == nil {
+            frame = self.frame
+        } else {
+            frame = NSKeyedUnarchiver.unarchiveObject(with: data!) as! NSRect
+        }
+        
+        self.contentViewController = flutterViewController
+        setFrame(frame, display: true)
+        
+        RegisterGeneratedPlugins(registry: flutterViewController)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(windowWillClose(_:)), name: NSWindow.willCloseNotification, object: nil)
+        super.awakeFromNib()
+    }
+    
+    @objc func windowWillClose(_ notification: Notification) {
+        let data = NSKeyedArchiver.archivedData(withRootObject: frame)
+        UserDefaults.standard.set(data, forKey: key)
+    }
 }
 
