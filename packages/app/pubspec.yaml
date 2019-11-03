@@ -29,7 +29,7 @@ dependencies:
   remote_ui: ^0.0.6
   remote_form: ^0.0.2
   remote_color_picker: ^0.0.2
-  remote_ip_camera: ^1.1.1
+  remote_ip_camera: ^1.1.2
   remote_image_button: ^0.0.3
   proxy_layout: ^2.1.0
   provider: ^3.1.0+1

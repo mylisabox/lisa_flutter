@@ -90,6 +90,9 @@
       <excludeFolder url="file://$MODULE_DIR$/packages/app/macos/Flutter/ephemeral/.symlinks/plugins/path_provider/example/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/packages/app/macos/Flutter/ephemeral/.symlinks/plugins/path_provider/example/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/packages/app/macos/Flutter/ephemeral/.symlinks/plugins/path_provider/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/app/macos/Flutter/ephemeral/.symlinks/plugins/path_provider_fde/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/app/macos/Flutter/ephemeral/.symlinks/plugins/path_provider_fde/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/app/macos/Flutter/ephemeral/.symlinks/plugins/path_provider_fde/build" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Dart SDK" level="project" />

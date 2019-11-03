@@ -24,16 +24,11 @@ jobs:
       - run: flutter config --enable-macos-desktop
       - run: flutter config --enable-windows-desktop
       - run: flutter config --enable-linux-desktop
-      - name: Build and test
-        run: |
-          cd packages/app
-          flutter pub get
-          flutter pub pub run build_runner build
-          flutter test
+      - name: Checkout FDE
+        run: git clone https://github.com/google/flutter-desktop-embedding
       - name: Build apk
         run: |
           cd packages/app
-          flutter create --org=com.mylisabox.lisa .
           flutter clean
           flutter build apk --release --split-per-abi
       - name: Create a Release APK
