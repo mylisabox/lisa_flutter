@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
+import 'package:lisa_flutter/src/common/presentation/speech_button.dart';
 import 'package:lisa_flutter/src/common/utils/platform_detector/platform_detector.dart';
 import 'package:lisa_flutter/src/config/routes.dart';
 import 'package:lisa_flutter/src/devices/presentation/add_device.dart';
@@ -132,6 +133,8 @@ class ProxyScaffold extends HookWidget {
               }
             },
           ),
+        if (kIsMac() && currentRoute != null && currentRoute.contains('/room'))
+          SpeechButton(isFloating: false)
       ],
     );
   }

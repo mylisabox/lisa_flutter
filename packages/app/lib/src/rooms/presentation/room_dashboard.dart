@@ -10,7 +10,6 @@ import 'package:lisa_flutter/src/devices/presentation/dashboard.dart';
 import 'package:lisa_flutter/src/devices/stores/device_store.dart';
 import 'package:lisa_server_sdk/model/room.dart';
 import 'package:provider/provider.dart';
-import 'package:toast/toast.dart';
 
 class RoomDashboard extends HookWidget {
   static const route = '/room';
@@ -50,19 +49,17 @@ class RoomContainer extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final store = useMemoized(() => SpeechStore());
-    return Scaffold(
-      primary: false,
-      floatingActionButton: kIsMobile()
-          ? SpeechButton(
-              onResults: (text) async {
-                final response = await store.sendSentence(text, Localizations.localeOf(context).languageCode);
-                Toast.show(response, context, duration: Toast.LENGTH_LONG);
-              },
-            )
-          : AddDeviceFloatingButton(room: room),
-      body: Container(
-        padding: EdgeInsets.all(kSmallPadding),
-        child: child,
+    return Provider.value(
+      value: store,
+      child: Scaffold(
+        primary: false,
+        floatingActionButton: kIsMobile()
+            ? SpeechButton()
+            : AddDeviceFloatingButton(room: room),
+        body: Container(
+          padding: EdgeInsets.all(kSmallPadding),
+          child: child,
+        ),
       ),
     );
   }
