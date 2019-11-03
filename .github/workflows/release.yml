@@ -30,11 +30,11 @@ jobs:
           flutter pub get
           flutter build apk --release --split-per-abi
       - name: Build apk
-          run: |
-            cd packages/app
-            flutter clean
-            flutter pub get
-            flutter build macos --release
+        run: |
+          cd packages/app
+          flutter clean
+          flutter pub get
+          flutter build macos --release
       - name: Create a Release APK
         uses: ncipollo/release-action@v1
         with:
