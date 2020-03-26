@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/foundation.dart' as platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -10,9 +9,9 @@ import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/l10n/error_localizations.dart';
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
 import 'package:lisa_flutter/src/common/presentation/proxy_scaffold.dart';
+import 'package:lisa_flutter/src/common/stores/speech_store.dart';
 import 'package:lisa_flutter/src/common/stores/user_store.dart';
 import 'package:lisa_flutter/src/common/utils/logging.dart';
-import 'package:lisa_flutter/src/common/utils/platform_detector/platform_detector.dart';
 import 'package:lisa_flutter/src/config/routes.dart';
 import 'package:lisa_flutter/src/drawer/presentation/drawer.dart';
 import 'package:lisa_flutter/src/drawer/stores/drawer_store.dart';
@@ -24,9 +23,7 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if (!kIsMobile()) {
-    platform.debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia; //FIXME remove when desktop/web are detected and supported
-  }
+
   await PreferencesProvider().setup();
   final navigatorKey = GlobalKey<NavigatorState>();
   UserStore userStore;
@@ -116,10 +113,14 @@ class MyHomePage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final store = useMemoized(() => SpeechStore());
     final userStore = Provider.of<UserStore>(context);
-    return ProxyScaffold(
-      builderDrawer: (context) => AppDrawer(),
-      initialRoute: FavoritesWidget.route, //FIXME why it doesn't work?? check routes.dart userStore.lastRoute ?? FavoritesWidget.route,
+    return Provider.value(
+      value: store,
+      child: ProxyScaffold(
+        builderDrawer: (context) => AppDrawer(),
+        initialRoute: FavoritesWidget.route, //FIXME why it doesn't work?? check routes.dart userStore.lastRoute ?? FavoritesWidget.route,
+      ),
     );
   }
 }

@@ -30,7 +30,17 @@ class LocalServerProviderIO extends LocalServerProvider {
     final udpSocket =
         await RawDatagramSocket.bind(InternetAddress.anyIPv4, 5544, reuseAddress: true, reusePort: defaultTargetPlatform != TargetPlatform.android);
     try {
-      udpSocket.joinMulticast(address);
+      var interfaceEn0;
+      List<NetworkInterface> interfaces = await NetworkInterface.list(
+        type: InternetAddressType.IPv4,
+      );
+      for (var interface in interfaces) {
+        if (interface.name == 'en0') {
+          interfaceEn0 = interface;
+        }
+      }
+      udpSocket.setRawOption(RawSocketOption.fromInt(RawSocketOption.levelIPv4, RawSocketOption.IPv4MulticastInterface, 0));
+      udpSocket.joinMulticast(address, interfaceEn0);
     } catch (err, stacktrace) {
       _log.severe('Can\'t joinMulticast on $address', err, stacktrace);
       return Future.error(err);
@@ -59,7 +69,7 @@ class LocalServerProviderIO extends LocalServerProvider {
     udpSocket.send(dataToSend, address, 5544);
 
     //Return null if nothing is found before the timeout
-    return completer.future.timeout(Duration(milliseconds: 600)).catchError((error) {
+    return completer.future.timeout(Duration(milliseconds: 2000)).catchError((error) {
       _log.severe('Can\'t find server on multicast $error', error);
     }, test: (err) => err is TimeoutException).whenComplete(
       () {

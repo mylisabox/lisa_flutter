@@ -1,10 +1,11 @@
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
 
 mixin BaseUrlProvider {
-  String _getHost() {
-    final HostInterceptor interceptor = BackendApiProvider().interceptors.first; //get host interceptor
+  static String _getHost() {
+    final HostInterceptor interceptor = BackendApiProvider().interceptors.firstWhere((item) => item is HostInterceptor); //get host interceptor
     return interceptor.host;
   }
+  static String getBaseUrl() => _getHost();
 
   String get baseUrl => _getHost();
   String get baseApiUrl => _getHost() + '/api/v1';

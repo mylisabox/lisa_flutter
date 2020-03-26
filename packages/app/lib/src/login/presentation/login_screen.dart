@@ -29,7 +29,7 @@ class LoginScreen extends HookWidget {
 
     useEffect(() {
       store.init();
-      return null;
+      return store.dispose;
     }, [store]);
 
     final theme = Theme.of(context);
@@ -206,7 +206,7 @@ abstract class _LoginFields extends HookWidget {
   }
 
   void login(BuildContext context) async {
-    final store = Provider.of<LoginStore>(context);
+    final store = Provider.of<LoginStore>(context, listen: false);
     try {
       await store.login();
       Navigator.of(context).pushReplacementNamed(MyHomePage.route);

@@ -2,6 +2,8 @@ PODS:
   - connectivity (0.0.1):
     - Flutter
     - Reachability
+  - connectivity_fde (0.0.1):
+    - Flutter
   - Flutter (1.0.0)
   - flutter_speech (0.0.1):
     - Flutter
@@ -11,25 +13,31 @@ PODS:
     - Flutter
   - path_provider (0.0.1):
     - Flutter
+  - path_provider_fde (0.0.1):
+    - Flutter
   - Reachability (3.2)
 
 DEPENDENCIES:
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
-  - Flutter (from `.symlinks/flutter/ios`)
+  - connectivity_fde (from `.symlinks/plugins/connectivity_fde/ios`)
+  - Flutter (from `Flutter`)
   - flutter_speech (from `.symlinks/plugins/flutter_speech/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
   - multicast_lock (from `.symlinks/plugins/multicast_lock/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
+  - path_provider_fde (from `.symlinks/plugins/path_provider_fde/ios`)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  trunk:
     - Reachability
 
 EXTERNAL SOURCES:
   connectivity:
     :path: ".symlinks/plugins/connectivity/ios"
+  connectivity_fde:
+    :path: ".symlinks/plugins/connectivity_fde/ios"
   Flutter:
-    :path: ".symlinks/flutter/ios"
+    :path: Flutter
   flutter_speech:
     :path: ".symlinks/plugins/flutter_speech/ios"
   image_picker:
@@ -38,16 +46,20 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/multicast_lock/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
+  path_provider_fde:
+    :path: ".symlinks/plugins/path_provider_fde/ios"
 
 SPEC CHECKSUMS:
-  connectivity: c72716e202a1225ec4810740d5cb56b8ae3bf4cc
+  connectivity: 6e94255659cc86dcbef1d452ad3e0491bb1b3e75
+  connectivity_fde: f8bb89dc953d602673c0e1171869d98852a8169d
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_speech: dfa314b1f47e8e680a029c3705b3de22ddfceaf1
-  image_picker: 16e5fec1fbc87fd3b297c53e4048521eaf17cd06
+  image_picker: e3eacd46b94694dde7cf2705955cece853aa1a8f
   multicast_lock: f49c108bd10d66af4ea6f4f5a8273315fa0999e4
-  path_provider: f96fff6166a8867510d2c25fdcc346327cc4b259
+  path_provider: fb74bd0465e96b594bb3b5088ee4a4e7bb1f2a9d
+  path_provider_fde: 71febf5c9c8ddf45466632da27cbf38324ce81bf
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
 
-PODFILE CHECKSUM: aff02bfeed411c636180d6812254b2daeea14d09
+PODFILE CHECKSUM: 3dbe063e9c90a5d7c9e4e76e70a821b9e2c1d271
 
-COCOAPODS: 1.6.0
+COCOAPODS: 1.8.4

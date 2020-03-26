@@ -10,6 +10,7 @@ import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
 import 'package:lisa_flutter/src/common/presentation/refresh_no_scroll_content.dart';
+import 'package:lisa_flutter/src/common/utils/base_url_provider.dart';
 import 'package:lisa_flutter/src/common/utils/hooks.dart';
 import 'package:lisa_flutter/src/devices/stores/device_store.dart';
 import 'package:lisa_flutter/src/rooms/presentation/room_selector.dart';
@@ -47,14 +48,11 @@ class Dashboard extends HookWidget {
         RemoteColorPickerFactory(),
         RemoteIpCameraFactory(baseUrlProvider: () {
           final backend = BackendApiProvider();
-          final HostInterceptor interceptor = backend.interceptors.first; //get host interceptor
+          final HostInterceptor interceptor = backend.interceptors.firstWhere((item) => item is HostInterceptor); //get host interceptor
           final token = (backend.api.interceptors.firstWhere((item) => item is ApiKeyAuthInterceptor) as ApiKeyAuthInterceptor).apiKeys[kAuthKey].replaceFirst('JWT ', '');
           return interceptor.host + '/api/v1/camera/stream?token=$token&url=';
         }),
-        RemoteImageButtonFactory(baseUrlProvider: () {
-          final HostInterceptor interceptor = BackendApiProvider().interceptors.first; //get host interceptor
-          return interceptor.host;
-        })
+        RemoteImageButtonFactory(baseUrlProvider: () => BaseUrlProvider.getBaseUrl())
       ],
       onChanges: callback,
       child: LayoutBuilder(
@@ -207,7 +205,7 @@ class _DeviceIdle extends StatelessWidget {
                         showLoadingDialog(context, (_) => Text(translations.deleting), () => store.deleteDevice(device.id));
                       }
                     } else if (action == _DeviceAction.rename) {
-                      Provider.of<ValueNotifier<_DeviceState>>(context).value = _DeviceState.edition;
+                      Provider.of<ValueNotifier<_DeviceState>>(context, listen: false).value = _DeviceState.edition;
                     }
                   },
                   itemBuilder: (_) => [

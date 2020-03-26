@@ -50,7 +50,7 @@ class AppDrawer extends StatelessWidget {
                   icon: Icons.device_hub,
                   onTap: () {
                     if (drawerStore.currentSelectedRoute != OrphansWidget.route) {
-                      Provider.of<GlobalKey<NavigatorState>>(context).currentState.pushNamed(OrphansWidget.route);
+                      Provider.of<GlobalKey<NavigatorState>>(context, listen: false).currentState.pushNamed(OrphansWidget.route);
                       _closeDrawer(context);
                       drawerStore.selectRoute(OrphansWidget.route);
                     }

@@ -4,6 +4,7 @@ import 'package:crypted_preferences/crypted_preferences.dart';
 import 'package:jaguar_retrofit/jaguar_retrofit.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
+import 'package:lisa_flutter/src/common/utils/base_url_provider.dart';
 import 'package:lisa_flutter/src/preferences/preferences_provider.dart';
 import 'package:lisa_server_sdk/api.dart';
 import 'package:lisa_server_sdk/model/user.dart';
@@ -14,7 +15,7 @@ part 'user_store.g.dart';
 
 class UserStore = _UserStore with _$UserStore;
 
-abstract class _UserStore with Store {
+abstract class _UserStore with Store, BaseUrlProvider {
   final Preferences _preferences;
   final LisaServerSdk _api;
 
@@ -28,7 +29,7 @@ abstract class _UserStore with Store {
   User user;
 
   @computed
-  String get avatar => user?.avatar == null ? null : '${_api.basePath}${user.avatar}';
+  String get avatar => user?.avatar == null ? null : '$baseUrl${user.avatar}';
 
   @computed
   String get lang => user?.lang;
@@ -103,4 +104,5 @@ abstract class _UserStore with Store {
     await _preferences.remove(PreferencesProvider.keyToken);
     setUser(null);
   }
+
 }

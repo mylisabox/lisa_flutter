@@ -2,5 +2,3 @@ import 'package:lisa_flutter/src/common/utils/platform_detector/platform_detecto
 
 /// Return true if platform is Android or iOS
 bool kIsMobile() => platformIsMobile();
-
-bool kIsMac() => platformIsMac();

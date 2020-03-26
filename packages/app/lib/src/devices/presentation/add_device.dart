@@ -175,14 +175,11 @@ class AddDeviceFloatingButton extends StatelessWidget {
         var needRefresh = false;
         if (DeviceProxy.isTablet(context)) {
           needRefresh = await showPlatformDialog(context, (_) => AddDeviceDialog(room: room), barrierDismissible: false) ?? false;
-          if (needRefresh) {
-            Provider.of<DeviceStore>(context).loadDevices();
-          }
         } else {
           needRefresh = await Navigator.of(context, rootNavigator: true).pushNamed(AddDeviceScreen.route, arguments: room) ?? false;
         }
         if (needRefresh) {
-          Provider.of<DeviceStore>(context).loadDevices();
+          Provider.of<DeviceStore>(context, listen: false).loadDevices();
         }
       },
       child: Icon(Icons.add),

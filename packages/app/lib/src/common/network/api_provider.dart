@@ -33,7 +33,7 @@ class HostInterceptor extends Interceptor {
   })  : _connectivity = connectivity ?? Connectivity(),
         _serverProvider = serverProvider ?? LocalServerProvider.create(),
         _preferencesProvider = preferencesProvider ?? PreferencesProvider() {
-    if (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.android) {
+    if (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.macOS) {
       _connectivity.onConnectivityChanged.listen((connectivityResult) async {
         if (_previousConnectivity != connectivityResult) {
           _host = null; //reset host to trigger another search on next request
@@ -41,6 +41,7 @@ class HostInterceptor extends Interceptor {
           final ip = await connectivity.getWifiIP();
           if (_previousWifiIp != ip) {
             _host = null; //reset host to trigger another search on next request because we change wifi network
+            _previousWifiIp = ip;
           }
         }
 
@@ -58,7 +59,7 @@ class HostInterceptor extends Interceptor {
     final url = route.getUrl;
     if (_host == null) {
       final prefExternalUrl = _preferencesProvider.prefs.getString(PreferencesProvider.keyExternalUrl, defaultValue: url);
-      if (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.android) {
+      if (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.macOS) {
         var connectivityResult = await (_connectivity.checkConnectivity());
         if (connectivityResult == ConnectivityResult.mobile) {
           _setExternalUrl(route, prefExternalUrl);
@@ -75,7 +76,9 @@ class HostInterceptor extends Interceptor {
         }
       } else {
         // We're on desktop so let's search locally first
-        final localServer = await _serverProvider.search();
+        final localServer = await _serverProvider.search().catchError((err) {
+          return null;
+        });
         if (localServer == null) {
           _setExternalUrl(route, prefExternalUrl);
         } else {
@@ -135,13 +138,15 @@ class LogInterceptor extends Interceptor {
 class LogoutInterceptor extends Interceptor {
   final GlobalKey<NavigatorState> navigatorKey;
   final UserStore Function() userStore;
+  bool logoutInProgress = false;
 
   LogoutInterceptor(this.navigatorKey, this.userStore);
 
   @override
   Future after(StringResponse response) async {
     //backend tell us our token is not good anymore, let's logout in that case
-    if (response.statusCode == 401 && !response.request.url.path.contains('logout')) {
+    if (response.statusCode == 401 && !response.request.url.path.contains('logout') && !logoutInProgress) {
+      logoutInProgress = true;
       await userStore().logout();
       navigatorKey.currentState.pushAndRemoveUntil(
           FromBottomPageRoute(
@@ -149,6 +154,8 @@ class LogoutInterceptor extends Interceptor {
             settings: RouteSettings(name: LoginScreen.route),
           ),
           (route) => true);
+    } else if (response.statusCode >= 200 && response.statusCode < 300) {
+      logoutInProgress = false;
     }
 
     return response;

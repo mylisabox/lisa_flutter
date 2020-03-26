@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
@@ -133,7 +134,7 @@ class ProxyScaffold extends HookWidget {
               }
             },
           ),
-        if (kIsMac() && currentRoute != null && currentRoute.contains('/room'))
+        if (defaultTargetPlatform == TargetPlatform.macOS && currentRoute != null && currentRoute.contains('/room'))
           SpeechButton(isFloating: false)
       ],
     );
