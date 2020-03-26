@@ -76,7 +76,6 @@ class ProgressButton extends HookWidget {
     useEffect(() {
       if (state != null && _state.value != state) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          print(state);
           _onStart(false);
           if (state == ProgressButtonState.idle) {
             _controller.reverse();

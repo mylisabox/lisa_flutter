@@ -9,11 +9,13 @@ import 'package:toast/toast.dart';
 class SpeechButton extends HookWidget {
   final void Function(String text) onResults;
   final bool isFloating;
+  final String roomId;
 
   const SpeechButton({
     Key key,
     this.isFloating = true,
     this.onResults,
+    this.roomId,
   }) : super(key: key);
 
   @override
@@ -30,7 +32,7 @@ class SpeechButton extends HookWidget {
         isListening.value = false;
         Toast.show(text, context, duration: Toast.LENGTH_LONG);
         if (onResults == null) {
-          final response = await Provider.of<SpeechStore>(context, listen: false).sendSentence(text, Localizations.localeOf(context).languageCode);
+          final response = await Provider.of<SpeechStore>(context, listen: false).sendSentence(text, Localizations.localeOf(context).languageCode, roomId);
           Toast.show(response, context, duration: Toast.LENGTH_LONG);
         } else {
           onResults(text);
@@ -61,7 +63,7 @@ class SpeechButton extends HookWidget {
                       animation: 'loop',
                     ),
                   )
-                : Icon(Icons.mic),
+                : Icon(Icons.mic, color: Colors.white),
           )
         : IconButton(
             icon: isListening.value
@@ -75,7 +77,7 @@ class SpeechButton extends HookWidget {
                 animation: 'loop',
               ),
             )
-                : Icon(Icons.mic),
+                : Icon(Icons.mic, color: Colors.white),
             onPressed: isAvailable.value ? () => onSpeechClicked(context, isListening, speech) : null,
           );
   }

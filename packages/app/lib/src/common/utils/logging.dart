@@ -19,9 +19,7 @@ void initLogger() {
   Logger.root.onRecord.listen(_log);
 }
 
-
 void _memLog(LogRecord record) {
-
   // only keep last n lines
   if (_logs.length >= _memLogMaxLines) {
     _logs.removeFirst();
@@ -29,26 +27,37 @@ void _memLog(LogRecord record) {
 
   var level = '?';
   switch (record.level.value) {
-    case 300: level = 'T'; break;
+    case 300:
+      level = 'T';
+      break;
     case 400:
-    case 500: level = 'D'; break;
-    case 800: level = 'I'; break;
-    case 900: level = 'W'; break;
-    case 1000: level = 'E'; break;
-    case 1200: level = 'WTF'; break;
+    case 500:
+      level = 'D';
+      break;
+    case 800:
+      level = 'I';
+      break;
+    case 900:
+      level = 'W';
+      break;
+    case 1000:
+      level = 'E';
+      break;
+    case 1200:
+      level = 'WTF';
+      break;
   }
 
   _logs.add('${_memLogDateFormatter.format(DateTime.now())} $level/${record.loggerName} ${record.message}');
 
-  if(record.error) {
+  if (record.error != null) {
     _logs.add(record.error.toString());
   }
 
-  if(record.stackTrace != null && record.level == Level.SEVERE) {
+  if (record.stackTrace != null && record.level == Level.SEVERE) {
     _logs.add(record.stackTrace.toString());
   }
 }
-
 
 void _log(LogRecord record) async {
   // log to crashlytics

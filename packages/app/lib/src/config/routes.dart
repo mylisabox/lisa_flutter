@@ -42,9 +42,6 @@ class Router {
       return null;
     }
 
-    if (MyHomePage.route == settings.name) {
-      return MaterialPageRoute(builder: routes[settings.name], settings: settings.copyWith(isInitialRoute: true));
-    }
     return MaterialPageRoute(builder: routes[settings.name], settings: settings);
   }
 }

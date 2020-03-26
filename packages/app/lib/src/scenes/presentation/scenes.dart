@@ -135,7 +135,7 @@ class ScenesWidget extends HookWidget {
             refreshKey.currentState.show();
           }
         },
-        child: Icon(Icons.add),
+        child: Icon(Icons.add, color: Colors.white),
       ),
     );
   }

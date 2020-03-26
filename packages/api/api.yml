@@ -463,6 +463,10 @@ components:
           type: string
         lang:
           type: string
+        context:
+          type: object
+          additionalProperties:
+            type: object
     InteractResponse:
       type:  object
       required:
@@ -478,7 +482,7 @@ components:
         lang:
           type: string
         userId:
-          type: string
+          type: int
         userSentence:
           type: string
         response:

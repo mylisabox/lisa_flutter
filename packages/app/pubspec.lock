@@ -190,6 +190,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.9"
+  file_chooser:
+    dependency: "direct main"
+    description:
+      path: "../../../flutter-desktop-embedding/plugins/file_chooser"
+      relative: true
+    source: path
+    version: "0.0.1"
   fixnum:
     dependency: transitive
     description:
@@ -270,6 +277,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.3+1"
+  flutter_plugin_android_lifecycle:
+    dependency: transitive
+    description:
+      name: flutter_plugin_android_lifecycle
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.6"
   flutter_speech:
     dependency: "direct main"
     description:
@@ -297,7 +311,7 @@ packages:
       name: flutter_svg
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.14.2"
+    version: "0.17.3+1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -346,12 +360,12 @@ packages:
     source: hosted
     version: "0.12.0+2"
   http_multi_server:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: http_multi_server
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
+    version: "2.2.0"
   http_parser:
     dependency: transitive
     description:
@@ -372,7 +386,7 @@ packages:
       name: image_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.1+10"
+    version: "0.6.3+4"
   intl:
     dependency: transitive
     description:
@@ -638,7 +652,7 @@ packages:
       name: remote_image_button
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.3"
+    version: "0.0.4"
   remote_ip_camera:
     dependency: "direct main"
     description:
@@ -734,7 +748,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.11"
+    version: "0.2.15"
   timing:
     dependency: transitive
     description:
@@ -800,4 +814,4 @@ packages:
     version: "2.2.0"
 sdks:
   dart: ">=2.5.0 <3.0.0"
-  flutter: ">=1.9.1 <2.0.0"
+  flutter: ">=1.12.13 <2.0.0"

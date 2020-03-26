@@ -69,7 +69,7 @@ class LocalServerProviderIO extends LocalServerProvider {
     udpSocket.send(dataToSend, address, 5544);
 
     //Return null if nothing is found before the timeout
-    return completer.future.timeout(Duration(milliseconds: 2000)).catchError((error) {
+    return completer.future.timeout(Duration(milliseconds: 3000)).catchError((error) {
       _log.severe('Can\'t find server on multicast $error', error);
     }, test: (err) => err is TimeoutException).whenComplete(
       () {

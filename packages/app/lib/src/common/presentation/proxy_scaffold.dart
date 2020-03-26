@@ -103,7 +103,8 @@ class ProxyScaffold extends HookWidget {
     );
   }
 
-  AppBar _getAppBar(BuildContext context, String currentRoute, String title, bool canPop, GlobalKey<NavigatorState> navigatorKey, List<NavigatorObserver> observers) {
+  AppBar _getAppBar(
+      BuildContext context, String currentRoute, String title, bool canPop, GlobalKey<NavigatorState> navigatorKey, List<NavigatorObserver> observers) {
     final translations = CommonLocalizations.of(context);
     kDebugLogger.info('Current route: $currentRoute');
     return AppBar(
@@ -122,6 +123,7 @@ class ProxyScaffold extends HookWidget {
           IconButton(
             icon: Icon(
               Icons.add,
+              color: Colors.white,
               semanticLabel: translations.addDevice,
             ),
             tooltip: translations.addDevice,
@@ -134,8 +136,7 @@ class ProxyScaffold extends HookWidget {
               }
             },
           ),
-        if (defaultTargetPlatform == TargetPlatform.macOS && currentRoute != null && currentRoute.contains('/room'))
-          SpeechButton(isFloating: false)
+        if (defaultTargetPlatform == TargetPlatform.macOS && currentRoute != null && currentRoute.contains('/room')) SpeechButton(isFloating: false, roomId: currentRoute.split('/').last)
       ],
     );
   }

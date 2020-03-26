@@ -1,5 +1,6 @@
-import 'dart:ui' as ui;
 import 'dart:html';
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lisa_flutter/src/common/stores/user_store.dart';
@@ -37,7 +38,6 @@ class AvatarFieldWeb extends AvatarField {
         if (file != null) {
           final reader = FileReader();
           reader.onLoad.listen((e) {
-            print(reader.result);
             onFileSelected(reader.result, file.name);
           });
           reader.onError.listen((e) {

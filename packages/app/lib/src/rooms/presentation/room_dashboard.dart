@@ -50,7 +50,7 @@ class RoomContainer extends HookWidget {
     return Scaffold(
       primary: false,
       floatingActionButton: kIsMobile()
-          ? SpeechButton()
+          ? SpeechButton(roomId: room?.id.toString())
           : AddDeviceFloatingButton(room: room),
       body: Container(
         padding: EdgeInsets.all(kSmallPadding),

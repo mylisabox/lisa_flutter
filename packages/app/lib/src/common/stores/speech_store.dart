@@ -13,8 +13,8 @@ abstract class _SpeechStore with Store {
   _SpeechStore({ChatbotApi api}) : _api = api ?? BackendApiProvider().api.getChatbotApi();
 
   @action
-  Future<String> sendSentence(String sentence, String lang) async {
-    final result = await _api.interact(InteractRequest(sentence: sentence, lang: lang));
+  Future<String> sendSentence(String sentence, String lang, String roomId) async {
+    final result = await _api.interact(InteractRequest(sentence: sentence, lang: lang, context: { 'roomId': roomId }));
     return result.response;
   }
 }

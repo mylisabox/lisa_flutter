@@ -182,7 +182,7 @@ class AddDeviceFloatingButton extends StatelessWidget {
           Provider.of<DeviceStore>(context, listen: false).loadDevices();
         }
       },
-      child: Icon(Icons.add),
+      child: Icon(Icons.add, color: Colors.white),
     );
   }
 }

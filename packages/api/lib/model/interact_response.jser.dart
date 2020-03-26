@@ -28,7 +28,7 @@ abstract class _$InteractResponseSerializer
     final obj = InteractResponse(
         action: map['action'] as String ?? getJserDefault('action'),
         lang: map['lang'] as String ?? getJserDefault('lang'),
-        userId: map['userId'] as String ?? getJserDefault('userId'),
+        userId: map['userId'] as int ?? getJserDefault('userId'),
         userSentence:
             map['userSentence'] as String ?? getJserDefault('userSentence'),
         response: map['response'] as String ?? getJserDefault('response'),

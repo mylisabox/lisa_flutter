@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **action** | **String** |  | [default to null]
 **lang** | **String** |  | [default to null]
-**userId** | **String** |  | [default to null]
+**userId** | **int** |  | [default to null]
 **userSentence** | **String** |  | [default to null]
 **response** | **String** |  | [default to null]
 **responses** | **List&lt;String&gt;** |  | [default to const []]

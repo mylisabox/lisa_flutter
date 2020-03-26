@@ -2,6 +2,8 @@ PODS:
   - connectivity_fde (0.0.1):
     - FlutterMacOS
     - Reachability
+  - file_chooser (0.0.2):
+    - FlutterMacOS
   - flutter_speech (0.0.1):
     - FlutterMacOS
   - FlutterMacOS (1.0.0)
@@ -11,8 +13,9 @@ PODS:
 
 DEPENDENCIES:
   - connectivity_fde (from `Flutter/ephemeral/.symlinks/plugins/connectivity_fde/macos`)
+  - file_chooser (from `Flutter/ephemeral/.symlinks/plugins/file_chooser/macos`)
   - flutter_speech (from `Flutter/ephemeral/.symlinks/plugins/flutter_speech/macos`)
-  - FlutterMacOS (from `Flutter/ephemeral/.symlinks/flutter/darwin-x64`)
+  - FlutterMacOS (from `Flutter/ephemeral/.symlinks/flutter/darwin-x64-release`)
   - path_provider_fde (from `Flutter/ephemeral/.symlinks/plugins/path_provider_fde/macos`)
 
 SPEC REPOS:
@@ -22,15 +25,18 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   connectivity_fde:
     :path: Flutter/ephemeral/.symlinks/plugins/connectivity_fde/macos
+  file_chooser:
+    :path: Flutter/ephemeral/.symlinks/plugins/file_chooser/macos
   flutter_speech:
     :path: Flutter/ephemeral/.symlinks/plugins/flutter_speech/macos
   FlutterMacOS:
-    :path: Flutter/ephemeral/.symlinks/flutter/darwin-x64
+    :path: Flutter/ephemeral/.symlinks/flutter/darwin-x64-release
   path_provider_fde:
     :path: Flutter/ephemeral/.symlinks/plugins/path_provider_fde/macos
 
 SPEC CHECKSUMS:
   connectivity_fde: f169428d3243beecc7c89df24ec09e54eff0fb1c
+  file_chooser: 24432cf5dc836722b05c11c2a0a30d19c3c9b996
   flutter_speech: 5ef621aa91ebefe17ec7a585b3e2032c230b275f
   FlutterMacOS: 15bea8a44d2fa024068daa0140371c020b4b6ff9
   path_provider_fde: ac05eee380688ce8414a9003c3ac2d3c106dcbf8

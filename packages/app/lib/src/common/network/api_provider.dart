@@ -59,7 +59,7 @@ class HostInterceptor extends Interceptor {
     final url = route.getUrl;
     if (_host == null) {
       final prefExternalUrl = _preferencesProvider.prefs.getString(PreferencesProvider.keyExternalUrl, defaultValue: url);
-      if (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.macOS) {
+      if (!kIsWeb && (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.macOS)) {
         var connectivityResult = await (_connectivity.checkConnectivity());
         if (connectivityResult == ConnectivityResult.mobile) {
           _setExternalUrl(route, prefExternalUrl);

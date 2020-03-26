@@ -308,9 +308,10 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh",
-				"${PODS_ROOT}/../Flutter/ephemeral/.symlinks/flutter/darwin-x64/FlutterMacOS.framework",
+				"${PODS_ROOT}/../Flutter/ephemeral/.symlinks/flutter/darwin-x64-release/FlutterMacOS.framework",
 				"${BUILT_PRODUCTS_DIR}/Reachability/Reachability.framework",
 				"${BUILT_PRODUCTS_DIR}/connectivity_fde/connectivity_fde.framework",
+				"${BUILT_PRODUCTS_DIR}/file_chooser/file_chooser.framework",
 				"${BUILT_PRODUCTS_DIR}/flutter_speech/flutter_speech.framework",
 				"${BUILT_PRODUCTS_DIR}/path_provider_fde/path_provider_fde.framework",
 			);
@@ -319,6 +320,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FlutterMacOS.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Reachability.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/connectivity_fde.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/file_chooser.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/flutter_speech.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/path_provider_fde.framework",
 			);

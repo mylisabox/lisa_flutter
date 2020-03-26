@@ -14,6 +14,11 @@ abstract class _$InteractRequestSerializer
     Map<String, dynamic> ret = <String, dynamic>{};
     setMapValueIfNotNull(ret, 'sentence', model.sentence);
     setMapValueIfNotNull(ret, 'lang', model.lang);
+    setMapValueIfNotNull(
+        ret,
+        'context',
+        codeNonNullMap(model.context, (val) => passProcessor.serialize(val),
+            <String, dynamic>{}));
     return ret;
   }
 
@@ -22,7 +27,12 @@ abstract class _$InteractRequestSerializer
     if (map == null) return null;
     final obj = InteractRequest(
         sentence: map['sentence'] as String ?? getJserDefault('sentence'),
-        lang: map['lang'] as String ?? getJserDefault('lang'));
+        lang: map['lang'] as String ?? getJserDefault('lang'),
+        context: codeNonNullMap<Object>(
+                map['context'] as Map,
+                (val) => passProcessor.deserialize(val) as Object,
+                <String, Object>{}) ??
+            getJserDefault('context'));
     return obj;
   }
 }

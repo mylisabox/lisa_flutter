@@ -184,7 +184,7 @@ class _Section extends ExpansionPanel {
                       style: Theme.of(context).textTheme.title,
                     ),
                   ),
-                  IconButton(icon: Icon(Icons.add), onPressed: onAddClicked),
+                  IconButton(icon: Icon(Icons.add, color: Colors.white), onPressed: onAddClicked),
                 ],
               ),
             );
