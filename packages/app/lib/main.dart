@@ -53,7 +53,7 @@ class MyApp extends HookWidget {
     }, [prefStore]);
 
     return MultiProvider(
-      providers: <SingleChildCloneableWidget>[
+      providers: [
         Provider.value(value: drawerStore),
         Provider.value(value: userStore),
         Provider.value(value: prefStore),

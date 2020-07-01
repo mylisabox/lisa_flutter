@@ -9,7 +9,6 @@ import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
 import 'package:lisa_flutter/src/common/presentation/loading_button.dart';
 import 'package:lisa_flutter/src/common/stores/user_store.dart';
-import 'package:lisa_flutter/src/common/utils/hooks.dart';
 import 'package:lisa_flutter/src/login/stores/login_store.dart';
 import 'package:lisa_flutter/src/preferences/stores/preferences_store.dart';
 import 'package:provider/provider.dart';
@@ -29,7 +28,7 @@ class LoginScreen extends HookWidget {
 
     useEffect(() {
       store.init();
-      return store.dispose;
+      return null;
     }, [store]);
 
     final theme = Theme.of(context);
@@ -90,7 +89,7 @@ class LoginScreen extends HookWidget {
   }
 }
 
-abstract class _LoginFields extends HookWidget {
+mixin _LoginFields {
   Widget _getLogo() {
     return Image.asset(
       'assets/images/logo.png',
@@ -216,7 +215,7 @@ abstract class _LoginFields extends HookWidget {
   }
 }
 
-class _LoginLandscape extends _LoginFields {
+class _LoginLandscape extends HookWidget with _LoginFields {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -261,7 +260,7 @@ class _LoginLandscape extends _LoginFields {
   }
 }
 
-class _LoginPortrait extends _LoginFields {
+class _LoginPortrait extends HookWidget with _LoginFields {
   @override
   Widget build(BuildContext context) {
     return Container(

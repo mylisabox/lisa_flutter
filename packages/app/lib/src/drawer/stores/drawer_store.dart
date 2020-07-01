@@ -36,9 +36,12 @@ abstract class _DrawerStore with Store {
   bool isRoomListOpened = false;
 
   @action
-  void toggleListOpened() {
+  void toggleListOpened() async {
     isRoomListOpened = !isRoomListOpened;
-    _preferencesProvider.prefs.setBool(_keyRoomListOpened, isRoomListOpened);
+    await _preferencesProvider.prefs.setBool(_keyRoomListOpened, isRoomListOpened);
+    if (isRoomListOpened && rooms.isEmpty) {
+      await loadRooms();
+    }
   }
 
   @action

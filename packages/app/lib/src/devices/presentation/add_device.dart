@@ -27,7 +27,7 @@ class AddDeviceScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final translations = CommonLocalizations.of(context);
     return Provider(
-      builder: (_) {
+      create: (_) {
         return AddDeviceStore(room: room);
       },
       dispose: (_, store) => store.dispose(),
@@ -117,7 +117,7 @@ class AddDeviceDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final translations = CommonLocalizations.of(context);
     return Provider(
-      builder: (_) {
+      create: (_) {
         return AddDeviceStore(room: room);
       },
       dispose: (_, store) => store.dispose(),
