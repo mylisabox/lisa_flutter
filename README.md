@@ -2,6 +2,9 @@
 
 A new Flutter project.
 
+<img alt="JetBrains' support" src="jetbrains.png" data-canonical-src="jetbrains.png" width="100" />
+
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
