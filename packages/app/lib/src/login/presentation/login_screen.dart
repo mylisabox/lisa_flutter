@@ -61,7 +61,9 @@ class LoginScreen extends HookWidget {
             fit: StackFit.expand,
             children: [
               Image.asset(
-                OrientationProxy.isPortrait(context) ? 'assets/images/bg_login_portrait.jpg' : 'assets/images/bg_login_landscape.jpg',
+                OrientationProxy.isPortrait(context)
+                    ? 'assets/images/bg_login_portrait.jpg'
+                    : 'assets/images/bg_login_landscape.jpg',
                 fit: BoxFit.cover,
               ),
               Container(
@@ -101,7 +103,12 @@ mixin _LoginFields {
     return FlatButton(
       onPressed: () async {
         final bloc = Provider.of<PreferencesStore>(context, listen: false);
-        final url = await showPrompt(context, translations.externalUrl, hint: translations.externalUrlHint, initialValue: bloc.externalBaseUrl);
+        final url = await showPrompt(
+          context,
+          translations.externalUrl,
+          hint: translations.externalUrlHint,
+          initialValue: bloc.externalBaseUrl,
+        );
         if (url != null) {
           bloc.setExternalUrl(url);
         }
@@ -131,6 +138,7 @@ mixin _LoginFields {
             builder: (context) => TextField(
               autofocus: true,
               controller: controller,
+              autofillHints: [AutofillHints.email],
               onChanged: (value) => store.setEmail(value),
               onSubmitted: (_) {
                 FocusScope.of(context).focusInDirection(TraversalDirection.down);
@@ -160,6 +168,7 @@ mixin _LoginFields {
       color: Colors.white.withOpacity(_opacity),
       child: Observer(
         builder: (context) => TextField(
+          autofillHints: [AutofillHints.password],
           textInputAction: TextInputAction.send,
           onSubmitted: (_) {
             FocusScope.of(context).requestFocus(FocusNode());
@@ -194,7 +203,9 @@ mixin _LoginFields {
             elevation: 0,
             child: Observer(
               builder: (_) => Text(
-                store.mode == AuthMode.login ? translations.loginButton.toUpperCase() : translations.signupButton.toUpperCase(),
+                store.mode == AuthMode.login
+                    ? translations.loginButton.toUpperCase()
+                    : translations.signupButton.toUpperCase(),
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),

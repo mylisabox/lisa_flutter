@@ -4,7 +4,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
-import 'package:lisa_flutter/src/common/utils/hooks.dart';
 import 'package:lisa_flutter/src/scenes/stores/scene_store.dart';
 import 'package:lisa_server_sdk/model/scene.dart';
 
@@ -16,7 +15,7 @@ class SceneWidget extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final store = useDisposable(() => SceneStore(), [scene]);
+    final store = useMemoized(() => SceneStore(), [scene]);
     final sentencesExpanded = useState(true);
     final responsesExpanded = useState(true);
     final commandsExpanded = useState(true);
@@ -111,11 +110,13 @@ class SceneWidget extends HookWidget {
                 onPressed: () {
                   Navigator.of(context, rootNavigator: true).pop();
                 },
+                textColor: Colors.grey,
                 child: Text(translations.cancel.toUpperCase()),
               ),
               Observer(
                 builder: (context) => FlatButton(
                   textColor: Theme.of(context).primaryColor,
+                  disabledColor: Colors.grey[300],
                   onPressed: store.canSave
                       ? () async {
                           final success = await showLoadingDialog(context, (_) => Text(translations.saving), () => store.saveScene(), onError: (ex, stack) {

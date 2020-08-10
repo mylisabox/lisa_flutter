@@ -156,6 +156,9 @@
       <excludeFolder url="file://$MODULE_DIR$/packages/app/macos/Flutter/ephemeral/.symlinks/plugins/path_provider_macos/example/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/packages/app/macos/Flutter/ephemeral/.symlinks/plugins/path_provider_macos/example/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/packages/app/macos/Flutter/ephemeral/.symlinks/plugins/path_provider_macos/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/app/wear/mylisabox/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/app/wear/mylisabox/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/app/wear/mylisabox/build" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Dart SDK" level="project" />

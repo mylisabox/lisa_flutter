@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:keyboard_avoider/keyboard_avoider.dart';
 import 'package:lisa_flutter/src/common/errors.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 
@@ -196,38 +195,34 @@ Future<T> showSelectDialog<T>(BuildContext context, WidgetBuilder title, List<T>
 
 Widget getAppDialog(BuildContext context, WidgetBuilder title, WidgetBuilder content, {List<DialogAction> actions = const [], bool forceAndroid = false}) {
   if (defaultTargetPlatform == TargetPlatform.iOS && !forceAndroid) {
-    return KeyboardAvoider(
-      child: CupertinoAlertDialog(
-        title: title(context),
-        content: content(context),
-        actions: actions
-            .map((action) => CupertinoDialogAction(
-                  child: Text(
-                    action.text,
-                    style: TextStyle(color: _getColorForAction(context, action)),
-                  ),
-                  onPressed: action.callback == null ? null : () => action.callback(context),
-                  isDestructiveAction: action.isDestructiveAction,
-                  isDefaultAction: action.isDefaultAction,
-                ))
-            .toList(growable: false),
-      ),
+    return CupertinoAlertDialog(
+      title: title(context),
+      content: content(context),
+      actions: actions
+          .map((action) => CupertinoDialogAction(
+                child: Text(
+                  action.text,
+                  style: TextStyle(color: _getColorForAction(context, action)),
+                ),
+                onPressed: action.callback == null ? null : () => action.callback(context),
+                isDestructiveAction: action.isDestructiveAction,
+                isDefaultAction: action.isDefaultAction,
+              ))
+          .toList(growable: false),
     );
   } else {
-    return KeyboardAvoider(
-      child: AlertDialog(
-        title: title(context),
-        content: content(context),
-        actions: actions
-            .map((action) => FlatButton(
-                  child: Text(
-                    action.text,
-                    style: TextStyle(color: _getColorForAction(context, action)),
-                  ),
-                  onPressed: action.callback == null ? null : () => action.callback(context),
-                ))
-            .toList(growable: false),
-      ),
+    return AlertDialog(
+      title: title(context),
+      content: content(context),
+      actions: actions
+          .map((action) => FlatButton(
+                child: Text(
+                  action.text,
+                  style: TextStyle(color: _getColorForAction(context, action)),
+                ),
+                onPressed: action.callback == null ? null : () => action.callback(context),
+              ))
+          .toList(growable: false),
     );
   }
 }

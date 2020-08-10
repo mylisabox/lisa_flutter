@@ -121,6 +121,8 @@ class CommonLocalizations {
 
   String get menuScenes => Intl.message('Scenes', name: 'menuScenes');
 
+  String get menuMultimedia => Intl.message('Multimedia', name: 'menuMultimedia');
+
   String get menuFavorite => Intl.message('Favorites', name: 'menuFavorite');
 
   String get menuLogout => Intl.message('Logout', name: 'menuLogout');

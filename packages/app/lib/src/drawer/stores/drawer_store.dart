@@ -36,9 +36,10 @@ abstract class _DrawerStore with Store {
   bool isRoomListOpened = false;
 
   @action
-  void toggleListOpened() async {
+  Future<void> toggleListOpened() async {
     isRoomListOpened = !isRoomListOpened;
-    await _preferencesProvider.prefs.setBool(_keyRoomListOpened, isRoomListOpened);
+    await _preferencesProvider.prefs
+        .setBool(_keyRoomListOpened, isRoomListOpened);
     if (isRoomListOpened && rooms.isEmpty) {
       await loadRooms();
     }
@@ -48,7 +49,8 @@ abstract class _DrawerStore with Store {
   Future loadRooms({bool force: false}) async {
     if (rooms.isEmpty || force) {
       rooms = ObservableList.of(await _roomApi.getRooms());
-      isRoomListOpened = _preferencesProvider.prefs.getBool(_keyRoomListOpened) ?? false;
+      isRoomListOpened =
+          _preferencesProvider.prefs.getBool(_keyRoomListOpened) ?? false;
     }
   }
 
@@ -63,7 +65,9 @@ abstract class _DrawerStore with Store {
   @action
   Future renameRoom(Room room, String name) async {
     if (name != null && name.length > 3) {
-      await _roomApi.saveRoom(room.id, Room(id: room.id, name: name)).catchError(handleCaughtError);
+      await _roomApi
+          .saveRoom(room.id, Room(id: room.id, name: name))
+          .catchError(handleCaughtError);
       await loadRooms(force: true);
     }
   }
@@ -77,6 +81,7 @@ abstract class _DrawerStore with Store {
   @action
   void selectRoute(String route) {
     currentSelectedRoute = route;
-    _preferencesProvider.prefs.setString(PreferencesProvider.keyLastRoute, route);
+    _preferencesProvider.prefs
+        .setString(PreferencesProvider.keyLastRoute, route);
   }
 }

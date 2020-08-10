@@ -28,7 +28,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.4.1"
+    version: "2.4.2"
   auth_header:
     dependency: transitive
     description:
@@ -105,7 +105,7 @@ packages:
       name: characters
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "1.1.0-nullsafety"
   charcode:
     dependency: transitive
     description:
@@ -147,14 +147,21 @@ packages:
       name: collection
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.14.12"
+    version: "1.15.0-nullsafety"
   connectivity:
     dependency: "direct main"
     description:
       name: connectivity
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.8+6"
+    version: "0.4.9"
+  connectivity_for_web:
+    dependency: transitive
+    description:
+      name: connectivity_for_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.1"
   connectivity_macos:
     dependency: transitive
     description:
@@ -211,6 +218,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.6"
+  dio:
+    dependency: transitive
+    description:
+      name: dio
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.10"
   fake_async:
     dependency: transitive
     description:
@@ -231,7 +245,7 @@ packages:
       path: "../../../flutter-desktop-embedding/plugins/file_chooser"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "0.2.0"
   fixnum:
     dependency: transitive
     description:
@@ -292,19 +306,19 @@ packages:
       name: flutter_hooks
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.10.0"
+    version: "0.13.0"
   flutter_localizations:
     dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
   flutter_mjpeg:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "../../../flutter_mjpeg"
-      relative: true
-    source: path
-    version: "1.2.8"
+      name: flutter_mjpeg
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.9"
   flutter_mobx:
     dependency: "direct main"
     description:
@@ -352,6 +366,18 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_transmission:
+    dependency: "direct main"
+    description:
+      name: flutter_transmission
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1"
+  flutter_web_plugins:
+    dependency: transitive
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   flutter_widgets:
     dependency: transitive
     description:
@@ -386,9 +412,9 @@ packages:
       name: http
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.1"
+    version: "0.12.2"
   http_multi_server:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: http_multi_server
       url: "https://pub.dartlang.org"
@@ -493,26 +519,26 @@ packages:
     source: path
     version: "1.0.0"
   logging:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: logging
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.11.3+2"
+    version: "0.11.4"
   matcher:
     dependency: transitive
     description:
       name: matcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.6"
+    version: "0.12.8"
   meta:
     dependency: transitive
     description:
       name: meta
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.8"
+    version: "1.3.0-nullsafety"
   mime:
     dependency: transitive
     description:
@@ -659,7 +685,7 @@ packages:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.1.3"
+    version: "4.3.2"
   proxy_layout:
     dependency: "direct main"
     description:
@@ -691,37 +717,37 @@ packages:
   remote_color_picker:
     dependency: "direct main"
     description:
-      path: "../../../remote_ui/packages/remote_color_picker"
-      relative: true
-    source: path
-    version: "0.0.2"
+      name: remote_color_picker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.3"
   remote_form:
     dependency: "direct main"
     description:
-      path: "../../../remote_ui/packages/remote_form"
-      relative: true
-    source: path
-    version: "0.0.2"
+      name: remote_form
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.3"
   remote_image_button:
     dependency: "direct main"
     description:
-      path: "../../../remote_ui/packages/remote_image_button"
-      relative: true
-    source: path
-    version: "0.0.4"
+      name: remote_image_button
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.5"
   remote_ip_camera:
     dependency: "direct main"
     description:
-      path: "../../../remote_ui/packages/remote_ip_camera"
-      relative: true
-    source: path
-    version: "1.1.3"
+      name: remote_ip_camera
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.4"
   remote_ui:
     dependency: "direct main"
     description:
-      path: "../../../remote_ui/packages/remote_ui"
-      relative: true
-    source: path
+      name: remote_ui
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "0.0.9"
   sentry:
     dependency: "direct main"
@@ -769,7 +795,7 @@ packages:
       name: stack_trace
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.9.3"
+    version: "1.9.5"
   stream_channel:
     dependency: transitive
     description:
@@ -804,7 +830,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.16"
+    version: "0.2.17"
   timing:
     dependency: transitive
     description:
@@ -819,13 +845,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.5"
+  transmission:
+    dependency: transitive
+    description:
+      name: transmission
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1"
   typed_data:
     dependency: transitive
     description:
       name: typed_data
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.6"
+    version: "1.3.0-nullsafety"
   usage:
     dependency: transitive
     description:
@@ -839,7 +872,7 @@ packages:
       name: vector_math
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.8"
+    version: "2.1.0-nullsafety"
   watcher:
     dependency: transitive
     description:
@@ -876,5 +909,5 @@ packages:
     source: hosted
     version: "2.2.0"
 sdks:
-  dart: ">=2.9.0-14.0.dev <3.0.0"
+  dart: ">=2.9.0-18.0 <2.9.0"
   flutter: ">=1.18.0-6.0.pre <2.0.0"

@@ -5,14 +5,14 @@
 import FlutterMacOS
 import Foundation
 
+import file_chooser
 import connectivity_macos
 import flutter_speech
 import path_provider_macos
-import file_chooser
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
+  FileChooserPlugin.register(with: registry.registrar(forPlugin: "FileChooserPlugin"))
   ConnectivityPlugin.register(with: registry.registrar(forPlugin: "ConnectivityPlugin"))
   FlutterSpeechRecognitionPlugin.register(with: registry.registrar(forPlugin: "FlutterSpeechRecognitionPlugin"))
   PathProviderPlugin.register(with: registry.registrar(forPlugin: "PathProviderPlugin"))
-  FileChooserPlugin.register(with: registry.registrar(forPlugin: "FileChooserPlugin"))
 }
