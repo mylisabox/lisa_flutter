@@ -19,6 +19,7 @@ class PreferencesProvider {
 
   Future<void> setup() async {
     String appDocPath = await kGetMainDirectory();
+    //File('$appDocPath/prefs.json').deleteSync();
     _prefs = await Preferences.preferences(path: '$appDocPath/prefs.json');
   }
 }

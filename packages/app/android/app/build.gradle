@@ -29,6 +29,7 @@ android {
 
     lintOptions {
         disable 'InvalidPackage'
+        checkReleaseBuilds false // bug flutter https://github.com/flutter/flutter/issues/58247
     }
 
     defaultConfig {

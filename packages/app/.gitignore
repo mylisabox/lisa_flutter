@@ -37,6 +37,13 @@
 **/android/gradlew.bat
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
+**/android_wear/**/gradle-wrapper.jar
+**/android_wear/.gradle
+**/android_wear/captures/
+**/android_wear/gradlew
+**/android_wear/gradlew.bat
+**/android_wear/local.properties
+**/android_wear/**/GeneratedPluginRegistrant.java
 
 # iOS/XCode related
 **/ios/**/*.mode1v3

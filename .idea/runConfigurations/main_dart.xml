@@ -1,7 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="main.dart" type="FlutterRunConfigurationType" factoryName="Flutter" singleton="false" nameIsGenerated="true">
-    <option name="additionalArgs" value="--track-widget-creation" />
-    <option name="filePath" value="$PROJECT_DIR$/packages/app/lib/main.dart" />
-    <method v="2" />
-  </configuration>
-</component>

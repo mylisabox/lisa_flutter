@@ -7,9 +7,24 @@ import 'package:lisa_flutter/src/common/presentation/refresh_no_scroll_content.d
 import 'package:lisa_flutter/src/common/utils/page_route_builders.dart';
 import 'package:lisa_flutter/src/scenes/presentation/scene.dart';
 import 'package:lisa_flutter/src/scenes/stores/scenes_store.dart';
+import 'package:lisa_server_sdk/model/scene.dart';
 
 class ScenesWidget extends HookWidget {
   static const route = '/scenes';
+
+  void editScene(BuildContext context, Scene scene, GlobalKey<RefreshIndicatorState> refreshKey) async {
+    final needRefresh = await Navigator.of(context, rootNavigator: true).push(
+      FromBottomPageRoute(
+        builder: (context) => SceneWidget(scene: scene),
+        settings: RouteSettings(name: SceneWidget.route),
+      ),
+    ) ??
+        false;
+
+    if (needRefresh) {
+      refreshKey.currentState.show();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,10 +72,16 @@ class ScenesWidget extends HookWidget {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
+                  showCheckboxColumn: false,
                   sortAscending: false,
                   rows: <DataRow>[
                     for (var i = 0; i < store.scenes.length; i++)
                       DataRow(
+                        onSelectChanged: (selected) {
+                          if (selected) {
+                            editScene(context, store.scenes[i], refreshKey);
+                          }
+                        },
                         cells: [
                           DataCell(
                             Row(
@@ -68,17 +89,7 @@ class ScenesWidget extends HookWidget {
                                 IconButton(
                                   icon: Icon(Icons.edit),
                                   onPressed: () async {
-                                    final needRefresh = await Navigator.of(context, rootNavigator: true).push(
-                                          FromBottomPageRoute(
-                                            builder: (context) => SceneWidget(scene: store.scenes[i]),
-                                            settings: RouteSettings(name: SceneWidget.route),
-                                          ),
-                                        ) ??
-                                        false;
-
-                                    if (needRefresh) {
-                                      refreshKey.currentState.show();
-                                    }
+                                    editScene(context, store.scenes[i], refreshKey);
                                   },
                                 ),
                                 IconButton(
@@ -124,16 +135,7 @@ class ScenesWidget extends HookWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final needRefresh = await Navigator.of(context, rootNavigator: true).push(
-                FromBottomPageRoute(
-                  builder: (context) => SceneWidget(),
-                  settings: RouteSettings(name: SceneWidget.route),
-                ),
-              ) ??
-              false;
-          if (needRefresh) {
-            refreshKey.currentState.show();
-          }
+          editScene(context, null, refreshKey);
         },
         child: Icon(Icons.add, color: Colors.white),
       ),

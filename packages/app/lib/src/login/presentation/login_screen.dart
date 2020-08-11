@@ -9,7 +9,6 @@ import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
 import 'package:lisa_flutter/src/common/presentation/loading_button.dart';
 import 'package:lisa_flutter/src/common/stores/user_store.dart';
-import 'package:lisa_flutter/src/common/utils/hooks.dart';
 import 'package:lisa_flutter/src/login/stores/login_store.dart';
 import 'package:lisa_flutter/src/preferences/stores/preferences_store.dart';
 import 'package:provider/provider.dart';
@@ -29,7 +28,7 @@ class LoginScreen extends HookWidget {
 
     useEffect(() {
       store.init();
-      return store.dispose;
+      return null;
     }, [store]);
 
     final theme = Theme.of(context);
@@ -62,7 +61,9 @@ class LoginScreen extends HookWidget {
             fit: StackFit.expand,
             children: [
               Image.asset(
-                OrientationProxy.isPortrait(context) ? 'assets/images/bg_login_portrait.jpg' : 'assets/images/bg_login_landscape.jpg',
+                OrientationProxy.isPortrait(context)
+                    ? 'assets/images/bg_login_portrait.jpg'
+                    : 'assets/images/bg_login_landscape.jpg',
                 fit: BoxFit.cover,
               ),
               Container(
@@ -90,7 +91,7 @@ class LoginScreen extends HookWidget {
   }
 }
 
-abstract class _LoginFields extends HookWidget {
+mixin _LoginFields {
   Widget _getLogo() {
     return Image.asset(
       'assets/images/logo.png',
@@ -102,7 +103,12 @@ abstract class _LoginFields extends HookWidget {
     return FlatButton(
       onPressed: () async {
         final bloc = Provider.of<PreferencesStore>(context, listen: false);
-        final url = await showPrompt(context, translations.externalUrl, hint: translations.externalUrlHint, initialValue: bloc.externalBaseUrl);
+        final url = await showPrompt(
+          context,
+          translations.externalUrl,
+          hint: translations.externalUrlHint,
+          initialValue: bloc.externalBaseUrl,
+        );
         if (url != null) {
           bloc.setExternalUrl(url);
         }
@@ -132,6 +138,7 @@ abstract class _LoginFields extends HookWidget {
             builder: (context) => TextField(
               autofocus: true,
               controller: controller,
+              autofillHints: [AutofillHints.email],
               onChanged: (value) => store.setEmail(value),
               onSubmitted: (_) {
                 FocusScope.of(context).focusInDirection(TraversalDirection.down);
@@ -161,6 +168,7 @@ abstract class _LoginFields extends HookWidget {
       color: Colors.white.withOpacity(_opacity),
       child: Observer(
         builder: (context) => TextField(
+          autofillHints: [AutofillHints.password],
           textInputAction: TextInputAction.send,
           onSubmitted: (_) {
             FocusScope.of(context).requestFocus(FocusNode());
@@ -195,7 +203,9 @@ abstract class _LoginFields extends HookWidget {
             elevation: 0,
             child: Observer(
               builder: (_) => Text(
-                store.mode == AuthMode.login ? translations.loginButton.toUpperCase() : translations.signupButton.toUpperCase(),
+                store.mode == AuthMode.login
+                    ? translations.loginButton.toUpperCase()
+                    : translations.signupButton.toUpperCase(),
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
@@ -216,7 +226,7 @@ abstract class _LoginFields extends HookWidget {
   }
 }
 
-class _LoginLandscape extends _LoginFields {
+class _LoginLandscape extends HookWidget with _LoginFields {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -261,7 +271,7 @@ class _LoginLandscape extends _LoginFields {
   }
 }
 
-class _LoginPortrait extends _LoginFields {
+class _LoginPortrait extends HookWidget with _LoginFields {
   @override
   Widget build(BuildContext context) {
     return Container(

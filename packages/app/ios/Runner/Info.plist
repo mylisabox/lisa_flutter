@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string>Need access to speech recognition to send voice command to L.I.S.A.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Need to access your library to pick an image</string>
 	<key>CFBundleLocalizations</key>
@@ -10,8 +12,6 @@
 		<string>fr</string>
 	</array>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>To use voice command, please accept this permission</string>
-	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>To use voice command, please accept this permission</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>

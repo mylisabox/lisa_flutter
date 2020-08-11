@@ -10,6 +10,7 @@ import 'package:lisa_flutter/src/drawer/presentation/room_list.dart';
 import 'package:lisa_flutter/src/drawer/stores/drawer_store.dart';
 import 'package:lisa_flutter/src/favorites/presentation/favorites.dart';
 import 'package:lisa_flutter/src/login/presentation/login_screen.dart';
+import 'package:lisa_flutter/src/multimedia/presentation/multimedia.dart';
 import 'package:lisa_flutter/src/orphans/presentation/orphans.dart';
 import 'package:lisa_flutter/src/preferences/presentation/preferences.dart';
 import 'package:lisa_flutter/src/preferences/stores/preferences_store.dart';
@@ -53,6 +54,18 @@ class AppDrawer extends StatelessWidget {
                       Provider.of<GlobalKey<NavigatorState>>(context, listen: false).currentState.pushNamed(OrphansWidget.route);
                       _closeDrawer(context);
                       drawerStore.selectRoute(OrphansWidget.route);
+                    }
+                  },
+                ),
+                Divider(height: 1),
+                DrawerEntry(
+                  text: translations.menuMultimedia,
+                  icon: Icons.perm_media,
+                  onTap: () {
+                    if (drawerStore.currentSelectedRoute != MultimediaWidget.route) {
+                      Provider.of<GlobalKey<NavigatorState>>(context, listen: false).currentState.pushNamed(MultimediaWidget.route);
+                      _closeDrawer(context);
+                      drawerStore.selectRoute(MultimediaWidget.route);
                     }
                   },
                 ),

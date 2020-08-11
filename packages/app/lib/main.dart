@@ -21,7 +21,16 @@ import 'package:lisa_flutter/src/preferences/stores/preferences_store.dart';
 import 'package:lisa_flutter/src/splash_screen/presentation/splash_screen.dart';
 import 'package:provider/provider.dart';
 
-void main() async {
+@pragma('vm:entry-point')
+void mainWear() {
+  app(true);
+}
+
+void main() {
+  app(false);
+}
+
+void app(bool isWear) async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await PreferencesProvider().setup();
@@ -30,8 +39,7 @@ void main() async {
   BackendApiProvider.setup(navigatorKey, () => userStore);
   initLogger();
   userStore = UserStore();
-
-  runApp(MyApp(navigatorKey: navigatorKey, userStore: userStore, router: Router()));
+  runApp(MyApp(navigatorKey: navigatorKey, userStore: userStore, router: Router(isWear: isWear)));
 }
 
 class MyApp extends HookWidget {
@@ -53,7 +61,7 @@ class MyApp extends HookWidget {
     }, [prefStore]);
 
     return MultiProvider(
-      providers: <SingleChildCloneableWidget>[
+      providers: [
         Provider.value(value: drawerStore),
         Provider.value(value: userStore),
         Provider.value(value: prefStore),

@@ -7,7 +7,6 @@ import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
 import 'package:lisa_flutter/src/common/stores/user_store.dart';
-import 'package:lisa_flutter/src/common/utils/hooks.dart';
 import 'package:lisa_flutter/src/profile/presentation/avatar_field.dart';
 import 'package:provider/provider.dart';
 import 'package:proxy_layout/proxy_layout.dart';
@@ -148,100 +147,107 @@ class _ProfileWidget extends HookWidget {
         child: Container(
           padding: modeDialog ? EdgeInsets.zero : EdgeInsets.all(kNormalPadding),
           color: modeDialog ? Colors.transparent : Theme.of(context).scaffoldBackgroundColor,
-          child: Column(
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(right: kNormalPadding),
-                    child: AvatarField.create(onFileSelected: (data, path) {
-                      profileManager.avatarData.value = AvatarData(data, path);
-                    }),
-                  ),
-                  Expanded(
-                    child: Column(
-                      children: <Widget>[
-                        TextField(
-                          decoration: InputDecoration(labelText: translations.firstNameField),
-                          textInputAction: TextInputAction.next,
-                          controller: profileManager.firstName,
-                          onSubmitted: (_) {
-                            FocusScope.of(context).focusInDirection(TraversalDirection.down);
-                          },
-                        ),
-                        TextField(
-                          decoration: InputDecoration(labelText: translations.lastNameField),
-                          controller: profileManager.lastName,
-                          textInputAction: TextInputAction.next,
-                          onSubmitted: (_) {
-                            FocusScope.of(context).focusInDirection(TraversalDirection.down);
-                          },
-                        ),
-                      ],
+          child: AutofillGroup(
+            child: Column(
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(right: kNormalPadding),
+                      child: AvatarField.create(onFileSelected: (data, path) {
+                        profileManager.avatarData.value = AvatarData(data, path);
+                      }),
                     ),
-                  )
-                ],
-              ),
-              TextField(
-                decoration: InputDecoration(labelText: translations.emailField),
-                controller: profileManager.email,
-                textInputAction: TextInputAction.next,
-                keyboardType: TextInputType.emailAddress,
-                onSubmitted: (_) {
-                  FocusScope.of(context).focusInDirection(TraversalDirection.down);
-                },
-              ),
-              TextField(
-                decoration: InputDecoration(labelText: translations.phoneField),
-                controller: profileManager.phone,
-                keyboardType: TextInputType.phone,
-                textInputAction: TextInputAction.next,
-                onSubmitted: (_) {
-                  FocusScope.of(context).focusInDirection(TraversalDirection.down);
-                },
-              ),
-              TextField(
-                decoration: InputDecoration(labelText: translations.passwordField),
-                controller: profileManager.password,
-                textInputAction: TextInputAction.next,
-                obscureText: true,
-                onSubmitted: (_) {
-                  FocusScope.of(context).focusInDirection(TraversalDirection.down);
-                },
-              ),
-              TextField(
-                decoration: InputDecoration(labelText: translations.passwordConfirmationField),
-                controller: profileManager.passwordConfirm,
-                obscureText: true,
-                textInputAction: TextInputAction.done,
-                onSubmitted: (_) {},
-              ),
-              Visibility(
-                visible: !modeDialog,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: kNormalPadding),
-                  child: RaisedButton(
-                    onPressed: () async {
-                      final isSuccessful = await showLoadingDialog(
-                        context,
-                        (_) => Text(translations.profile),
-                        () async => profileManager.save(context),
-                        onError: (err, stack) => showErrorDialog(context, err, stack),
-                      );
-                      if (isSuccessful) {
-                        final snackBar = SnackBar(content: Text(translations.profileSaved));
-                        Scaffold.of(context).showSnackBar(snackBar);
-                      }
-                    },
-                    textColor: Colors.white,
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-                    child: Text(translations.continueButton.toUpperCase()),
+                    Expanded(
+                      child: Column(
+                        children: <Widget>[
+                          TextField(
+                            decoration: InputDecoration(labelText: translations.firstNameField),
+                            textInputAction: TextInputAction.next,
+                            controller: profileManager.firstName,
+                            autofillHints: [AutofillHints.givenName],
+                            onSubmitted: (_) {
+                              FocusScope.of(context).focusInDirection(TraversalDirection.down);
+                            },
+                          ),
+                          TextField(
+                            decoration: InputDecoration(labelText: translations.lastNameField),
+                            controller: profileManager.lastName,
+                            textInputAction: TextInputAction.next,
+                            autofillHints: [AutofillHints.name],
+                            onSubmitted: (_) {
+                              FocusScope.of(context).focusInDirection(TraversalDirection.down);
+                            },
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                TextField(
+                  decoration: InputDecoration(labelText: translations.emailField),
+                  controller: profileManager.email,
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.emailAddress,
+                  autofillHints: [AutofillHints.email],
+                  onSubmitted: (_) {
+                    FocusScope.of(context).focusInDirection(TraversalDirection.down);
+                  },
+                ),
+                TextField(
+                  decoration: InputDecoration(labelText: translations.phoneField),
+                  controller: profileManager.phone,
+                  keyboardType: TextInputType.phone,
+                  textInputAction: TextInputAction.next,
+                  autofillHints: [AutofillHints.telephoneNumber],
+                  onSubmitted: (_) {
+                    FocusScope.of(context).focusInDirection(TraversalDirection.down);
+                  },
+                ),
+                TextField(
+                  decoration: InputDecoration(labelText: translations.passwordField),
+                  controller: profileManager.password,
+                  autofillHints: [AutofillHints.newPassword],
+                  textInputAction: TextInputAction.next,
+                  obscureText: true,
+                  onSubmitted: (_) {
+                    FocusScope.of(context).focusInDirection(TraversalDirection.down);
+                  },
+                ),
+                TextField(
+                  decoration: InputDecoration(labelText: translations.passwordConfirmationField),
+                  controller: profileManager.passwordConfirm,
+                  obscureText: true,
+                  textInputAction: TextInputAction.done,
+                  onSubmitted: (_) {},
+                ),
+                Visibility(
+                  visible: !modeDialog,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: kNormalPadding),
+                    child: RaisedButton(
+                      onPressed: () async {
+                        final isSuccessful = await showLoadingDialog(
+                          context,
+                          (_) => Text(translations.profile),
+                          () async => profileManager.save(context),
+                          onError: (err, stack) => showErrorDialog(context, err, stack),
+                        );
+                        if (isSuccessful) {
+                          final snackBar = SnackBar(content: Text(translations.profileSaved));
+                          Scaffold.of(context).showSnackBar(snackBar);
+                        }
+                      },
+                      textColor: Colors.white,
+                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                      child: Text(translations.continueButton.toUpperCase()),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
