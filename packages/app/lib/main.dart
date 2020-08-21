@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_sickchill/flutter_sickchill.dart';
+import 'package:flutter_transmission/flutter_transmission.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/l10n/error_localizations.dart';
@@ -39,7 +41,22 @@ void app(bool isWear) async {
   BackendApiProvider.setup(navigatorKey, () => userStore);
   initLogger();
   userStore = UserStore();
-  runApp(MyApp(navigatorKey: navigatorKey, userStore: userStore, router: Router(isWear: isWear)));
+  runApp(
+    TransmissionScope(
+      baseUrl: 'http://192.168.1.35:9091/transmission/rpc',
+      enableLog: !kIsProductionMode,
+      child: SickChillScope(
+        enableLogs: !kIsProductionMode,
+        baseUrl: 'http://192.168.1.35:8081',
+        apiKey: '6678ab0183ce51868e84c4b1738939cc',
+        child: MyApp(
+          navigatorKey: navigatorKey,
+          userStore: userStore,
+          router: Router(isWear: isWear),
+        ),
+      ),
+    ),
+  );
 }
 
 class MyApp extends HookWidget {

@@ -7,8 +7,10 @@ environment:
   sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
-  flutter_transmission: ^0.0.1
-    #path: '../../../../Documents/workspaceStudio/flutter_transmission'
+  flutter_sickchill: ^0.0.2
+    #path: '../../../flutter_sickchill'
+  flutter_transmission: ^0.0.2
+    #path: '../../../flutter_transmission'
   sentry: ^3.0.1
   logging: ^0.11.4
   file_chooser:

@@ -148,6 +148,13 @@ class TitleNavigatorObserver extends NavigatorObserver {
         return localizations.menuScenes;
       case MultimediaWidget.route:
         return localizations.menuMultimedia;
+      case MultimediaWidget.routeSickChill:
+        return localizations.menuMultimediaSickChill;
+      case MultimediaWidget.routeTransmission:
+        return localizations.menuMultimediaTransmission;
+    }
+    if (route.startsWith(MultimediaWidget.routeSickChillShow)) {
+      return localizations.menuMultimediaSickChill;
     }
     return 'L.I.S.A.';
   }
