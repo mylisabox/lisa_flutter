@@ -12,6 +12,21 @@ import 'package:lisa_flutter/src/drawer/stores/drawer_store.dart';
 import 'package:provider/provider.dart';
 import 'package:proxy_layout/proxy_layout.dart';
 
+class _NestedNavigatorAndroidSupport extends StatelessWidget {
+  final Widget child;
+  final GlobalKey<NavigatorState> navigatorKey;
+
+  const _NestedNavigatorAndroidSupport({Key key, this.child, this.navigatorKey}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      return child;
+    }
+    return WillPopScope(child: child, onWillPop: () async => !await navigatorKey.currentState.maybePop());
+  }
+}
+
 class ProxyScaffold extends HookWidget {
   final WidgetBuilder builderDrawer;
   final String initialRoute;
@@ -51,11 +66,14 @@ class ProxyScaffold extends HookWidget {
             drawer: builderDrawer == null ? null : Drawer(child: builderDrawer(context)),
             body: ClipRect(
               clipBehavior: Clip.hardEdge,
-              child: Navigator(
-                initialRoute: initialRoute,
-                observers: observers,
-                onGenerateRoute: Router().onGenerateRoute,
-                key: navigatorKey,
+              child: _NestedNavigatorAndroidSupport(
+                navigatorKey: navigatorKey,
+                child: Navigator(
+                  initialRoute: initialRoute,
+                  observers: observers,
+                  onGenerateRoute: Router().onGenerateRoute,
+                  key: navigatorKey,
+                ),
               ),
             ),
             appBar: _getAppBar(context, currentRoute.value, titleState.value, canPopState.value, navigatorKey, observers),
@@ -73,11 +91,14 @@ class ProxyScaffold extends HookWidget {
                     Expanded(
                         child: ClipRect(
                           clipBehavior: Clip.hardEdge,
-                          child: Navigator(
-                            initialRoute: initialRoute,
-                            observers: observers,
-                            onGenerateRoute: Router().onGenerateRoute,
-                            key: navigatorKey,
+                          child: _NestedNavigatorAndroidSupport(
+                            navigatorKey: navigatorKey,
+                            child: Navigator(
+                              initialRoute: initialRoute,
+                              observers: observers,
+                              onGenerateRoute: Router().onGenerateRoute,
+                              key: navigatorKey,
+                            ),
                           ),
                         ),
                         flex: 3),
@@ -89,11 +110,14 @@ class ProxyScaffold extends HookWidget {
               return Scaffold(
                 drawer: builderDrawer == null ? null : Drawer(child: builderDrawer(context)),
                 appBar: _getAppBar(context, currentRoute.value, titleState.value, canPopState.value, navigatorKey, observers),
-                body: Navigator(
-                  initialRoute: initialRoute,
-                  observers: observers,
-                  onGenerateRoute: Router().onGenerateRoute,
-                  key: navigatorKey,
+                body: _NestedNavigatorAndroidSupport(
+                  navigatorKey: navigatorKey,
+                  child: Navigator(
+                    initialRoute: initialRoute,
+                    observers: observers,
+                    onGenerateRoute: Router().onGenerateRoute,
+                    key: navigatorKey,
+                  ),
                 ),
               );
             },
