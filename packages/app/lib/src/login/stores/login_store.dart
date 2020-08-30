@@ -13,13 +13,13 @@ import 'package:mobx/mobx.dart';
 
 part 'login_store.g.dart';
 
-enum AuthMode { login, registration }
+enum AuthMode { login, registration, noHost }
 
 class LoginStore = _LoginStore with _$LoginStore;
 
 abstract class _LoginStore with Store {
   static const keyLastEmail = 'last_email';
-  final LisaServerSdk _api;
+  final BackendApiProvider _apiProvider;
   final Preferences _preferences;
   final Validator _validator;
   final UserStore _userStore;
@@ -43,22 +43,30 @@ abstract class _LoginStore with Store {
 
   _LoginStore({
     @required UserStore userStore,
-    LisaServerSdk api,
+    BackendApiProvider apiProvider,
     Preferences prefs,
     Validator validator,
-  })  : _api = api ?? BackendApiProvider().api,
+  })  : _apiProvider = apiProvider ?? BackendApiProvider(),
         _userStore = userStore,
         _validator = validator ?? Validator(),
         _preferences = prefs ?? PreferencesProvider().prefs;
 
   bool get hasError => emailError != null || passwordError != null;
 
+  LisaServerSdk get _api => _apiProvider.api;
+
   @action
-  Future init() async {
+  Future init({bool resetHost = false}) async {
+    if (resetHost) {
+      _apiProvider.clearHost();
+    }
     email = _preferences.getString(keyLastEmail, defaultValue: email);
-    final response = await _api.getConfigApi().isInitialized();
-    if (!response.initialized) {
-      mode = AuthMode.registration;
+    try {
+      final response = await _api.getConfigApi().isInitialized();
+      mode = response.initialized ? AuthMode.login : AuthMode.registration;
+    } catch(err) {
+      mode = AuthMode.noHost;
+      print(err);
     }
   }
 

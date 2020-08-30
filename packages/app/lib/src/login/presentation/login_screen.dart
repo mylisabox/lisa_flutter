@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -9,6 +10,7 @@ import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
 import 'package:lisa_flutter/src/common/presentation/loading_button.dart';
 import 'package:lisa_flutter/src/common/stores/user_store.dart';
+import 'package:lisa_flutter/src/login/presentation/setup_screen.dart';
 import 'package:lisa_flutter/src/login/stores/login_store.dart';
 import 'package:lisa_flutter/src/preferences/stores/preferences_store.dart';
 import 'package:provider/provider.dart';
@@ -42,6 +44,10 @@ class LoginScreen extends HookWidget {
             primaryColor: _primaryColor,
           ),
           fontFamily: 'Raleway',
+          buttonTheme: ButtonThemeData(
+            buttonColor: _primaryColor,
+            textTheme: ButtonTextTheme.normal,
+          ),
           brightness: Brightness.light,
           primaryColorBrightness: Brightness.dark,
           accentColorBrightness: Brightness.dark,
@@ -61,26 +67,31 @@ class LoginScreen extends HookWidget {
             fit: StackFit.expand,
             children: [
               Image.asset(
-                OrientationProxy.isPortrait(context)
-                    ? 'assets/images/bg_login_portrait.jpg'
-                    : 'assets/images/bg_login_landscape.jpg',
+                OrientationProxy.isPortrait(context) ? 'assets/images/bg_login_portrait.jpg' : 'assets/images/bg_login_landscape.jpg',
                 fit: BoxFit.cover,
               ),
               Container(
                 alignment: Alignment.center,
-                child: KeyboardAvoider(
-                  autoScroll: true,
-                  child: OrientationProxy(
-                    landscapeBuilder: (context) {
-                      return DeviceProxy(
-                        tabletBuilder: (_) => _LoginPortrait(),
-                        mobileBuilder: (_) => _LoginLandscape(),
-                      );
-                    },
-                    portraitBuilder: (context) {
-                      return _LoginPortrait();
-                    },
-                  ),
+                child: Observer(
+                  builder: (context) {
+                    if (store.mode == AuthMode.noHost) {
+                      return _NoHost();
+                    }
+                    return KeyboardAvoider(
+                      autoScroll: true,
+                      child: OrientationProxy(
+                        landscapeBuilder: (context) {
+                          return DeviceProxy(
+                            tabletBuilder: (_) => _LoginPortrait(),
+                            mobileBuilder: (_) => _LoginLandscape(),
+                          );
+                        },
+                        portraitBuilder: (context) {
+                          return _LoginPortrait();
+                        },
+                      ),
+                    );
+                  },
                 ),
               ),
             ],
@@ -100,26 +111,29 @@ mixin _LoginFields {
 
   Widget _getExternalUrlButtons(BuildContext context) {
     final translations = CommonLocalizations.of(context);
-    return FlatButton(
-      onPressed: () async {
-        final bloc = Provider.of<PreferencesStore>(context, listen: false);
-        final url = await showPrompt(
-          context,
-          translations.externalUrl,
-          hint: translations.externalUrlHint,
-          initialValue: bloc.externalBaseUrl,
-        );
-        if (url != null) {
-          bloc.setExternalUrl(url);
-        }
-      },
-      child: Text(
-        translations.linkExternalUrl,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          color: Theme.of(context).primaryColor,
-          fontWeight: FontWeight.bold,
-          decoration: TextDecoration.underline,
+    return Visibility(
+      visible: !kIsWeb,
+      child: FlatButton(
+        onPressed: () async {
+          final bloc = Provider.of<PreferencesStore>(context, listen: false);
+          final url = await showPrompt(
+            context,
+            translations.externalUrl,
+            hint: translations.externalUrlHint,
+            initialValue: bloc.externalBaseUrl,
+          );
+          if (url != null) {
+            bloc.setExternalUrl(url);
+          }
+        },
+        child: Text(
+          translations.linkExternalUrl,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Theme.of(context).primaryColor,
+            fontWeight: FontWeight.bold,
+            decoration: TextDecoration.underline,
+          ),
         ),
       ),
     );
@@ -203,9 +217,7 @@ mixin _LoginFields {
             elevation: 0,
             child: Observer(
               builder: (_) => Text(
-                store.mode == AuthMode.login
-                    ? translations.loginButton.toUpperCase()
-                    : translations.signupButton.toUpperCase(),
+                store.mode == AuthMode.login ? translations.loginButton.toUpperCase() : translations.signupButton.toUpperCase(),
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
@@ -223,6 +235,66 @@ mixin _LoginFields {
     } catch (ex, stack) {
       showErrorDialog(context, ex, stack);
     }
+  }
+}
+
+class _NoHost extends StatelessWidget with _LoginFields {
+  @override
+  Widget build(BuildContext context) {
+    final localization = CommonLocalizations.of(context);
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Container(
+        color: Colors.white.withOpacity(_opacity),
+        constraints: BoxConstraints(maxWidth: 400),
+        padding: EdgeInsets.all(12),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _getLogo(),
+            Text(
+              localization.errorNoHostTitle,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Theme.of(context).errorColor),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              child: Text(
+                kIsWeb ? localization.setupNotSupported : localization.setupDescription,
+                textAlign: TextAlign.center,
+              ),
+            ),
+            if (!kIsWeb)
+              RaisedButton(
+                textColor: Colors.white,
+                child: Text(localization.setupButton.toUpperCase()),
+                onPressed: () async {
+                  final store = Provider.of<LoginStore>(context, listen: false);
+                  await Navigator.of(context).pushNamed(SetupScreen.route);
+                  store.init(resetHost: true);
+                },
+              ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: Text(
+                localization.errorNoHost,
+                textAlign: TextAlign.center,
+              ),
+            ),
+            _getExternalUrlButtons(context),
+            RaisedButton(
+              textColor: Colors.white,
+              child: Text(localization.retry.toUpperCase()),
+              onPressed: () {
+                final store = Provider.of<LoginStore>(context, listen: false);
+                store.init(resetHost: true);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 

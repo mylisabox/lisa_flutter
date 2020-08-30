@@ -176,6 +176,11 @@ class BackendApiProvider {
 
   BackendApiProvider._(this.interceptors, String baseUrl) : api = LisaServerSdk(baseUrl: baseUrl, interceptors: interceptors, timeout: httpTimeout);
 
+  void clearHost() {
+    final HostInterceptor hostInterceptor = api.interceptors.firstWhere((element) => element is HostInterceptor);
+    hostInterceptor.clearHost();
+  }
+
   // ignore: prefer_constructors_over_static_methods
   static BackendApiProvider setup(GlobalKey<NavigatorState> navigatorKey, UserStore Function() userStore, {String baseUrl, List<Interceptor> interceptors}) {
     baseUrl ??= Config.kUrl;

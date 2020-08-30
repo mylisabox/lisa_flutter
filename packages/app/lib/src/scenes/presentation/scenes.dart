@@ -112,19 +112,19 @@ class ScenesWidget extends HookWidget {
                   ],
                   columns: <DataColumn>[
                     DataColumn(
-                      label: Text(translations.actions, style: Theme.of(context).textTheme.title),
+                      label: Text(translations.actions, style: Theme.of(context).textTheme.headline6),
                     ),
                     DataColumn(
-                      label: Text(translations.nameField, style: Theme.of(context).textTheme.title),
+                      label: Text(translations.nameField, style: Theme.of(context).textTheme.headline6),
                     ),
                     DataColumn(
-                      label: Text(translations.sceneCommandsTitle, style: Theme.of(context).textTheme.title),
+                      label: Text(translations.sceneCommandsTitle, style: Theme.of(context).textTheme.headline6),
                     ),
                     DataColumn(
-                      label: Text(translations.sceneResponsesTitle, style: Theme.of(context).textTheme.title),
+                      label: Text(translations.sceneResponsesTitle, style: Theme.of(context).textTheme.headline6),
                     ),
                     DataColumn(
-                      label: Text(translations.sceneCommandsTitle, style: Theme.of(context).textTheme.title),
+                      label: Text(translations.sceneCommandsTitle, style: Theme.of(context).textTheme.headline6),
                     ),
                   ],
                 ),

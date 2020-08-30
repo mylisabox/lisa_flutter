@@ -162,11 +162,44 @@ class CommonLocalizations {
   String get sceneActionsTitle => Intl.message('Actions', name: 'sceneSentencesTitle');
 
   String get sceneAddSentence => Intl.message('Add sentence', name: 'sceneAddSentence');
+
   String get sceneAddResponse => Intl.message('Add response', name: 'sceneAddResponse');
+
   String get sceneAddCommand => Intl.message('Add command', name: 'sceneAddCommand');
+
   String get deleteConfirm => Intl.message('Are you sure you want to delete this item ?', name: 'deleteConfirm');
+
   String deleteItem(String name) => Intl.message('Delete $name', args: [name], name: 'deleteItem');
+
   String get selectRoom => Intl.message('Select room', name: 'selectRoom');
+
+  String get errorNoHostTitle => Intl.message('No L.I.S.A. server has been found.', name: 'errorNoHostTitle');
+
+  String get errorNoHost => Intl.message('Please check/set an external URL or make sure you\'re on same network as the server.', name: 'errorNoHost');
+
+  String get setupTitle => Intl.message('Setup', name: 'setupTitle');
+
+  String get setupButton => Intl.message('Setup a new L.I.S.A.', name: 'setupButton');
+
+  String get setupDescription => Intl.message('You can setup your new L.I.S.A. box now or retry the search', name: 'setupDescription');
+
+  String get setupNotSupported => Intl.message('If you need to setup a new L.I.S.A. box please use the mobile application to do it as it need Bluetooth to do it.', name: 'setupNotSupported');
+
+  String get btConnecting => Intl.message('Searching and connecting to a near L.I.S.A. instance', name: 'btConnecting');
+
+  String get networkSearching => Intl.message('Searching for remote networks available to L.I.S.A.', name: 'networkSearching');
+
+  String get networkSaving => Intl.message('Saving network to L.I.S.A.', name: 'networkSaving');
+
+  String get noDeviceFound => Intl.message('No L.I.S.A. instance found, be sure you plug it and it blink in yellow', name: 'noDeviceFound');
+
+  String get searchingBTDevice => Intl.message('Your box should currently blink in yellow, if it\'s not the case please replug it.\n\nOnce it blink launch a search to connect to it and setup the WiFi network.', name: 'searchingBTDevice');
+
+  String get boxConnected =>
+      Intl.message('Your box is now connected and should blink in blue, meaning you can use L.I.S.A. but can\'t do voice commands until you setup it.',
+          name: 'boxConnected');
+
+  String networkPasswordTitle(String ssid) => Intl.message('Password for $ssid', name: 'networkPasswordTitle', args: [ssid]);
 }
 
 class CommonLocalizationsDelegate extends LocalizationsDelegate<CommonLocalizations> {

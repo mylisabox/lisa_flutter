@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart' hide Router;
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Router;
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -107,11 +107,14 @@ class MyApp extends HookWidget {
                 brightness: prefStore.isDarkTheme ? Brightness.dark : Brightness.light,
                 primaryColor: _primaryColor,
               ),
+              buttonTheme: ButtonThemeData(
+                buttonColor: _primaryColor,
+                textTheme: ButtonTextTheme.accent,
+              ),
               fontFamily: 'Raleway',
               brightness: prefStore.isDarkTheme ? Brightness.dark : Brightness.light,
               primaryColorBrightness: Brightness.dark,
               accentColorBrightness: Brightness.dark,
-              buttonColor: _primaryColor,
               primaryColor: _primaryColor,
               primaryColorLight: _primaryColor.withOpacity(0.2),
               primaryColorDark: _primaryColor,

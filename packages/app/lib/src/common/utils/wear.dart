@@ -22,7 +22,7 @@ class InheritedShape extends InheritedWidget {
   final Shape shape;
 
   static InheritedShape of(BuildContext context) {
-    return context.inheritFromWidgetOfExactType(InheritedShape);
+    return context.dependOnInheritedWidgetOfExactType<InheritedShape>();
   }
 
   @override
@@ -123,6 +123,7 @@ class _AmbientModeState extends State<AmbientMode> {
           setState(() => ambientMode = Mode.active);
           break;
       }
+      return null;
     });
   }
 

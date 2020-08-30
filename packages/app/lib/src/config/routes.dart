@@ -7,6 +7,7 @@ import 'package:lisa_flutter/src/devices/presentation/add_device.dart';
 import 'package:lisa_flutter/src/favorites/presentation/favorites.dart';
 import 'package:lisa_flutter/src/login/presentation/login_screen.dart';
 import 'package:lisa_flutter/src/login/presentation/login_wear_screen.dart';
+import 'package:lisa_flutter/src/login/presentation/setup_screen.dart';
 import 'package:lisa_flutter/src/multimedia/presentation/multimedia.dart';
 import 'package:lisa_flutter/src/orphans/presentation/orphans.dart';
 import 'package:lisa_flutter/src/preferences/presentation/preferences.dart';
@@ -26,6 +27,7 @@ class Router {
 
   final Map<String, dynamic> _routes = {
     LoginScreen.route: (_) => LoginScreen(),
+    SetupScreen.route: (_) => SetupScreen(),
     SplashScreen.route: (_) => SplashScreen(),
     ProfileScreen.route: (_) => ProfileScreen(),
     AddDeviceScreen.route: (context) => AddDeviceScreen(room: ModalRoute.of(context).settings.arguments),
