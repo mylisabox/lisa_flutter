@@ -1,4 +1,6 @@
+// ignore: avoid_web_libraries_in_flutter
 import 'dart:html';
+import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -21,7 +23,6 @@ class AvatarFieldWeb extends AvatarField {
 
   @override
   Widget build(BuildContext context) {
-    //TODO test that this stuff is working ^^
     final userStore = Provider.of<UserStore>(context);
     ImageProvider avatarImage = userStore.avatar == null ? null : NetworkImage(userStore.avatar);
     final uploadElement = useMemoized(() => FileUploadInputElement());
@@ -32,12 +33,19 @@ class AvatarFieldWeb extends AvatarField {
       width: 60px;
       opacity: 0;''');
 
+    final avatar = useState<Uint8List>(null);
+
+    if (avatar.value != null) {
+      avatarImage = MemoryImage(avatar.value);
+    }
+
     useEffect(() {
       uploadElement.onChange.listen((e) {
         File file = (e.target as dynamic).files[0];
         if (file != null) {
           final reader = FileReader();
           reader.onLoad.listen((e) {
+            avatar.value = reader.result;
             onFileSelected(reader.result, file.name);
           });
           reader.onError.listen((e) {

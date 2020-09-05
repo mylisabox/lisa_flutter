@@ -1,6 +1,9 @@
 import 'dart:io';
 
+import 'package:file_chooser/file_chooser.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lisa_flutter/src/common/stores/user_store.dart';
@@ -36,9 +39,25 @@ class AvatarFieldIO extends AvatarField {
         clipBehavior: Clip.hardEdge,
         child: InkWell(
           onTap: () async {
-            final image = await ImagePicker.pickImage(source: ImageSource.gallery);
-            avatar.value = image;
-            onFileSelected(await image.readAsBytes(), image.path);
+            if (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.android) {
+              final image = await ImagePicker().getImage(source: ImageSource.gallery);
+              final file = File(image.path);
+              avatar.value = file;
+              onFileSelected(await image.readAsBytes(), image.path);
+            } else {
+              final result = await showOpenPanel(
+                allowsMultipleSelection: false,
+                canSelectDirectories: false,
+                allowedFileTypes: [
+                  FileTypeFilterGroup(fileExtensions: ['jpg', 'jpeg', 'png'])
+                ],
+              );
+              if (!result.canceled && result.paths.isNotEmpty) {
+                final file = File(result.paths.first);
+                avatar.value = file;
+                onFileSelected(await file.readAsBytes(), result.paths.first);
+              }
+            }
           },
           child: Container(
             height: double.infinity,

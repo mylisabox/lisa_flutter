@@ -10,11 +10,13 @@ import 'package:lisa_flutter/src/login/presentation/login_wear_screen.dart';
 import 'package:lisa_flutter/src/login/presentation/setup_screen.dart';
 import 'package:lisa_flutter/src/multimedia/presentation/multimedia.dart';
 import 'package:lisa_flutter/src/orphans/presentation/orphans.dart';
+import 'package:lisa_flutter/src/plugins/presentation/plugins.dart';
 import 'package:lisa_flutter/src/preferences/presentation/preferences.dart';
 import 'package:lisa_flutter/src/profile/presentation/profile.dart';
 import 'package:lisa_flutter/src/rooms/presentation/room_dashboard.dart';
 import 'package:lisa_flutter/src/scenes/presentation/scene.dart';
 import 'package:lisa_flutter/src/scenes/presentation/scenes.dart';
+import 'package:lisa_flutter/src/settings/presentation/settings.dart';
 import 'package:lisa_flutter/src/splash_screen/presentation/splash_screen.dart';
 import 'package:lisa_server_sdk/model/room.dart';
 
@@ -35,6 +37,8 @@ class Router {
     SceneWidget.route: (context) => SceneWidget(scene: ModalRoute.of(context).settings.arguments),
     FavoritesWidget.route: (_) => FavoritesWidget(),
     PreferencesWidget.route: (_) => PreferencesWidget(),
+    SettingsWidget.route: (_) => SettingsWidget(),
+    PluginsStoreWidget.route: (_) => PluginsStoreWidget(),
     RoomDashboard.route: (context) => RoomDashboard(room: ModalRoute.of(context).settings.arguments),
     OrphansWidget.route: (_) => OrphansWidget(),
     MultimediaWidget.route: (_) => MultimediaWidget(),
@@ -142,12 +146,16 @@ class TitleNavigatorObserver extends NavigatorObserver {
         return localizations.profile;
       case PreferencesWidget.route:
         return localizations.menuPreferences;
+      case SettingsWidget.route:
+        return localizations.menuSettings;
       case OrphansWidget.route:
         return localizations.menuOrphans;
       case RoomDashboard.route:
         return (arguments as Room)?.name ?? 'L.I.S.A.';
       case ScenesWidget.route:
         return localizations.menuScenes;
+      case PluginsStoreWidget.route:
+        return localizations.pluginShop;
       case MultimediaWidget.route:
         return localizations.menuMultimedia;
       case MultimediaWidget.routeSickChill:
@@ -155,7 +163,7 @@ class TitleNavigatorObserver extends NavigatorObserver {
       case MultimediaWidget.routeTransmission:
         return localizations.menuMultimediaTransmission;
     }
-    if (route.startsWith(MultimediaWidget.routeSickChillShow)) {
+    if (route != null && route.startsWith(MultimediaWidget.routeSickChillShow)) {
       return localizations.menuMultimediaSickChill;
     }
     return 'L.I.S.A.';

@@ -1,5 +1,3 @@
-import 'package:lisa_flutter/src/common/network/api_provider.dart';
-import 'package:lisa_server_sdk/api.dart';
 import 'package:mobx/mobx.dart';
 import 'package:nymea_network_manager/nymea_network_manager.dart';
 
@@ -10,16 +8,11 @@ enum NetworkMode { idle, connectingBT, searchingNetworks, waitingNetworkInfo, sa
 class SetupStore = _SetupStore with _$SetupStore;
 
 abstract class _SetupStore with Store {
-  final BackendApiProvider _apiProvider;
   final NymeaNetworkManager _networkManager;
 
   _SetupStore({
-    BackendApiProvider apiProvider,
     NymeaNetworkManager networkManager,
-  })  : _apiProvider = apiProvider ?? BackendApiProvider(),
-        _networkManager = networkManager ?? NymeaNetworkManager(advertisingName: 'mylisabox', enableLogs: true);
-
-  LisaServerSdk get _api => _apiProvider.api;
+  })  : _networkManager = networkManager ?? NymeaNetworkManager(advertisingName: 'mylisabox', enableLogs: true);
 
   @observable
   NetworkMode currentMode = NetworkMode.idle;

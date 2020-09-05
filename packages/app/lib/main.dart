@@ -143,7 +143,7 @@ class MyHomePage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final store = useMemoized(() => SpeechStore());
-    final userStore = Provider.of<UserStore>(context);
+    //final userStore = Provider.of<UserStore>(context);
     return Provider.value(
       value: store,
       child: ProxyScaffold(

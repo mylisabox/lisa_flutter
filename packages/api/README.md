@@ -91,8 +91,11 @@ Class | Method | HTTP request | Description
 *LoginApi* | [**login**](docs//LoginApi.md#login) | **Post** /api/v1/auth/local | 
 *LoginApi* | [**logout**](docs//LoginApi.md#logout) | **Get** /api/v1/auth/logout | 
 *LoginApi* | [**register**](docs//LoginApi.md#register) | **Post** /api/v1/auth/local/register | 
+*PluginApi* | [**getStorePlugins**](docs//PluginApi.md#getstoreplugins) | **Get** /api/v1/plugin/store | 
+*PluginApi* | [**installPlugin**](docs//PluginApi.md#installplugin) | **Post** /api/v1/plugin/install | 
 *PluginApi* | [**pairing**](docs//PluginApi.md#pairing) | **Post** /api/v1/plugin/:pluginName/drivers/:driver/pairing | 
 *PluginApi* | [**searchPlugins**](docs//PluginApi.md#searchplugins) | **Get** /api/v1/plugin/search | 
+*PluginApi* | [**uninstallPlugin**](docs//PluginApi.md#uninstallplugin) | **Delete** /api/v1/plugin/:pluginName/uninstall | 
 *RoomApi* | [**addRoom**](docs//RoomApi.md#addroom) | **Post** /api/v1/room | 
 *RoomApi* | [**deleteRoom**](docs//RoomApi.md#deleteroom) | **Delete** /api/v1/room/:roomId | 
 *RoomApi* | [**getRooms**](docs//RoomApi.md#getrooms) | **Get** /api/v1/room | 
@@ -100,12 +103,14 @@ Class | Method | HTTP request | Description
 *SceneApi* | [**deleteScene**](docs//SceneApi.md#deletescene) | **Delete** /api/v1/chatbot/userBot/:scene | 
 *SceneApi* | [**getScene**](docs//SceneApi.md#getscene) | **Get** /api/v1/chatbot/userBot | 
 *SceneApi* | [**saveScene**](docs//SceneApi.md#savescene) | **Post** /api/v1/chatbot/userBot | 
+*SetupApi* | [**setupVoiceCommands**](docs//SetupApi.md#setupvoicecommands) | **Post** /api/v1/setup/voice_commands | 
 *UserApi* | [**getProfile**](docs//UserApi.md#getprofile) | **Get** /api/v1/user | 
 *UserApi* | [**saveProfile**](docs//UserApi.md#saveprofile) | **Post** /api/v1/user | 
 
 
 ## Documentation For Models
 
+ - [AddPluginRequest](docs//AddPluginRequest.md)
  - [Dashboard](docs//Dashboard.md)
  - [Device](docs//Device.md)
  - [DeviceSettings](docs//DeviceSettings.md)
@@ -118,6 +123,8 @@ Class | Method | HTTP request | Description
  - [Room](docs//Room.md)
  - [Scene](docs//Scene.md)
  - [SceneData](docs//SceneData.md)
+ - [SetupVoiceCommands](docs//SetupVoiceCommands.md)
+ - [StorePlugin](docs//StorePlugin.md)
  - [UpdateDeviceInfoRequest](docs//UpdateDeviceInfoRequest.md)
  - [User](docs//User.md)
  - [UserUpdate](docs//UserUpdate.md)

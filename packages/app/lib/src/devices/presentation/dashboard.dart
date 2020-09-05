@@ -11,7 +11,6 @@ import 'package:lisa_flutter/src/common/network/api_provider.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
 import 'package:lisa_flutter/src/common/presentation/refresh_no_scroll_content.dart';
 import 'package:lisa_flutter/src/common/utils/base_url_provider.dart';
-import 'package:lisa_flutter/src/common/utils/hooks.dart';
 import 'package:lisa_flutter/src/devices/stores/device_store.dart';
 import 'package:lisa_flutter/src/rooms/presentation/room_selector.dart';
 import 'package:lisa_server_sdk/auth/api_key_auth.dart';

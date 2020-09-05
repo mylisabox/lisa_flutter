@@ -8,6 +8,41 @@ part of 'plugin_api.dart';
 
 abstract class _$PluginApiClient implements ApiClient {
   final String basePath = "";
+  Future<List<StorePlugin>> getStorePlugins() async {
+    var req = base.get
+        .metadata({
+          "auth": [
+            {
+              "type": "apiKey",
+              "name": "Bearer",
+              "keyName": "Authorization",
+              "where": "header",
+            }
+          ],
+        })
+        .path(basePath)
+        .path("/api/v1/plugin/store");
+    return req.go(throwOnErr: true).map(decodeList);
+  }
+
+  Future<void> installPlugin(AddPluginRequest addPluginRequest) async {
+    var req = base.post
+        .metadata({
+          "auth": [
+            {
+              "type": "apiKey",
+              "name": "Bearer",
+              "keyName": "Authorization",
+              "where": "header",
+            }
+          ],
+        })
+        .path(basePath)
+        .path("/api/v1/plugin/install")
+        .json(jsonConverter.to(addPluginRequest));
+    await req.go(throwOnErr: true);
+  }
+
   Future<Map<String, Object>> pairing(
       String pluginName, String driver, Map<String, Object> requestBody) async {
     var req = base.post
@@ -48,5 +83,23 @@ abstract class _$PluginApiClient implements ApiClient {
         .query("query", query)
         .query("activated", activated);
     return req.go(throwOnErr: true).map(decodeList);
+  }
+
+  Future<void> uninstallPlugin(String pluginName) async {
+    var req = base.delete
+        .metadata({
+          "auth": [
+            {
+              "type": "apiKey",
+              "name": "Bearer",
+              "keyName": "Authorization",
+              "where": "header",
+            }
+          ],
+        })
+        .path(basePath)
+        .path("/api/v1/plugin/:pluginName/uninstall")
+        .pathParams("pluginName", pluginName);
+    await req.go(throwOnErr: true);
   }
 }

@@ -16,6 +16,7 @@ dependencies:
     #path: '../../../flutter_transmission'
   sentry: ^3.0.1
   logging: ^0.11.4
+  file_picker: ^1.13.3
   file_chooser:
     path: ../../../flutter-desktop-embedding/plugins/file_chooser
   flutter_staggered_animations: ^0.1.2

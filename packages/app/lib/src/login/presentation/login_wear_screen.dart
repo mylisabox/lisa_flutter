@@ -6,8 +6,6 @@ import 'package:lisa_flutter/src/common/utils/wear.dart';
 import 'package:lisa_flutter/src/login/stores/login_store.dart';
 import 'package:provider/provider.dart';
 
-final _opacity = .7;
-
 class LoginWearScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
@@ -21,8 +19,6 @@ class LoginWearScreen extends HookWidget {
       return null;
     }, [store]);
 
-    final theme = Theme.of(context);
-    final _primaryColor = theme.primaryColor;
     return Provider.value(
       value: store,
       child: AmbientMode(

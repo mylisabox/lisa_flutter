@@ -5,7 +5,6 @@ import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
 import 'package:lisa_flutter/src/common/utils/base_url_provider.dart';
-import 'package:lisa_flutter/src/common/utils/hooks.dart';
 import 'package:lisa_flutter/src/devices/stores/add_device_store.dart';
 import 'package:lisa_flutter/src/devices/stores/device_store.dart';
 import 'package:lisa_server_sdk/model/device_settings.dart';
@@ -84,7 +83,6 @@ class AddDeviceWidget extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final store = Provider.of<AddDeviceStore>(context);
-    final translations = CommonLocalizations.of(context);
 
     return Observer(builder: (context) {
       if (store.selectedDeviceTemplate == null || store.currentCustomStep == null || store.currentCustomStep.isEmpty) {

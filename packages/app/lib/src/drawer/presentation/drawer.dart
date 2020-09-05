@@ -15,6 +15,7 @@ import 'package:lisa_flutter/src/orphans/presentation/orphans.dart';
 import 'package:lisa_flutter/src/preferences/presentation/preferences.dart';
 import 'package:lisa_flutter/src/preferences/stores/preferences_store.dart';
 import 'package:lisa_flutter/src/scenes/presentation/scenes.dart';
+import 'package:lisa_flutter/src/settings/presentation/settings.dart';
 import 'package:provider/provider.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -84,12 +85,24 @@ class AppDrawer extends StatelessWidget {
                 Divider(height: 1),
                 DrawerEntry(
                   text: translations.menuPreferences,
-                  icon: Icons.settings,
+                  icon: Icons.assignment,
                   onTap: () {
                     if (drawerStore.currentSelectedRoute != PreferencesWidget.route) {
                       Provider.of<GlobalKey<NavigatorState>>(context, listen: false).currentState.pushNamed(PreferencesWidget.route);
                       _closeDrawer(context);
                       drawerStore.selectRoute(PreferencesWidget.route);
+                    }
+                  },
+                ),
+                Divider(height: 1),
+                DrawerEntry(
+                  text: translations.menuSettings,
+                  icon: Icons.settings,
+                  onTap: () {
+                    if (drawerStore.currentSelectedRoute != SettingsWidget.route) {
+                      Provider.of<GlobalKey<NavigatorState>>(context, listen: false).currentState.pushNamed(SettingsWidget.route);
+                      _closeDrawer(context);
+                      drawerStore.selectRoute(SettingsWidget.route);
                     }
                   },
                 ),
@@ -143,7 +156,7 @@ class AppDrawer extends StatelessWidget {
 }
 
 class DrawerEntry extends StatelessWidget {
-  static const height = 55.0;
+  static const height = 60.0;
   final String text;
   final IconData icon;
   final VoidCallback onTap;

@@ -244,7 +244,6 @@ abstract class _AddDeviceStore with Store, BaseUrlProvider {
     ));
   }
 
-  @override
   void dispose() {
     for (final d in _disposers) {
       d();

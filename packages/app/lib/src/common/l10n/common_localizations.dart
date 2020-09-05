@@ -119,6 +119,8 @@ class CommonLocalizations {
 
   String get menuPreferences => Intl.message('Preferences', name: 'menuPreferences');
 
+  String get menuSettings => Intl.message('Settings', name: 'menuSettings');
+
   String get menuScenes => Intl.message('Scenes', name: 'menuScenes');
 
   String get menuMultimedia => Intl.message('Multimedia', name: 'menuMultimedia');
@@ -140,6 +142,10 @@ class CommonLocalizations {
   String get externalUrl => Intl.message('External URL', name: 'externalUrl');
 
   String get externalUrlHint => Intl.message('http://myDomain.com:3000', name: 'externalUrlHint');
+
+  String get voiceCommand => Intl.message('Setup voice commands', name: 'voiceCommand');
+
+  String get voiceCommandDesc => Intl.message('Send your google config file to L.I.S.A. to be able to use voice commands', name: 'voiceCommandDesc');
 
   String get prefLanguage => Intl.message('Language', name: 'prefLanguage');
 
@@ -194,6 +200,26 @@ class CommonLocalizations {
   String get noDeviceFound => Intl.message('No L.I.S.A. instance found, be sure you plug it and it blink in yellow', name: 'noDeviceFound');
 
   String get searchingBTDevice => Intl.message('Your box should currently blink in yellow, if it\'s not the case please replug it.\n\nOnce it blink launch a search to connect to it and setup the WiFi network.', name: 'searchingBTDevice');
+
+  String get voiceCommandSetupTitle => Intl.message('Choose configuration file', name: 'voiceCommandSetupTitle');
+
+  String get chooseFileButton => Intl.message('Choose file', name: 'chooseFileButton');
+
+  String chosenFile(String name) => Intl.message('Chosen file: $name', args: [name], name: 'chosenFile');
+
+  String get voiceCommandSetupDesc => Intl.message('To enable voice commands for L.I.S.A. you need to provide a Google configuration file (JSON file).', name: 'voiceCommandSetupDesc');
+
+  String get pluginShop => Intl.message('Plugins', name: 'pluginShop');
+
+  String installPluginDesc(String plugin) => Intl.message('Are you sure to install $plugin ?', args: [plugin], name: 'installPluginDesc');
+
+  String get installPlugin => Intl.message('Install', name: 'installPlugin');
+
+  String uninstallPluginDesc(String plugin) => Intl.message('Are you sure to uninstall $plugin ?', args: [plugin], name: 'uninstallPluginDesc');
+
+  String get uninstallPlugin => Intl.message('Uninstall', name: 'uninstallPlugin');
+
+  String get pluginShopDesc => Intl.message('Install or uninstall L.I.S.A. plugins', name: 'pluginShopDesc');
 
   String get boxConnected =>
       Intl.message('Your box is now connected and should blink in blue, meaning you can use L.I.S.A. but can\'t do voice commands until you setup it.',

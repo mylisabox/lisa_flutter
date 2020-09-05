@@ -17,6 +17,6 @@ java ${JAVA_OPTS} -jar ${executable} ${ags}
 #pub get
 #pub run build_runner build --delete-conflicting-outputs
 #TODO not commit this ! revert once dev finished
-/Users/jaumard/flutter_master/bin/flutter pub get
-/Users/jaumard/flutter_master/bin/flutter pub pub run build_runner build --delete-conflicting-outputs
+/Users/jaumard/flutter_dev/bin/flutter pub get
+/Users/jaumard/flutter_dev/bin/flutter pub pub run build_runner build --delete-conflicting-outputs
 rm -R ${WORKDIR}/test/

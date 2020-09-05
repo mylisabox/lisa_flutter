@@ -194,7 +194,7 @@ Future<T> showSelectDialog<T>(BuildContext context, WidgetBuilder title, List<T>
 }
 
 Widget getAppDialog(BuildContext context, WidgetBuilder title, WidgetBuilder content, {List<DialogAction> actions = const [], bool forceAndroid = false}) {
-  if (defaultTargetPlatform == TargetPlatform.iOS && !forceAndroid) {
+  if ((defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.macOS) && !forceAndroid) {
     return CupertinoAlertDialog(
       title: title(context),
       content: content(context),
@@ -248,7 +248,7 @@ Future<T> showPlatformDialog<T>(BuildContext context, WidgetBuilder builder, {bo
 
 Future<T> showAppDialog<T>(BuildContext context, WidgetBuilder title, WidgetBuilder content,
     {bool barrierDismissible = true, List<DialogAction> actions = const []}) {
-  if (defaultTargetPlatform == TargetPlatform.iOS) {
+  if (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.macOS) {
     final Future<T> Function({BuildContext context, WidgetBuilder builder}) showCupertino = barrierDismissible ? showCupertinoDialog : showCupertinoModalPopup;
     return showCupertino(
       context: context,

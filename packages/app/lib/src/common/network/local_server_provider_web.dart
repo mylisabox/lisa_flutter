@@ -1,4 +1,5 @@
 import 'dart:async';
+// ignore: avoid_web_libraries_in_flutter
 import 'dart:html';
 
 import 'package:lisa_flutter/src/common/network/local_server_provider.dart';

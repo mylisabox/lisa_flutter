@@ -303,7 +303,6 @@ class _Step2NetworkList extends StatelessWidget {
 class _Step3NetworkSaved extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final store = Provider.of<SetupStore>(context);
     final localization = CommonLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.all(16.0),

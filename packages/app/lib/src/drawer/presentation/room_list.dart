@@ -7,7 +7,6 @@ import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
 import 'package:lisa_flutter/src/common/presentation/proxy_scaffold.dart';
-import 'package:lisa_flutter/src/common/utils/hooks.dart';
 import 'package:lisa_flutter/src/drawer/presentation/drawer.dart';
 import 'package:lisa_flutter/src/drawer/stores/drawer_store.dart';
 import 'package:lisa_flutter/src/rooms/presentation/room_dashboard.dart';
@@ -145,6 +144,7 @@ class _RoomListEntry extends HookWidget {
 
 class _RoomIdle extends StatelessWidget {
   final Room room;
+  static const height = 55.0;
 
   const _RoomIdle({Key key, this.room}) : super(key: key);
 
@@ -154,7 +154,7 @@ class _RoomIdle extends StatelessWidget {
     final drawerStore = Provider.of<DrawerStore>(context);
     return InkWell(
       child: Container(
-        height: DrawerEntry.height,
+        height: height,
         child: Row(
           children: [
             Expanded(
