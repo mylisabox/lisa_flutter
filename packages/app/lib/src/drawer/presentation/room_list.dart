@@ -60,7 +60,8 @@ class RoomList extends HookWidget {
               height: drawerStore.isRoomListOpened ? drawerStore.roomNumber * DrawerEntry.height + 1 : .0,
               child: ClipRect(
                 child: OverflowBox(
-                  maxHeight: drawerStore.roomNumber * DrawerEntry.height + 2,
+                  maxHeight: drawerStore.roomNumber * _RoomIdle.height + 2,
+                  alignment: Alignment.topCenter,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [

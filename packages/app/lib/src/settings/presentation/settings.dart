@@ -15,31 +15,38 @@ class SettingsWidget extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final translations = CommonLocalizations.of(context);
-    return Container(
-      color: Theme.of(context).scaffoldBackgroundColor,
-      child: Material(
-        color: Colors.transparent,
-        child: Column(
-          children: <Widget>[
-            ListTile(
-              onTap: () async {
-                await _showFilePickerDialog(context);
-              },
-              leading: Icon(Icons.mic),
-              title: Text(translations.voiceCommand),
-              subtitle: Text(translations.voiceCommandDesc),
+    final settingStore = useMemoized(() => SettingsStore());
+
+    return Provider.value(
+      value: settingStore,
+      child: Builder(
+        builder: (context) => Container(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          child: Material(
+            color: Colors.transparent,
+            child: Column(
+              children: <Widget>[
+                ListTile(
+                  onTap: () async {
+                    await _showFilePickerDialog(context);
+                  },
+                  leading: Icon(Icons.mic),
+                  title: Text(translations.voiceCommand),
+                  subtitle: Text(translations.voiceCommandDesc),
+                ),
+                Divider(height: 1),
+                ListTile(
+                  onTap: () async {
+                    Provider.of<GlobalKey<NavigatorState>>(context, listen: false).currentState.pushNamed(PluginsStoreWidget.route);
+                  },
+                  leading: Icon(Icons.shop),
+                  title: Text(translations.pluginShop),
+                  subtitle: Text(translations.pluginShopDesc),
+                ),
+                Divider(height: 1),
+              ],
             ),
-            Divider(height: 1),
-            ListTile(
-              onTap: () async {
-                Provider.of<GlobalKey<NavigatorState>>(context, listen: false).currentState.pushNamed(PluginsStoreWidget.route);
-              },
-              leading: Icon(Icons.shop),
-              title: Text(translations.pluginShop),
-              subtitle: Text(translations.pluginShopDesc),
-            ),
-            Divider(height: 1),
-          ],
+          ),
         ),
       ),
     );
