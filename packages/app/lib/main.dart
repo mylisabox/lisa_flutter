@@ -110,7 +110,6 @@ class MyApp extends HookWidget {
               buttonTheme: ButtonThemeData(
                 buttonColor: _primaryColor,
                 textTheme: ButtonTextTheme.normal,
-
               ),
               fontFamily: 'Raleway',
               brightness: prefStore.isDarkTheme ? Brightness.dark : Brightness.light,
