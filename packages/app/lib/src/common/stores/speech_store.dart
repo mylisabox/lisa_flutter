@@ -1,3 +1,5 @@
+import 'package:built_collection/built_collection.dart';
+import 'package:built_value/json_object.dart';
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
 import 'package:lisa_server_sdk/api/chatbot_api.dart';
 import 'package:lisa_server_sdk/model/interact_request.dart';
@@ -14,7 +16,7 @@ abstract class _SpeechStore with Store {
 
   @action
   Future<String> sendSentence(String sentence, String lang, String roomId) async {
-    final result = await _api.interact(InteractRequest(sentence: sentence, lang: lang, context: { 'roomId': roomId }));
-    return result.response;
+    final result = await _api.interact((InteractRequestBuilder()..sentence= sentence..lang= lang..context= MapBuilder<String, JsonObject>({'roomId': JsonObject(roomId)})).build());
+    return result.data.response;
   }
 }

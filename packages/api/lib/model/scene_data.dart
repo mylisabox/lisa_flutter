@@ -1,39 +1,33 @@
-import 'package:jaguar_serializer/jaguar_serializer.dart';
+//
+// AUTO-GENERATED FILE, DO NOT MODIFY!
+//
+// @dart=2.6
 
+// ignore_for_file: unused_import
 
-part 'scene_data.jser.dart';
+import 'package:built_collection/built_collection.dart';
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
 
-class SceneData {
-  
-  @Alias('sentences', isNullable: false,  )
-  final List<String> sentences;
-  
-  @Alias('responses', isNullable: false,  )
-  final List<String> responses;
-  
-  @Alias('commands', isNullable: false,  )
-  final List<String> commands;
-  
+part 'scene_data.g.dart';
 
-  SceneData(
-      
+abstract class SceneData implements Built<SceneData, SceneDataBuilder> {
 
-{
-     this.sentences = const [],  
-     this.responses = const [],  
-     this.commands = const [] 
-    
-    }
-  );
+    @BuiltValueField(wireName: r'sentences')
+    BuiltList<String> get sentences;
 
-  @override
-  String toString() {
-    return 'SceneData[sentences=$sentences, responses=$responses, commands=$commands, ]';
-  }
-}
+    @BuiltValueField(wireName: r'responses')
+    BuiltList<String> get responses;
 
-@GenSerializer(nullableFields: false)
-class SceneDataSerializer extends Serializer<SceneData> with _$SceneDataSerializer {
+    @BuiltValueField(wireName: r'commands')
+    BuiltList<String> get commands;
 
+    // Boilerplate code needed to wire-up generated code
+    SceneData._();
+
+    static void _initializeBuilder(SceneDataBuilder b) => b;
+
+    factory SceneData([void updates(SceneDataBuilder b)]) = _$SceneData;
+    static Serializer<SceneData> get serializer => _$sceneDataSerializer;
 }
 

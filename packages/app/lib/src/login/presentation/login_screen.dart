@@ -56,10 +56,12 @@ class LoginScreen extends HookWidget {
           primaryColorLight: _primaryColor,
           primaryColorDark: _primaryColor,
           accentColor: _primaryColor,
-          cursorColor: _primaryColor,
           indicatorColor: _primaryColor,
-          textSelectionColor: _primaryColor,
-          textSelectionHandleColor: _primaryColor,
+          textSelectionTheme: TextSelectionThemeData(
+            cursorColor: _primaryColor,
+            selectionColor: _primaryColor,
+            selectionHandleColor: _primaryColor,
+          ),
         ),
         child: Scaffold(
           resizeToAvoidBottomInset: false,
@@ -113,7 +115,7 @@ mixin _LoginFields {
     final translations = CommonLocalizations.of(context);
     return Visibility(
       visible: !kIsWeb,
-      child: FlatButton(
+      child: TextButton(
         onPressed: () async {
           final bloc = Provider.of<PreferencesStore>(context, listen: false);
           final url = await showPrompt(
@@ -154,9 +156,6 @@ mixin _LoginFields {
               controller: controller,
               autofillHints: [AutofillHints.email],
               onChanged: (value) => store.setEmail(value),
-              onSubmitted: (_) {
-                FocusScope.of(context).focusInDirection(TraversalDirection.down);
-              },
               keyboardType: TextInputType.emailAddress,
               textInputAction: TextInputAction.next,
               style: TextStyle(fontSize: 20),
@@ -266,8 +265,10 @@ class _NoHost extends StatelessWidget with _LoginFields {
               ),
             ),
             if (!kIsWeb)
-              RaisedButton(
-                textColor: Colors.white,
+              ElevatedButton(
+                style: ButtonStyle(
+                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                ),
                 child: Text(localization.setupButton.toUpperCase()),
                 onPressed: () async {
                   final store = Provider.of<LoginStore>(context, listen: false);
@@ -283,8 +284,10 @@ class _NoHost extends StatelessWidget with _LoginFields {
               ),
             ),
             _getExternalUrlButtons(context),
-            RaisedButton(
-              textColor: Colors.white,
+            ElevatedButton(
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+              ),
               child: Text(localization.retry.toUpperCase()),
               onPressed: () {
                 final store = Provider.of<LoginStore>(context, listen: false);

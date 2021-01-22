@@ -62,9 +62,9 @@ abstract class _LoginStore with Store {
     }
     email = _preferences.getString(keyLastEmail, defaultValue: email);
     try {
-      final response = await _api.getConfigApi().isInitialized();
+      final response = (await _api.getConfigApi().isInitialized()).data;
       mode = response.initialized ? AuthMode.login : AuthMode.registration;
-    } catch(err) {
+    } catch (err) {
       mode = AuthMode.noHost;
       print(err);
     }
@@ -90,7 +90,11 @@ abstract class _LoginStore with Store {
       try {
         loginState = ProgressButtonState.progress;
         final method = mode == AuthMode.login ? _api.getLoginApi().login : _api.getLoginApi().register;
-        final response = await method(LoginRequest(email: email, password: password));
+        final response = (await method((LoginRequestBuilder()
+                  ..email = email
+                  ..password = password)
+                .build()))
+            .data;
         _preferences.setString(PreferencesProvider.keyToken, response.token);
         _preferences.setString(keyLastEmail, email);
         _api.setApiKey(kAuthKey, 'JWT ${response.token}');
@@ -122,7 +126,11 @@ abstract class _LoginStore with Store {
     } else {
       try {
         loginState = ProgressButtonState.progress;
-        final response = await _api.getLoginApi().register(LoginRequest(email: email, password: password));
+        final response = (await _api.getLoginApi().register((LoginRequestBuilder()
+                  ..email = email
+                  ..password = password)
+                .build()))
+            .data;
         _preferences.setString(PreferencesProvider.keyToken, response.token);
         _api.setApiKey(kAuthKey, 'JWT ${response.token}');
         await _userStore.init();

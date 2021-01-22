@@ -1,33 +1,35 @@
+//
+// AUTO-GENERATED FILE, DO NOT MODIFY!
+//
+// @dart=2.6
+
+// ignore_for_file: unused_import
+
 import 'dart:async';
+
+import 'package:dio/dio.dart';
 import 'package:lisa_server_sdk/auth/auth.dart';
-import 'package:jaguar_retrofit/jaguar_retrofit.dart';
 
 class ApiKeyAuthInterceptor extends AuthInterceptor {
     Map<String, String> apiKeys = {};
 
     @override
-    FutureOr<void> before(RouteBase route) {
-        final authInfo = getAuthInfo(route, "apiKey");
-        for (var info in authInfo) {
-            final authName = info["name"];
-            final authKeyName = info["keyName"];
-            final authWhere = info["where"];
+    Future<dynamic> onRequest(RequestOptions options) {
+        final authInfo = getAuthInfo(options, 'apiKey');
+        for (final info in authInfo) {
+            final authName = info['name'] as String;
+            final authKeyName = info['keyName'] as String;
+            final authWhere = info['where'] as String;
             final apiKey = apiKeys[authName];
-            if(apiKey != null) {
-                if(authWhere == 'query'){
-                    route.query(authKeyName, apiKey);
-                }
-            else {
-                    route.header(authKeyName, apiKey);
+            if (apiKey != null) {
+                if (authWhere == 'query') {
+                    options.queryParameters[authKeyName] = apiKey;
+                } else {
+                    options.headers[authKeyName] = apiKey;
                 }
                 break;
             }
         }
-        return super.before(route);
-    }
-
-    @override
-    FutureOr after(StringResponse response) {
-        return Future.value(response);
+        return super.onRequest(options);
     }
 }

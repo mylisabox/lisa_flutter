@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:built_collection/built_collection.dart';
 import 'package:lisa_flutter/src/common/errors.dart';
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
 import 'package:lisa_server_sdk/api/scene_api.dart';
@@ -89,9 +90,9 @@ abstract class _SceneStore with Store {
     _scene = scene;
     if (scene != null) {
       name = scene.displayName;
-      commands = ObservableList.of(scene.data.commands);
-      sentences = ObservableList.of(scene.data.sentences);
-      responses = ObservableList.of(scene.data.responses);
+      commands = ObservableList.of(scene.data.commands.toList());
+      sentences = ObservableList.of(scene.data.sentences.toList());
+      responses = ObservableList.of(scene.data.responses.toList());
     }
   }
 
@@ -101,15 +102,15 @@ abstract class _SceneStore with Store {
       error = null;
       await _sceneApi
           .saveScene(
-            Scene(
-              name: _scene?.name,
-              displayName: name,
-              data: SceneData(
-                commands: commands,
-                responses: responses,
-                sentences: sentences,
-              ),
-            ),
+            (SceneBuilder()
+                  ..name = _scene?.name
+                  ..displayName = name
+                  ..data = (SceneDataBuilder()
+                        ..commands = ListBuilder(commands)
+                        ..responses = ListBuilder(responses)
+                        ..sentences = ListBuilder(sentences))
+                      )
+                .build(),
           )
           .catchError(handleCaughtError);
     } on ErrorResultException catch (ex) {

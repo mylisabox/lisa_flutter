@@ -1,39 +1,34 @@
-import 'package:jaguar_serializer/jaguar_serializer.dart';
+//
+// AUTO-GENERATED FILE, DO NOT MODIFY!
+//
+// @dart=2.6
 
+// ignore_for_file: unused_import
 
-part 'interact_request.jser.dart';
+import 'package:built_collection/built_collection.dart';
+import 'package:built_value/built_value.dart';
+import 'package:built_value/json_object.dart';
+import 'package:built_value/serializer.dart';
 
-class InteractRequest {
-  
-  @Alias('sentence', isNullable: false,  )
-  final String sentence;
-  
-  @Alias('lang', isNullable: false,  )
-  final String lang;
-  
-  @Alias('context', isNullable: false,  )
-  final Map<String, Object> context;
-  
+part 'interact_request.g.dart';
 
-  InteractRequest(
-      
+abstract class InteractRequest implements Built<InteractRequest, InteractRequestBuilder> {
 
-{
-    
-     this.sentence = null,   this.lang = null,  
-     this.context = const {} 
-    
-    }
-  );
+    @BuiltValueField(wireName: r'sentence')
+    String get sentence;
 
-  @override
-  String toString() {
-    return 'InteractRequest[sentence=$sentence, lang=$lang, context=$context, ]';
-  }
-}
+    @BuiltValueField(wireName: r'lang')
+    String get lang;
 
-@GenSerializer(nullableFields: false)
-class InteractRequestSerializer extends Serializer<InteractRequest> with _$InteractRequestSerializer {
+    @BuiltValueField(wireName: r'context')
+    BuiltMap<String, JsonObject> get context;
 
+    // Boilerplate code needed to wire-up generated code
+    InteractRequest._();
+
+    static void _initializeBuilder(InteractRequestBuilder b) => b;
+
+    factory InteractRequest([void updates(InteractRequestBuilder b)]) = _$InteractRequest;
+    static Serializer<InteractRequest> get serializer => _$interactRequestSerializer;
 }
 

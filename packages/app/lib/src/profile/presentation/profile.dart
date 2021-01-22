@@ -103,7 +103,7 @@ class ProfileDialog extends HookWidget {
                 Navigator.of(context).pop();
                 if (isSuccessful) {
                   final snackBar = SnackBar(content: Text(translations.profileSaved));
-                  Scaffold.of(context).showSnackBar(snackBar);
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 }
               }
             },
@@ -227,7 +227,7 @@ class _ProfileWidget extends HookWidget {
                   visible: !modeDialog,
                   child: Padding(
                     padding: const EdgeInsets.only(top: kNormalPadding),
-                    child: RaisedButton(
+                    child: ElevatedButton(
                       onPressed: () async {
                         final isSuccessful = await showLoadingDialog(
                           context,
@@ -237,11 +237,13 @@ class _ProfileWidget extends HookWidget {
                         );
                         if (isSuccessful) {
                           final snackBar = SnackBar(content: Text(translations.profileSaved));
-                          Scaffold.of(context).showSnackBar(snackBar);
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         }
                       },
-                      textColor: Colors.white,
-                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                      style: ButtonStyle(
+                        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                        padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 10, horizontal: 30)),
+                      ),
                       child: Text(translations.continueButton.toUpperCase()),
                     ),
                   ),

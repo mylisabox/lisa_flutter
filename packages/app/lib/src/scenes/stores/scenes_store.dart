@@ -27,7 +27,7 @@ abstract class _ScenesStore with Store {
   Future<void> loadScenes() async {
     try {
       error = null;
-      scenes = ObservableList.of(await _sceneApi.getScene().catchError(handleCaughtError));
+      scenes = ObservableList.of((await _sceneApi.getScene().catchError(handleCaughtError)).data);
     } on ErrorResultException catch (ex) {
       error = ex;
     }

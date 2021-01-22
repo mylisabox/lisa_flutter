@@ -1,76 +1,263 @@
-import 'package:jaguar_retrofit/annotations/annotations.dart';
-import 'package:jaguar_retrofit/jaguar_retrofit.dart';
-import 'package:jaguar_serializer/jaguar_serializer.dart';
-import 'package:jaguar_mimetype/jaguar_mimetype.dart';
-import 'dart:async';
+//
+// AUTO-GENERATED FILE, DO NOT MODIFY!
+//
+// @dart=2.6
 
+// ignore_for_file: unused_import
+
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:built_collection/built_collection.dart';
+import 'package:built_value/serializer.dart';
+import 'package:dio/dio.dart';
 import 'package:lisa_server_sdk/model/room.dart';
 
-part 'room_api.jretro.dart';
+class RoomApi {
+    final Dio _dio;
+    Serializers _serializers;
 
-@GenApiClient()
-class RoomApi extends ApiClient with _$RoomApiClient {
-    final Route base;
-    final Map<String, CodecRepo> converters;
-    final Duration timeout;
+    RoomApi(this._dio, this._serializers);
 
-    RoomApi({this.base, this.converters, this.timeout = const Duration(minutes: 2)});
-
-    /// 
     ///
-    /// 
-    @PostReq(path: "/api/v1/room", metadata: {"auth": [ {"type": "apiKey", "name": "Bearer", "keyName": "Authorization", "where": "header" }]})
-    Future<void> addRoom(
-            
-             @AsJson() Room room
-        ) {
-        return super.addRoom(
+    ///
+    ///
+    Future<Response<void>> addRoom(
+        Room room, {
+        CancelToken cancelToken,
+        Map<String, dynamic> headers,
+        Map<String, dynamic> extra,
+        ValidateStatus validateStatus,
+        ProgressCallback onSendProgress,
+        ProgressCallback onReceiveProgress,
+    }) async {
+        final String _path = '/api/v1/room';
 
-        
-        room
-        ).timeout(timeout);
+        final queryParams = <String, dynamic>{};
+        final headerParams = <String, dynamic>{
+            if (headers != null) ...headers,
+        };
+        dynamic bodyData;
+
+        queryParams.removeWhere((key, dynamic value) => value == null);
+        headerParams.removeWhere((key, dynamic value) => value == null);
+
+        final contentTypes = <String>[
+            'application/json',
+        ];
+
+        final bodySerializer = _serializers.serializerForType(Room) as Serializer<Room>;
+        final serializedBody = _serializers.serializeWith(bodySerializer, room);
+        final jsonroom = json.encode(serializedBody);
+        bodyData = jsonroom;
+
+        return _dio.request<dynamic>(
+            _path,
+            queryParameters: queryParams,
+            data: bodyData,
+            options: Options(
+                method: 'post'.toUpperCase(),
+                headers: headerParams,
+                extra: <String, dynamic>{
+                    'secure': <Map<String, String>>[
+                        {
+                            'type': 'apiKey',
+                            'name': 'Bearer',
+                            'keyName': 'Authorization',
+                            'where': 'header',
+                        },
+                    ],
+                    if (extra != null) ...extra,
+                },
+                validateStatus: validateStatus,
+                contentType: contentTypes.isNotEmpty ? contentTypes[0] : 'application/json',
+            ),
+            cancelToken: cancelToken,
+            onSendProgress: onSendProgress,
+            onReceiveProgress: onReceiveProgress,
+        );
     }
 
-    /// 
     ///
-    /// 
-    @DeleteReq(path: "/api/v1/room/:roomId", metadata: {"auth": [ {"type": "apiKey", "name": "Bearer", "keyName": "Authorization", "where": "header" }]})
-    Future<void> deleteRoom(
-            @PathParam("roomId") int roomId
-        ) {
-        return super.deleteRoom(
-        roomId
+    ///
+    ///
+    Future<Response<void>> deleteRoom(
+        int roomId, {
+        CancelToken cancelToken,
+        Map<String, dynamic> headers,
+        Map<String, dynamic> extra,
+        ValidateStatus validateStatus,
+        ProgressCallback onSendProgress,
+        ProgressCallback onReceiveProgress,
+    }) async {
+        final String _path = '/api/v1/room/{roomId}'.replaceAll('{' r'roomId' '}', roomId.toString());
 
-        ).timeout(timeout);
+        final queryParams = <String, dynamic>{};
+        final headerParams = <String, dynamic>{
+            if (headers != null) ...headers,
+        };
+        dynamic bodyData;
+
+        queryParams.removeWhere((key, dynamic value) => value == null);
+        headerParams.removeWhere((key, dynamic value) => value == null);
+
+        final contentTypes = <String>[];
+
+        return _dio.request<dynamic>(
+            _path,
+            queryParameters: queryParams,
+            data: bodyData,
+            options: Options(
+                method: 'delete'.toUpperCase(),
+                headers: headerParams,
+                extra: <String, dynamic>{
+                    'secure': <Map<String, String>>[
+                        {
+                            'type': 'apiKey',
+                            'name': 'Bearer',
+                            'keyName': 'Authorization',
+                            'where': 'header',
+                        },
+                    ],
+                    if (extra != null) ...extra,
+                },
+                validateStatus: validateStatus,
+                contentType: contentTypes.isNotEmpty ? contentTypes[0] : 'application/json',
+            ),
+            cancelToken: cancelToken,
+            onSendProgress: onSendProgress,
+            onReceiveProgress: onReceiveProgress,
+        );
     }
 
-    /// 
     ///
-    /// 
-    @GetReq(path: "/api/v1/room", metadata: {"auth": [ {"type": "apiKey", "name": "Bearer", "keyName": "Authorization", "where": "header" }]})
-    Future<List<Room>> getRooms(
-        ) {
-        return super.getRooms(
+    ///
+    ///
+    Future<Response<BuiltList<Room>>> getRooms({
+        CancelToken cancelToken,
+        Map<String, dynamic> headers,
+        Map<String, dynamic> extra,
+        ValidateStatus validateStatus,
+        ProgressCallback onSendProgress,
+        ProgressCallback onReceiveProgress,
+    }) async {
+        final String _path = '/api/v1/room';
 
-        ).timeout(timeout);
+        final queryParams = <String, dynamic>{};
+        final headerParams = <String, dynamic>{
+            if (headers != null) ...headers,
+        };
+        dynamic bodyData;
+
+        queryParams.removeWhere((key, dynamic value) => value == null);
+        headerParams.removeWhere((key, dynamic value) => value == null);
+
+        final contentTypes = <String>[];
+
+        return _dio.request<dynamic>(
+            _path,
+            queryParameters: queryParams,
+            data: bodyData,
+            options: Options(
+                method: 'get'.toUpperCase(),
+                headers: headerParams,
+                extra: <String, dynamic>{
+                    'secure': <Map<String, String>>[
+                        {
+                            'type': 'apiKey',
+                            'name': 'Bearer',
+                            'keyName': 'Authorization',
+                            'where': 'header',
+                        },
+                    ],
+                    if (extra != null) ...extra,
+                },
+                validateStatus: validateStatus,
+                contentType: contentTypes.isNotEmpty ? contentTypes[0] : 'application/json',
+            ),
+            cancelToken: cancelToken,
+            onSendProgress: onSendProgress,
+            onReceiveProgress: onReceiveProgress,
+        ).then((response) {
+            const collectionType = BuiltList;
+            const type = FullType(collectionType, [FullType(Room)]);
+            final data = _serializers.deserialize(
+                response.data is String
+                ? jsonDecode(response.data as String)
+                : response.data,
+                specifiedType: type,
+            ) as BuiltList<Room>;
+
+            return Response<BuiltList<Room>>(
+                data: data,
+                headers: response.headers,
+                request: response.request,
+                redirects: response.redirects,
+                statusCode: response.statusCode,
+                statusMessage: response.statusMessage,
+                extra: response.extra,
+            );
+        });
     }
 
-    /// 
     ///
-    /// 
-    @PutReq(path: "/api/v1/room/:roomId", metadata: {"auth": [ {"type": "apiKey", "name": "Bearer", "keyName": "Authorization", "where": "header" }]})
-    Future<void> saveRoom(
-            @PathParam("roomId") int roomId
-            ,
-             @AsJson() Room room
-        ) {
-        return super.saveRoom(
-        roomId
+    ///
+    ///
+    Future<Response<void>> saveRoom(
+        int roomId,
+        Room room, {
+        CancelToken cancelToken,
+        Map<String, dynamic> headers,
+        Map<String, dynamic> extra,
+        ValidateStatus validateStatus,
+        ProgressCallback onSendProgress,
+        ProgressCallback onReceiveProgress,
+    }) async {
+        final String _path = '/api/v1/room/{roomId}'.replaceAll('{' r'roomId' '}', roomId.toString());
 
-        ,
-        room
-        ).timeout(timeout);
+        final queryParams = <String, dynamic>{};
+        final headerParams = <String, dynamic>{
+            if (headers != null) ...headers,
+        };
+        dynamic bodyData;
+
+        queryParams.removeWhere((key, dynamic value) => value == null);
+        headerParams.removeWhere((key, dynamic value) => value == null);
+
+        final contentTypes = <String>[
+            'application/json',
+        ];
+
+        final bodySerializer = _serializers.serializerForType(Room) as Serializer<Room>;
+        final serializedBody = _serializers.serializeWith(bodySerializer, room);
+        final jsonroom = json.encode(serializedBody);
+        bodyData = jsonroom;
+
+        return _dio.request<dynamic>(
+            _path,
+            queryParameters: queryParams,
+            data: bodyData,
+            options: Options(
+                method: 'put'.toUpperCase(),
+                headers: headerParams,
+                extra: <String, dynamic>{
+                    'secure': <Map<String, String>>[
+                        {
+                            'type': 'apiKey',
+                            'name': 'Bearer',
+                            'keyName': 'Authorization',
+                            'where': 'header',
+                        },
+                    ],
+                    if (extra != null) ...extra,
+                },
+                validateStatus: validateStatus,
+                contentType: contentTypes.isNotEmpty ? contentTypes[0] : 'application/json',
+            ),
+            cancelToken: cancelToken,
+            onSendProgress: onSendProgress,
+            onReceiveProgress: onReceiveProgress,
+        );
     }
-
 
 }

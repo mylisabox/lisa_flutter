@@ -1,37 +1,30 @@
-import 'package:jaguar_serializer/jaguar_serializer.dart';
+//
+// AUTO-GENERATED FILE, DO NOT MODIFY!
+//
+// @dart=2.6
 
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
+// ignore_for_file: unused_import
 
 import 'package:lisa_server_sdk/model/user.dart';
 
-part 'login_response.jser.dart';
+part 'login_response.g.dart';
 
-class LoginResponse {
-  
-  @Alias('token', isNullable: false,  )
-  final String token;
-  
-  @Alias('user', isNullable: false,  )
-  final User user;
-  
+abstract class LoginResponse implements Built<LoginResponse, LoginResponseBuilder> {
 
-  LoginResponse(
-      
+    @BuiltValueField(wireName: r'token')
+    String get token;
 
-{
-    
-     this.token = null,  
-     this.user = null 
-    }
-  );
+    @BuiltValueField(wireName: r'user')
+    User get user;
 
-  @override
-  String toString() {
-    return 'LoginResponse[token=$token, user=$user, ]';
-  }
-}
+    // Boilerplate code needed to wire-up generated code
+    LoginResponse._();
 
-@GenSerializer(nullableFields: false)
-class LoginResponseSerializer extends Serializer<LoginResponse> with _$LoginResponseSerializer {
+    static void _initializeBuilder(LoginResponseBuilder b) => b;
 
+    factory LoginResponse([void updates(LoginResponseBuilder b)]) = _$LoginResponse;
+    static Serializer<LoginResponse> get serializer => _$loginResponseSerializer;
 }
 

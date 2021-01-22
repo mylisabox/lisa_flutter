@@ -21,23 +21,23 @@ class FileFieldIO extends FileField {
   Widget build(BuildContext context) {
     final translations = CommonLocalizations.of(context);
 
-    return RaisedButton(
+    return ElevatedButton(
       onPressed: () async {
         if (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.android) {
-          File file = await FilePicker.getFile();
-          onFileSelected(await file.readAsBytes(), file.path);
+          FilePickerResult file = await FilePicker.platform.pickFiles();
+          onFileSelected(file.files.first.bytes, file.files.first.name);
         } else {
-          final result = await showOpenPanel(
+          showOpenPanel(
+            (FileChooserResult result, List<String> paths) async {
+              if (result == FileChooserResult.cancel && paths.isNotEmpty) {
+                final file = File(paths.first);
+                onFileSelected(await file.readAsBytes(), paths.first);
+              }
+            },
             allowsMultipleSelection: false,
             canSelectDirectories: false,
-            allowedFileTypes: [
-              FileTypeFilterGroup(fileExtensions: ['json'])
-            ],
+            allowedFileTypes: ['json'],
           );
-          if (!result.canceled && result.paths.isNotEmpty) {
-            final file = File(result.paths.first);
-            onFileSelected(await file.readAsBytes(), result.paths.first);
-          }
         }
       },
       child: Text(translations.chooseFileButton.toUpperCase()),

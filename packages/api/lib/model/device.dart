@@ -1,63 +1,55 @@
-import 'package:jaguar_serializer/jaguar_serializer.dart';
+//
+// AUTO-GENERATED FILE, DO NOT MODIFY!
+//
+// @dart=2.6
 
+// ignore_for_file: unused_import
 
-part 'device.jser.dart';
+import 'package:built_collection/built_collection.dart';
+import 'package:built_value/built_value.dart';
+import 'package:built_value/json_object.dart';
+import 'package:built_value/serializer.dart';
 
-class Device {
-  
-  @Alias('id', isNullable: false,  )
-  final int id;
-  
-  @Alias('roomId', isNullable: false,  )
-  final int roomId;
-  
-  @Alias('name', isNullable: false,  )
-  final String name;
-  
-  @Alias('driver', isNullable: false,  )
-  final String driver;
-  
-  @Alias('pluginName', isNullable: false,  )
-  final String pluginName;
-  
-  @Alias('type', isNullable: false,  )
-  final String type;
-  
-  @Alias('template', isNullable: false,  )
-  final Map<String, Object> template;
-  
-  @Alias('data', isNullable: false,  )
-  final Map<String, Object> data;
-  
-  @Alias('favorite', isNullable: false,  )
-  final bool favorite;
-  
+part 'device.g.dart';
 
-  Device(
-      
+abstract class Device implements Built<Device, DeviceBuilder> {
 
-{
-    
-     this.id = null,   this.roomId = null,  
-    
-     this.name = null,  
-     this.driver = null,  
-     this.pluginName = null,  
-     this.type = null,  
-     this.template = const {},   this.data = const {},  
-    
-     this.favorite = null 
-    }
-  );
+    @BuiltValueField(wireName: r'id')
+    int get id;
 
-  @override
-  String toString() {
-    return 'Device[id=$id, roomId=$roomId, name=$name, driver=$driver, pluginName=$pluginName, type=$type, template=$template, data=$data, favorite=$favorite, ]';
-  }
-}
+    @BuiltValueField(wireName: r'roomId')
+    int get roomId;
 
-@GenSerializer(nullableFields: false)
-class DeviceSerializer extends Serializer<Device> with _$DeviceSerializer {
+    @BuiltValueField(wireName: r'name')
+    String get name;
 
+    @nullable
+    @BuiltValueField(wireName: r'driver')
+    String get driver;
+
+    @nullable
+    @BuiltValueField(wireName: r'pluginName')
+    String get pluginName;
+
+    @BuiltValueField(wireName: r'type')
+    String get type;
+
+    @BuiltValueField(wireName: r'template')
+    BuiltMap<String, JsonObject> get template;
+
+    @BuiltValueField(wireName: r'data')
+    BuiltMap<String, JsonObject> get data;
+
+    @BuiltValueField(wireName: r'favorite')
+    bool get favorite;
+
+    // Boilerplate code needed to wire-up generated code
+    Device._();
+
+    static void _initializeBuilder(DeviceBuilder b) => b
+        ..favorite = false;
+
+    factory Device([void updates(DeviceBuilder b)]) = _$Device;
+    static Serializer<Device> get serializer => _$deviceSerializer;
 }
 

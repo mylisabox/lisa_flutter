@@ -1,38 +1,32 @@
-import 'package:jaguar_serializer/jaguar_serializer.dart';
+//
+// AUTO-GENERATED FILE, DO NOT MODIFY!
+//
+// @dart=2.6
 
-part 'add_plugin_request.jser.dart';
+// ignore_for_file: unused_import
 
-class AddPluginRequest {
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
 
-  @Alias('id', isNullable: false,  )
-  final String id;
+part 'add_plugin_request.g.dart';
 
-  @Alias('version', isNullable: false,  )
-  final String version;
+abstract class AddPluginRequest implements Built<AddPluginRequest, AddPluginRequestBuilder> {
 
-  @Alias('from', isNullable: false,  )
-  final String from;
+    @BuiltValueField(wireName: r'id')
+    String get id;
 
+    @BuiltValueField(wireName: r'version')
+    String get version;
 
-  AddPluginRequest(
+    @BuiltValueField(wireName: r'from')
+    String get from;
 
+    // Boilerplate code needed to wire-up generated code
+    AddPluginRequest._();
 
-{
-     this.id = null,
-     this.version = null,
-     this.from = null
+    static void _initializeBuilder(AddPluginRequestBuilder b) => b;
 
-    }
-  );
-
-  @override
-  String toString() {
-    return 'AddPluginRequest[id=$id, version=$version, from=$from, ]';
-  }
-}
-
-@GenSerializer(nullableFields: false)
-class AddPluginRequestSerializer extends Serializer<AddPluginRequest> with _$AddPluginRequestSerializer {
-
+    factory AddPluginRequest([void updates(AddPluginRequestBuilder b)]) = _$AddPluginRequest;
+    static Serializer<AddPluginRequest> get serializer => _$addPluginRequestSerializer;
 }
 

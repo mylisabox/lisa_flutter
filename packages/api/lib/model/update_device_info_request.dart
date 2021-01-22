@@ -1,35 +1,29 @@
-import 'package:jaguar_serializer/jaguar_serializer.dart';
+//
+// AUTO-GENERATED FILE, DO NOT MODIFY!
+//
+// @dart=2.6
 
+// ignore_for_file: unused_import
 
-part 'update_device_info_request.jser.dart';
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
 
-class UpdateDeviceInfoRequest {
-  
-  @Alias('name', isNullable: false,  )
-  final String name;
-  
-  @Alias('roomId', isNullable: false,  )
-  final int roomId;
-  
+part 'update_device_info_request.g.dart';
 
-  UpdateDeviceInfoRequest(
-      
+abstract class UpdateDeviceInfoRequest implements Built<UpdateDeviceInfoRequest, UpdateDeviceInfoRequestBuilder> {
 
-{
-    
-     this.name = null,   this.roomId = null 
-    
-    }
-  );
+    @BuiltValueField(wireName: r'name')
+    String get name;
 
-  @override
-  String toString() {
-    return 'UpdateDeviceInfoRequest[name=$name, roomId=$roomId, ]';
-  }
-}
+    @BuiltValueField(wireName: r'roomId')
+    int get roomId;
 
-@GenSerializer(nullableFields: false)
-class UpdateDeviceInfoRequestSerializer extends Serializer<UpdateDeviceInfoRequest> with _$UpdateDeviceInfoRequestSerializer {
+    // Boilerplate code needed to wire-up generated code
+    UpdateDeviceInfoRequest._();
 
+    static void _initializeBuilder(UpdateDeviceInfoRequestBuilder b) => b;
+
+    factory UpdateDeviceInfoRequest([void updates(UpdateDeviceInfoRequestBuilder b)]) = _$UpdateDeviceInfoRequest;
+    static Serializer<UpdateDeviceInfoRequest> get serializer => _$updateDeviceInfoRequestSerializer;
 }
 

@@ -1,41 +1,33 @@
-import 'package:jaguar_serializer/jaguar_serializer.dart';
+//
+// AUTO-GENERATED FILE, DO NOT MODIFY!
+//
+// @dart=2.6
 
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
+// ignore_for_file: unused_import
 
 import 'package:lisa_server_sdk/model/scene_data.dart';
 
-part 'scene.jser.dart';
+part 'scene.g.dart';
 
-class Scene {
-  
-  @Alias('name', isNullable: false,  )
-  final String name;
-  
-  @Alias('displayName', isNullable: false,  )
-  final String displayName;
-  
-  @Alias('data', isNullable: false,  )
-  final SceneData data;
-  
+abstract class Scene implements Built<Scene, SceneBuilder> {
 
-  Scene(
-      
+    @BuiltValueField(wireName: r'name')
+    String get name;
 
-{
-    
-     this.name = null,  
-     this.displayName = null,  
-     this.data = null 
-    }
-  );
+    @BuiltValueField(wireName: r'displayName')
+    String get displayName;
 
-  @override
-  String toString() {
-    return 'Scene[name=$name, displayName=$displayName, data=$data, ]';
-  }
-}
+    @BuiltValueField(wireName: r'data')
+    SceneData get data;
 
-@GenSerializer(nullableFields: false)
-class SceneSerializer extends Serializer<Scene> with _$SceneSerializer {
+    // Boilerplate code needed to wire-up generated code
+    Scene._();
 
+    static void _initializeBuilder(SceneBuilder b) => b;
+
+    factory Scene([void updates(SceneBuilder b)]) = _$Scene;
+    static Serializer<Scene> get serializer => _$sceneSerializer;
 }
 

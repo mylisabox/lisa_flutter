@@ -1,119 +1,405 @@
-import 'package:jaguar_retrofit/annotations/annotations.dart';
-import 'package:jaguar_retrofit/jaguar_retrofit.dart';
-import 'package:jaguar_serializer/jaguar_serializer.dart';
-import 'package:jaguar_mimetype/jaguar_mimetype.dart';
+//
+// AUTO-GENERATED FILE, DO NOT MODIFY!
+//
+// @dart=2.6
+
+// ignore_for_file: unused_import
+
 import 'dart:async';
+import 'dart:convert';
 
-import 'package:lisa_server_sdk/model/update_device_info_request.dart';
+import 'package:built_collection/built_collection.dart';
+import 'package:built_value/json_object.dart';
+import 'package:built_value/serializer.dart';
+import 'package:dio/dio.dart';
 import 'package:lisa_server_sdk/model/device.dart';
+import 'package:lisa_server_sdk/model/update_device_info_request.dart';
 
-part 'device_api.jretro.dart';
+class DeviceApi {
+    final Dio _dio;
+    Serializers _serializers;
 
-@GenApiClient()
-class DeviceApi extends ApiClient with _$DeviceApiClient {
-    final Route base;
-    final Map<String, CodecRepo> converters;
-    final Duration timeout;
+    DeviceApi(this._dio, this._serializers);
 
-    DeviceApi({this.base, this.converters, this.timeout = const Duration(minutes: 2)});
-
-    /// 
     ///
-    /// 
-    @PostReq(path: "/api/v1/device/", metadata: {"auth": [ {"type": "apiKey", "name": "Bearer", "keyName": "Authorization", "where": "header" }]})
-    Future<void> addDevice(
-            
-             @AsJson() Device device
-        ) {
-        return super.addDevice(
+    ///
+    ///
+    Future<Response<void>> addDevice(
+        Device device, {
+        CancelToken cancelToken,
+        Map<String, dynamic> headers,
+        Map<String, dynamic> extra,
+        ValidateStatus validateStatus,
+        ProgressCallback onSendProgress,
+        ProgressCallback onReceiveProgress,
+    }) async {
+        final String _path = '/api/v1/device/';
 
-        
-        device
-        ).timeout(timeout);
+        final queryParams = <String, dynamic>{};
+        final headerParams = <String, dynamic>{
+            if (headers != null) ...headers,
+        };
+        dynamic bodyData;
+
+        queryParams.removeWhere((key, dynamic value) => value == null);
+        headerParams.removeWhere((key, dynamic value) => value == null);
+
+        final contentTypes = <String>[
+            'application/json',
+        ];
+
+        final bodySerializer = _serializers.serializerForType(Device) as Serializer<Device>;
+        final serializedBody = _serializers.serializeWith(bodySerializer, device);
+        final jsondevice = json.encode(serializedBody);
+        bodyData = jsondevice;
+
+        return _dio.request<dynamic>(
+            _path,
+            queryParameters: queryParams,
+            data: bodyData,
+            options: Options(
+                method: 'post'.toUpperCase(),
+                headers: headerParams,
+                extra: <String, dynamic>{
+                    'secure': <Map<String, String>>[
+                        {
+                            'type': 'apiKey',
+                            'name': 'Bearer',
+                            'keyName': 'Authorization',
+                            'where': 'header',
+                        },
+                    ],
+                    if (extra != null) ...extra,
+                },
+                validateStatus: validateStatus,
+                contentType: contentTypes.isNotEmpty ? contentTypes[0] : 'application/json',
+            ),
+            cancelToken: cancelToken,
+            onSendProgress: onSendProgress,
+            onReceiveProgress: onReceiveProgress,
+        );
     }
 
-    /// 
     ///
-    /// 
-    @DeleteReq(path: "/api/v1/device/:deviceId", metadata: {"auth": [ {"type": "apiKey", "name": "Bearer", "keyName": "Authorization", "where": "header" }]})
-    Future<void> deleteDevice(
-            @PathParam("deviceId") int deviceId
-        ) {
-        return super.deleteDevice(
-        deviceId
+    ///
+    ///
+    Future<Response<void>> deleteDevice(
+        int deviceId, {
+        CancelToken cancelToken,
+        Map<String, dynamic> headers,
+        Map<String, dynamic> extra,
+        ValidateStatus validateStatus,
+        ProgressCallback onSendProgress,
+        ProgressCallback onReceiveProgress,
+    }) async {
+        final String _path = '/api/v1/device/{deviceId}'.replaceAll('{' r'deviceId' '}', deviceId.toString());
 
-        ).timeout(timeout);
+        final queryParams = <String, dynamic>{};
+        final headerParams = <String, dynamic>{
+            if (headers != null) ...headers,
+        };
+        dynamic bodyData;
+
+        queryParams.removeWhere((key, dynamic value) => value == null);
+        headerParams.removeWhere((key, dynamic value) => value == null);
+
+        final contentTypes = <String>[];
+
+        return _dio.request<dynamic>(
+            _path,
+            queryParameters: queryParams,
+            data: bodyData,
+            options: Options(
+                method: 'delete'.toUpperCase(),
+                headers: headerParams,
+                extra: <String, dynamic>{
+                    'secure': <Map<String, String>>[
+                        {
+                            'type': 'apiKey',
+                            'name': 'Bearer',
+                            'keyName': 'Authorization',
+                            'where': 'header',
+                        },
+                    ],
+                    if (extra != null) ...extra,
+                },
+                validateStatus: validateStatus,
+                contentType: contentTypes.isNotEmpty ? contentTypes[0] : 'application/json',
+            ),
+            cancelToken: cancelToken,
+            onSendProgress: onSendProgress,
+            onReceiveProgress: onReceiveProgress,
+        );
     }
 
-    /// 
     ///
-    /// 
-    @GetReq(path: "/api/v1/device/", metadata: {"auth": [ {"type": "apiKey", "name": "Bearer", "keyName": "Authorization", "where": "header" }]})
-    Future<List<Device>> getDevices(
-        
-            @QueryParam("roomId") String roomId
-        ) {
-        return super.getDevices(
-        
-        roomId
+    ///
+    ///
+    Future<Response<BuiltList<Device>>> getDevices(
+        String roomId, {
+        CancelToken cancelToken,
+        Map<String, dynamic> headers,
+        Map<String, dynamic> extra,
+        ValidateStatus validateStatus,
+        ProgressCallback onSendProgress,
+        ProgressCallback onReceiveProgress,
+    }) async {
+        final String _path = '/api/v1/device/';
 
-        ).timeout(timeout);
+        final queryParams = <String, dynamic>{};
+        final headerParams = <String, dynamic>{
+            if (headers != null) ...headers,
+        };
+        dynamic bodyData;
+
+        queryParams[r'roomId'] = roomId;
+        queryParams.removeWhere((key, dynamic value) => value == null);
+        headerParams.removeWhere((key, dynamic value) => value == null);
+
+        final contentTypes = <String>[];
+
+        return _dio.request<dynamic>(
+            _path,
+            queryParameters: queryParams,
+            data: bodyData,
+            options: Options(
+                method: 'get'.toUpperCase(),
+                headers: headerParams,
+                extra: <String, dynamic>{
+                    'secure': <Map<String, String>>[
+                        {
+                            'type': 'apiKey',
+                            'name': 'Bearer',
+                            'keyName': 'Authorization',
+                            'where': 'header',
+                        },
+                    ],
+                    if (extra != null) ...extra,
+                },
+                validateStatus: validateStatus,
+                contentType: contentTypes.isNotEmpty ? contentTypes[0] : 'application/json',
+            ),
+            cancelToken: cancelToken,
+            onSendProgress: onSendProgress,
+            onReceiveProgress: onReceiveProgress,
+        ).then((response) {
+            const collectionType = BuiltList;
+            const type = FullType(collectionType, [FullType(Device)]);
+            final data = _serializers.deserialize(
+                response.data is String
+                ? jsonDecode(response.data as String)
+                : response.data,
+                specifiedType: type,
+            ) as BuiltList<Device>;
+
+            return Response<BuiltList<Device>>(
+                data: data,
+                headers: response.headers,
+                request: response.request,
+                redirects: response.redirects,
+                statusCode: response.statusCode,
+                statusMessage: response.statusMessage,
+                extra: response.extra,
+            );
+        });
     }
 
-    /// 
     ///
-    /// 
-    @PatchReq(path: "/api/v1/device/:deviceId", metadata: {"auth": [ {"type": "apiKey", "name": "Bearer", "keyName": "Authorization", "where": "header" }]})
-    Future<void> saveDeviceInfo(
-            @PathParam("deviceId") int deviceId
-            ,
-             @AsJson() UpdateDeviceInfoRequest updateDeviceInfoRequest
-        ) {
-        return super.saveDeviceInfo(
-        deviceId
+    ///
+    ///
+    Future<Response<void>> saveDeviceInfo(
+        int deviceId,
+        UpdateDeviceInfoRequest updateDeviceInfoRequest, {
+        CancelToken cancelToken,
+        Map<String, dynamic> headers,
+        Map<String, dynamic> extra,
+        ValidateStatus validateStatus,
+        ProgressCallback onSendProgress,
+        ProgressCallback onReceiveProgress,
+    }) async {
+        final String _path = '/api/v1/device/{deviceId}'.replaceAll('{' r'deviceId' '}', deviceId.toString());
 
-        ,
-        updateDeviceInfoRequest
-        ).timeout(timeout);
+        final queryParams = <String, dynamic>{};
+        final headerParams = <String, dynamic>{
+            if (headers != null) ...headers,
+        };
+        dynamic bodyData;
+
+        queryParams.removeWhere((key, dynamic value) => value == null);
+        headerParams.removeWhere((key, dynamic value) => value == null);
+
+        final contentTypes = <String>[
+            'application/json',
+        ];
+
+        final bodySerializer = _serializers.serializerForType(UpdateDeviceInfoRequest) as Serializer<UpdateDeviceInfoRequest>;
+        final serializedBody = _serializers.serializeWith(bodySerializer, updateDeviceInfoRequest);
+        final jsonupdateDeviceInfoRequest = json.encode(serializedBody);
+        bodyData = jsonupdateDeviceInfoRequest;
+
+        return _dio.request<dynamic>(
+            _path,
+            queryParameters: queryParams,
+            data: bodyData,
+            options: Options(
+                method: 'patch'.toUpperCase(),
+                headers: headerParams,
+                extra: <String, dynamic>{
+                    'secure': <Map<String, String>>[
+                        {
+                            'type': 'apiKey',
+                            'name': 'Bearer',
+                            'keyName': 'Authorization',
+                            'where': 'header',
+                        },
+                    ],
+                    if (extra != null) ...extra,
+                },
+                validateStatus: validateStatus,
+                contentType: contentTypes.isNotEmpty ? contentTypes[0] : 'application/json',
+            ),
+            cancelToken: cancelToken,
+            onSendProgress: onSendProgress,
+            onReceiveProgress: onReceiveProgress,
+        );
     }
 
-    /// 
     ///
-    /// 
-    @PostReq(path: "/api/v1/plugins/:pluginName/:deviceId", metadata: {"auth": [ {"type": "apiKey", "name": "Bearer", "keyName": "Authorization", "where": "header" }]})
-    Future<Device> updateDevice(
-            @PathParam("deviceId") int deviceId, 
-            @PathParam("pluginName") String pluginName
-            ,
-             @AsJson() Map<String, Object> requestBody
-        ) {
-        return super.updateDevice(
-        deviceId, 
-        pluginName
+    ///
+    ///
+    Future<Response<Device>> updateDevice(
+        int deviceId,
+        String pluginName,
+        BuiltMap<String, JsonObject> requestBody, {
+        CancelToken cancelToken,
+        Map<String, dynamic> headers,
+        Map<String, dynamic> extra,
+        ValidateStatus validateStatus,
+        ProgressCallback onSendProgress,
+        ProgressCallback onReceiveProgress,
+    }) async {
+        final String _path = '/api/v1/plugins/{pluginName}/{deviceId}'.replaceAll('{' r'deviceId' '}', deviceId.toString()).replaceAll('{' r'pluginName' '}', pluginName.toString());
 
-        ,
-        requestBody
-        ).timeout(timeout);
+        final queryParams = <String, dynamic>{};
+        final headerParams = <String, dynamic>{
+            if (headers != null) ...headers,
+        };
+        dynamic bodyData;
+
+        queryParams.removeWhere((key, dynamic value) => value == null);
+        headerParams.removeWhere((key, dynamic value) => value == null);
+
+        final contentTypes = <String>[
+            'application/json',
+        ];
+
+        const type = FullType(BuiltMap, [FullType(String), FullType(JsonObject)]);
+        final serializedBody = _serializers.serialize(requestBody, specifiedType: type);
+        final jsonrequestBody = json.encode(serializedBody);
+        bodyData = jsonrequestBody;
+
+        return _dio.request<dynamic>(
+            _path,
+            queryParameters: queryParams,
+            data: bodyData,
+            options: Options(
+                method: 'post'.toUpperCase(),
+                headers: headerParams,
+                extra: <String, dynamic>{
+                    'secure': <Map<String, String>>[
+                        {
+                            'type': 'apiKey',
+                            'name': 'Bearer',
+                            'keyName': 'Authorization',
+                            'where': 'header',
+                        },
+                    ],
+                    if (extra != null) ...extra,
+                },
+                validateStatus: validateStatus,
+                contentType: contentTypes.isNotEmpty ? contentTypes[0] : 'application/json',
+            ),
+            cancelToken: cancelToken,
+            onSendProgress: onSendProgress,
+            onReceiveProgress: onReceiveProgress,
+        ).then((response) {
+            final serializer = _serializers.serializerForType(Device) as Serializer<Device>;
+            final data = _serializers.deserializeWith<Device>(
+                serializer,
+                response.data is String ? jsonDecode(response.data as String) : response.data,
+            );
+
+            return Response<Device>(
+                data: data,
+                headers: response.headers,
+                request: response.request,
+                redirects: response.redirects,
+                statusCode: response.statusCode,
+                statusMessage: response.statusMessage,
+                extra: response.extra,
+            );
+        });
     }
 
-    /// 
     ///
-    /// 
-    @PostReq(path: "/api/v1/devices/group/:roomId/:groupId", metadata: {"auth": [ {"type": "apiKey", "name": "Bearer", "keyName": "Authorization", "where": "header" }]})
-    Future<void> updateGroup(
-            @PathParam("roomId") int roomId, 
-            @PathParam("groupId") int groupId
-            ,
-             @AsJson() Map<String, Object> requestBody
-        ) {
-        return super.updateGroup(
-        roomId, 
-        groupId
+    ///
+    ///
+    Future<Response<void>> updateGroup(
+        int roomId,
+        int groupId,
+        BuiltMap<String, JsonObject> requestBody, {
+        CancelToken cancelToken,
+        Map<String, dynamic> headers,
+        Map<String, dynamic> extra,
+        ValidateStatus validateStatus,
+        ProgressCallback onSendProgress,
+        ProgressCallback onReceiveProgress,
+    }) async {
+        final String _path = '/api/v1/devices/group/{roomId}/{groupId}'.replaceAll('{' r'roomId' '}', roomId.toString()).replaceAll('{' r'groupId' '}', groupId.toString());
 
-        ,
-        requestBody
-        ).timeout(timeout);
+        final queryParams = <String, dynamic>{};
+        final headerParams = <String, dynamic>{
+            if (headers != null) ...headers,
+        };
+        dynamic bodyData;
+
+        queryParams.removeWhere((key, dynamic value) => value == null);
+        headerParams.removeWhere((key, dynamic value) => value == null);
+
+        final contentTypes = <String>[
+            'application/json',
+        ];
+
+        const type = FullType(BuiltMap, [FullType(String), FullType(JsonObject)]);
+        final serializedBody = _serializers.serialize(requestBody, specifiedType: type);
+        final jsonrequestBody = json.encode(serializedBody);
+        bodyData = jsonrequestBody;
+
+        return _dio.request<dynamic>(
+            _path,
+            queryParameters: queryParams,
+            data: bodyData,
+            options: Options(
+                method: 'post'.toUpperCase(),
+                headers: headerParams,
+                extra: <String, dynamic>{
+                    'secure': <Map<String, String>>[
+                        {
+                            'type': 'apiKey',
+                            'name': 'Bearer',
+                            'keyName': 'Authorization',
+                            'where': 'header',
+                        },
+                    ],
+                    if (extra != null) ...extra,
+                },
+                validateStatus: validateStatus,
+                contentType: contentTypes.isNotEmpty ? contentTypes[0] : 'application/json',
+            ),
+            cancelToken: cancelToken,
+            onSendProgress: onSendProgress,
+            onReceiveProgress: onReceiveProgress,
+        );
     }
-
 
 }

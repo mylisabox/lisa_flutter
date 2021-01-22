@@ -1,55 +1,48 @@
-import 'package:jaguar_serializer/jaguar_serializer.dart';
+//
+// AUTO-GENERATED FILE, DO NOT MODIFY!
+//
+// @dart=2.6
 
+// ignore_for_file: unused_import
 
-part 'user.jser.dart';
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
 
-class User {
-  
-  @Alias('id', isNullable: false,  )
-  final int id;
-  
-  @Alias('email', isNullable: false,  )
-  final String email;
-  
-  @Alias('firstname', isNullable: false,  )
-  final String firstname;
-  
-  @Alias('lang', isNullable: false,  )
-  final String lang;
-  
-  @Alias('lastname', isNullable: false,  )
-  final String lastname;
-  
-  @Alias('mobile', isNullable: false,  )
-  final String mobile;
-  
-  @Alias('avatar', isNullable: false,  )
-  final String avatar;
-  
+part 'user.g.dart';
 
-  User(
-      
+abstract class User implements Built<User, UserBuilder> {
 
-{
-    
-     this.id = null,  
-     this.email = null,   this.firstname = null,  
-    
-     this.lang = null,   this.lastname = null,  
-     this.mobile = null,  
-     this.avatar = null 
-    
-    }
-  );
+    @BuiltValueField(wireName: r'id')
+    int get id;
 
-  @override
-  String toString() {
-    return 'User[id=$id, email=$email, firstname=$firstname, lang=$lang, lastname=$lastname, mobile=$mobile, avatar=$avatar, ]';
-  }
-}
+    @BuiltValueField(wireName: r'email')
+    String get email;
 
-@GenSerializer(nullableFields: false)
-class UserSerializer extends Serializer<User> with _$UserSerializer {
+    @nullable
+    @BuiltValueField(wireName: r'firstname')
+    String get firstname;
 
+    @BuiltValueField(wireName: r'lang')
+    String get lang;
+
+    @nullable
+    @BuiltValueField(wireName: r'lastname')
+    String get lastname;
+
+    @nullable
+    @BuiltValueField(wireName: r'mobile')
+    String get mobile;
+
+    @nullable
+    @BuiltValueField(wireName: r'avatar')
+    String get avatar;
+
+    // Boilerplate code needed to wire-up generated code
+    User._();
+
+    static void _initializeBuilder(UserBuilder b) => b;
+
+    factory User([void updates(UserBuilder b)]) = _$User;
+    static Serializer<User> get serializer => _$userSerializer;
 }
 

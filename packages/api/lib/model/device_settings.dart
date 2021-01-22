@@ -1,63 +1,54 @@
-import 'package:jaguar_serializer/jaguar_serializer.dart';
+//
+// AUTO-GENERATED FILE, DO NOT MODIFY!
+//
+// @dart=2.6
 
+// ignore_for_file: unused_import
 
-part 'device_settings.jser.dart';
+import 'package:built_collection/built_collection.dart';
+import 'package:built_value/built_value.dart';
+import 'package:built_value/json_object.dart';
+import 'package:built_value/serializer.dart';
 
-class DeviceSettings {
-  
-  @Alias('name', isNullable: false,  )
-  final String name;
-  
-  @Alias('driver', isNullable: false,  )
-  final String driver;
-  
-  @Alias('image', isNullable: false,  )
-  final String image;
-  
-  @Alias('pairing', isNullable: false,  )
-  final String pairing;
-  
-  @Alias('pluginName', isNullable: false,  )
-  final String pluginName;
-  
-  @Alias('description', isNullable: false,  )
-  final String description;
-  
-  @Alias('type', isNullable: false,  )
-  final String type;
-  
-  @Alias('template', isNullable: false,  )
-  final Map<String, Object> template;
-  
-  @Alias('settings', isNullable: false,  )
-  final Map<String, Object> settings;
-  
+part 'device_settings.g.dart';
 
-  DeviceSettings(
-      
+abstract class DeviceSettings implements Built<DeviceSettings, DeviceSettingsBuilder> {
 
-{
-     this.name = null,  
-     this.driver = null,  
-     this.image = null,  
-     this.pairing = null,  
-     this.pluginName = null,  
-     this.description = null,  
-     this.type = null,  
-     this.template = const {},  
-     this.settings = const {} 
-    
-    }
-  );
+    @BuiltValueField(wireName: r'name')
+    String get name;
 
-  @override
-  String toString() {
-    return 'DeviceSettings[name=$name, driver=$driver, image=$image, pairing=$pairing, pluginName=$pluginName, description=$description, type=$type, template=$template, settings=$settings, ]';
-  }
-}
+    @BuiltValueField(wireName: r'driver')
+    String get driver;
 
-@GenSerializer(nullableFields: false)
-class DeviceSettingsSerializer extends Serializer<DeviceSettings> with _$DeviceSettingsSerializer {
+    @BuiltValueField(wireName: r'image')
+    String get image;
 
+    @BuiltValueField(wireName: r'pairing')
+    String get pairing;
+
+    @BuiltValueField(wireName: r'pluginName')
+    String get pluginName;
+
+    @BuiltValueField(wireName: r'description')
+    String get description;
+
+    @nullable
+    @BuiltValueField(wireName: r'type')
+    String get type;
+
+    @BuiltValueField(wireName: r'template')
+    BuiltMap<String, JsonObject> get template;
+
+    @nullable
+    @BuiltValueField(wireName: r'settings')
+    BuiltMap<String, JsonObject> get settings;
+
+    // Boilerplate code needed to wire-up generated code
+    DeviceSettings._();
+
+    static void _initializeBuilder(DeviceSettingsBuilder b) => b;
+
+    factory DeviceSettings([void updates(DeviceSettingsBuilder b)]) = _$DeviceSettings;
+    static Serializer<DeviceSettings> get serializer => _$deviceSettingsSerializer;
 }
 

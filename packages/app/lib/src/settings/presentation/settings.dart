@@ -96,7 +96,7 @@ Future<void> _showFilePickerDialog(BuildContext context) {
           isDefaultAction: true,
           text: MaterialLocalizations.of(context).okButtonLabel,
           callback: (context) async {
-            final success = await showLoadingDialog(context, (_) => Text(translations.saving), () => store.saveVoiceCommandsConfig(data, name));
+            final success = await showLoadingDialog(context, (_) => Text(translations.saving), () => store.saveVoiceCommandsConfig(data));
             if (success) {
               Navigator.of(context).pop(true);
             }

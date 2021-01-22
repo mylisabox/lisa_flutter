@@ -215,7 +215,7 @@ Widget getAppDialog(BuildContext context, WidgetBuilder title, WidgetBuilder con
       title: title(context),
       content: content(context),
       actions: actions
-          .map((action) => FlatButton(
+          .map((action) => TextButton(
                 child: Text(
                   action.text,
                   style: TextStyle(color: _getColorForAction(context, action)),

@@ -1,49 +1,42 @@
-import 'package:jaguar_serializer/jaguar_serializer.dart';
+//
+// AUTO-GENERATED FILE, DO NOT MODIFY!
+//
+// @dart=2.6
 
+// ignore_for_file: unused_import
 
+import 'package:built_collection/built_collection.dart';
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
 import 'package:lisa_server_sdk/model/device_settings.dart';
 
-part 'plugin.jser.dart';
+part 'plugin.g.dart';
 
-class Plugin {
-  
-  @Alias('id', isNullable: false,  )
-  final String id;
-  
-  @Alias('name', isNullable: false,  )
-  final String name;
-  
-  @Alias('description', isNullable: false,  )
-  final String description;
-  
-  @Alias('image', isNullable: false,  )
-  final String image;
-  
-  @Alias('devicesSettings', isNullable: false,  )
-  final List<DeviceSettings> devicesSettings;
-  
+abstract class Plugin implements Built<Plugin, PluginBuilder> {
 
-  Plugin(
-      
+    @BuiltValueField(wireName: r'id')
+    String get id;
 
-{
-    
-     this.id = null,  
-     this.name = null,  
-     this.description = null,   this.image = null,  
-     this.devicesSettings = const [] 
-    
-    }
-  );
+    @BuiltValueField(wireName: r'name')
+    String get name;
 
-  @override
-  String toString() {
-    return 'Plugin[id=$id, name=$name, description=$description, image=$image, devicesSettings=$devicesSettings, ]';
-  }
-}
+    @nullable
+    @BuiltValueField(wireName: r'description')
+    String get description;
 
-@GenSerializer(nullableFields: false)
-class PluginSerializer extends Serializer<Plugin> with _$PluginSerializer {
+    @nullable
+    @BuiltValueField(wireName: r'image')
+    String get image;
 
+    @BuiltValueField(wireName: r'devicesSettings')
+    BuiltList<DeviceSettings> get devicesSettings;
+
+    // Boilerplate code needed to wire-up generated code
+    Plugin._();
+
+    static void _initializeBuilder(PluginBuilder b) => b;
+
+    factory Plugin([void updates(PluginBuilder b)]) = _$Plugin;
+    static Serializer<Plugin> get serializer => _$pluginSerializer;
 }
 

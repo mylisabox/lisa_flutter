@@ -37,40 +37,42 @@ class AddDeviceScreen extends StatelessWidget {
             appBar: AppBar(
               title: Text(room == null ? translations.addDevice : translations.addDeviceTo(room.name)),
             ),
-            body: Column(
-              children: <Widget>[
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(kNormalPadding),
-                    child: AddDeviceWidget(),
+            body: Observer(
+              builder: (context) => Column(
+                children: <Widget>[
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(kNormalPadding),
+                      child: AddDeviceWidget(),
+                    ),
                   ),
-                ),
-                if (store.selectedDeviceTemplate != null) Divider(height: 1),
-                if (store.selectedDeviceTemplate != null)
-                  ButtonBar(
-                    children: <Widget>[
-                      FlatButton(
-                          onPressed: () {
-                            if (store.back()) {
-                              Navigator.of(context).pop(false);
-                            }
-                          },
-                          child: Text(translations.cancel)),
-                      Observer(
-                        builder: (_) => FlatButton(
-                            textColor: Theme.of(context).primaryColor,
-                            onPressed: store.canContinue && !store.isLoading
-                                ? () async {
-                                    if (await store.next()) {
-                                      Navigator.of(context).pop(true);
+                  if (store.selectedDeviceTemplate != null) Divider(height: 1),
+                  if (store.selectedDeviceTemplate != null)
+                    ButtonBar(
+                      children: <Widget>[
+                        TextButton(
+                            onPressed: () {
+                              if (store.back()) {
+                                Navigator.of(context).pop(false);
+                              }
+                            },
+                            child: Text(translations.cancel)),
+                        Observer(
+                          builder: (_) => TextButton(
+                              style: ButtonStyle(textStyle: MaterialStateProperty.all(TextStyle(color: Theme.of(context).primaryColor))),
+                              onPressed: store.canContinue && !store.isLoading
+                                  ? () async {
+                                      if (await store.next()) {
+                                        Navigator.of(context).pop(true);
+                                      }
                                     }
-                                  }
-                                : null,
-                            child: Text(translations.continueButton)),
-                      )
-                    ],
-                  ),
-              ],
+                                  : null,
+                              child: Text(translations.continueButton)),
+                        )
+                      ],
+                    ),
+                ],
+              ),
             ),
           );
         },

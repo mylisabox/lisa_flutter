@@ -1,34 +1,39 @@
+//
+// AUTO-GENERATED FILE, DO NOT MODIFY!
+//
+// @dart=2.6
+
+// ignore_for_file: unused_import
+
 import 'dart:async';
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:lisa_server_sdk/auth/auth.dart';
-import 'package:jaguar_retrofit/jaguar_retrofit.dart';
 
 class BasicAuthInfo {
     final String username;
     final String password;
 
     const BasicAuthInfo(this.username, this.password);
-
 }
 
 class BasicAuthInterceptor extends AuthInterceptor {
     Map<String, BasicAuthInfo> authInfo = {};
 
     @override
-    FutureOr<void> before(RouteBase route) {
-        final metadataAuthInfo = getAuthInfo(route, "basic");
-        for (var info in metadataAuthInfo) {
-            final authName = info["name"];
+    Future<dynamic> onRequest(RequestOptions options) {
+        final metadataAuthInfo = getAuthInfo(options, 'basic');
+        for (final info in metadataAuthInfo) {
+            final authName = info['name'] as String;
             final basicAuthInfo = authInfo[authName];
-            if(basicAuthInfo != null) {
-                route.basicAuth(basicAuthInfo.username, basicAuthInfo.password);
+            if (basicAuthInfo != null) {
+                final basicAuth = 'Basic ' + base64Encode(utf8.encode('${basicAuthInfo.username}:${basicAuthInfo.password}'));
+                options.headers['Authorization'] = basicAuth;
                 break;
             }
         }
-        return super.before(route);
-    }
 
-    @override
-    FutureOr after(StringResponse response) {
-        return Future.value(response);
+        return super.onRequest(options);
     }
 }

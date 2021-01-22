@@ -1,31 +1,26 @@
-import 'package:jaguar_serializer/jaguar_serializer.dart';
+//
+// AUTO-GENERATED FILE, DO NOT MODIFY!
+//
+// @dart=2.6
 
+// ignore_for_file: unused_import
 
-part 'is_initialized.jser.dart';
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
 
-class IsInitialized {
-  
-  @Alias('initialized', isNullable: false,  )
-  final bool initialized;
-  
+part 'is_initialized.g.dart';
 
-  IsInitialized(
-      
+abstract class IsInitialized implements Built<IsInitialized, IsInitializedBuilder> {
 
-{
-    
-     this.initialized = null 
-    }
-  );
+    @BuiltValueField(wireName: r'initialized')
+    bool get initialized;
 
-  @override
-  String toString() {
-    return 'IsInitialized[initialized=$initialized, ]';
-  }
-}
+    // Boilerplate code needed to wire-up generated code
+    IsInitialized._();
 
-@GenSerializer(nullableFields: false)
-class IsInitializedSerializer extends Serializer<IsInitialized> with _$IsInitializedSerializer {
+    static void _initializeBuilder(IsInitializedBuilder b) => b;
 
+    factory IsInitialized([void updates(IsInitializedBuilder b)]) = _$IsInitialized;
+    static Serializer<IsInitialized> get serializer => _$isInitializedSerializer;
 }
 

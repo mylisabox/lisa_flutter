@@ -45,18 +45,20 @@ class AvatarFieldIO extends AvatarField {
               avatar.value = file;
               onFileSelected(await image.readAsBytes(), image.path);
             } else {
-              final result = await showOpenPanel(
+              showOpenPanel(
+                    (FileChooserResult result, List<String> paths) async {
+                  if (result == FileChooserResult.cancel && paths.isNotEmpty) {
+                    final file = File(paths.first);
+                    avatar.value = file;
+                    onFileSelected(await file.readAsBytes(), paths.first);
+                  }
+                },
                 allowsMultipleSelection: false,
                 canSelectDirectories: false,
                 allowedFileTypes: [
-                  FileTypeFilterGroup(fileExtensions: ['jpg', 'jpeg', 'png'])
+                  'jpg', 'jpeg', 'png'
                 ],
               );
-              if (!result.canceled && result.paths.isNotEmpty) {
-                final file = File(result.paths.first);
-                avatar.value = file;
-                onFileSelected(await file.readAsBytes(), result.paths.first);
-              }
             }
           },
           child: Container(

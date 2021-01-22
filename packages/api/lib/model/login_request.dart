@@ -1,35 +1,29 @@
-import 'package:jaguar_serializer/jaguar_serializer.dart';
+//
+// AUTO-GENERATED FILE, DO NOT MODIFY!
+//
+// @dart=2.6
 
+// ignore_for_file: unused_import
 
-part 'login_request.jser.dart';
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
 
-class LoginRequest {
-  
-  @Alias('email', isNullable: false,  )
-  final String email;
-  
-  @Alias('password', isNullable: false,  )
-  final String password;
-  
+part 'login_request.g.dart';
 
-  LoginRequest(
-      
+abstract class LoginRequest implements Built<LoginRequest, LoginRequestBuilder> {
 
-{
-    
-     this.email = null,  
-     this.password = null 
-    }
-  );
+    @BuiltValueField(wireName: r'email')
+    String get email;
 
-  @override
-  String toString() {
-    return 'LoginRequest[email=$email, password=$password, ]';
-  }
-}
+    @BuiltValueField(wireName: r'password')
+    String get password;
 
-@GenSerializer(nullableFields: false)
-class LoginRequestSerializer extends Serializer<LoginRequest> with _$LoginRequestSerializer {
+    // Boilerplate code needed to wire-up generated code
+    LoginRequest._();
 
+    static void _initializeBuilder(LoginRequestBuilder b) => b;
+
+    factory LoginRequest([void updates(LoginRequestBuilder b)]) = _$LoginRequest;
+    static Serializer<LoginRequest> get serializer => _$loginRequestSerializer;
 }
 

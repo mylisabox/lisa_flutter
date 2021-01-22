@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:crypted_preferences/crypted_preferences.dart';
-import 'package:jaguar_retrofit/jaguar_retrofit.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
 import 'package:lisa_flutter/src/common/utils/base_url_provider.dart';
@@ -9,7 +8,6 @@ import 'package:lisa_flutter/src/preferences/preferences_provider.dart';
 import 'package:lisa_server_sdk/api.dart';
 import 'package:lisa_server_sdk/model/user.dart';
 import 'package:mobx/mobx.dart';
-import 'package:path/path.dart';
 
 part 'user_store.g.dart';
 
@@ -44,14 +42,14 @@ abstract class _UserStore with Store, BaseUrlProvider {
     final token = _preferences.getString(PreferencesProvider.keyToken);
     if (token != null) {
       _api.setApiKey(kAuthKey, 'JWT $token');
-      user = await _api.getUserApi().getProfile();
+      user = (await _api.getUserApi().getProfile()).data;
     }
   }
 
   @action
   Future changeLang(String lang) async {
     if (lang != user.lang) {
-      final result = await _api.getUserApi().saveProfile(
+      final result = (await _api.getUserApi().saveProfile(
             user.id,
             user.email,
             user.firstname,
@@ -60,7 +58,7 @@ abstract class _UserStore with Store, BaseUrlProvider {
             user.mobile,
             null,
             null,
-          );
+          )).data;
       setUser(result);
     }
   }
@@ -78,9 +76,8 @@ abstract class _UserStore with Store, BaseUrlProvider {
     String phone,
     String password,
     Uint8List avatarData,
-    String avatarName,
   }) async {
-    final result = await _api.getUserApi().saveProfile(
+    final result = (await _api.getUserApi().saveProfile(
           user.id,
           email,
           firstName,
@@ -88,8 +85,8 @@ abstract class _UserStore with Store, BaseUrlProvider {
           lastName,
           phone,
           password,
-          avatarData == null ? null : MultipartFile(avatarData, filename: basename(avatarName)),
-        );
+          avatarData)
+        ).data;
 
     setUser(result);
   }

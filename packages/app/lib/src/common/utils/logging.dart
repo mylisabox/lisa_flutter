@@ -1,13 +1,14 @@
 import 'dart:collection';
 import 'dart:developer';
 
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:logging/logging.dart';
+import 'package:pubspec_parse/pubspec_parse.dart';
 import 'package:sentry/sentry.dart';
-
-final SentryClient sentry = SentryClient(dsn: 'https://53c5686c50434e9884c1a763b984af58@sentry.io/1777712');
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 const _logFilter = [];
 const _memLogMaxLines = 500;
@@ -48,7 +49,8 @@ void _memLog(LogRecord record) {
       break;
   }
 
-  _logs.add('${_memLogDateFormatter.format(DateTime.now())} $level/${record.loggerName} ${record.message}');
+  _logs.add(
+      '${_memLogDateFormatter.format(DateTime.now())} $level/${record.loggerName} ${record.message}');
 
   if (record.error != null) {
     _logs.add(record.error.toString());
@@ -59,35 +61,58 @@ void _memLog(LogRecord record) {
   }
 }
 
+String _currentVersion;
+
 void _log(LogRecord record) async {
   // log to crashlytics
   if (kIsProductionMode) {
     _memLog(record);
   }
 
+  if (_currentVersion == null) {
+    final pubSpecTxt = await rootBundle.loadString('pubspec.yaml');
+    final pubSpec = Pubspec.parse(pubSpecTxt);
+    _currentVersion = pubSpec.version.toString();
+  }
+
   // send as crash to crashlytics if severe
-  if (kIsProductionMode && record.level >= Level.SEVERE && record.stackTrace != null) {
-    await sentry.capture(
-      event: Event(
-        //TODO release https://github.com/dart-lang/sdk/issues/38855
+  if (kIsProductionMode &&
+      record.level >= Level.SEVERE &&
+      record.stackTrace != null) {
+    await Sentry.captureEvent(
+      SentryEvent(
+        release: _currentVersion,
         extra: {'log': _logs.toList(growable: false)},
         culprit: record.error.toString(),
-        loggerName: record.loggerName,
+        logger: record.loggerName,
         exception: record.error,
-        stackTrace: record.stackTrace,
       ),
+      stackTrace: record.stackTrace,
     );
     _logs.clear();
   } else if (!kIsProductionMode) {
     // now, log!
     if (record.stackTrace != null) {
-      log(record.message, name: record.loggerName, level: record.level.value, error: record.error, stackTrace: record.stackTrace, time: DateTime.now());
-      debugPrint(record.message.toString()); //FIXME until IDE plugin does it for us
-      debugPrint(record.error.toString()); //FIXME until IDE plugin does it for us
-      print(record.stackTrace.toString()); //FIXME until IDE plugin does it for us
+      log(record.message,
+          name: record.loggerName,
+          level: record.level.value,
+          error: record.error,
+          stackTrace: record.stackTrace,
+          time: DateTime.now());
+      debugPrint(
+          record.message.toString()); //FIXME until IDE plugin does it for us
+      debugPrint(
+          record.error.toString()); //FIXME until IDE plugin does it for us
+      print(
+          record.stackTrace.toString()); //FIXME until IDE plugin does it for us
     } else {
-      if (_logFilter.isEmpty || _logFilter.contains(record.loggerName) || kIsProductionMode) {
-        log(record.message, name: record.loggerName, level: record.level.value, time: DateTime.now());
+      if (_logFilter.isEmpty ||
+          _logFilter.contains(record.loggerName) ||
+          kIsProductionMode) {
+        log(record.message,
+            name: record.loggerName,
+            level: record.level.value,
+            time: DateTime.now());
       }
     }
   }

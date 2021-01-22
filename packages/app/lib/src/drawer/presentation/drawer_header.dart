@@ -52,8 +52,7 @@ class AppDrawerHeader extends StatelessWidget {
                       ),
                     ),
                   ),
-                  FlatButton(
-                    splashColor: Theme.of(context).primaryColor,
+                  TextButton(
                     child: Text(userStore.fullName, style: TextStyle(color: Colors.white)),
                     onPressed: () {
                       _goToProfile(context);

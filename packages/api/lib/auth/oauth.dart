@@ -1,25 +1,28 @@
+//
+// AUTO-GENERATED FILE, DO NOT MODIFY!
+//
+// @dart=2.6
+
+// ignore_for_file: unused_import
+
 import 'dart:async';
+
+import 'package:dio/dio.dart';
 import 'package:lisa_server_sdk/auth/auth.dart';
-import 'package:jaguar_retrofit/jaguar_retrofit.dart';
 
 class OAuthInterceptor extends AuthInterceptor {
     Map<String, String> tokens = {};
 
     @override
-    FutureOr<void> before(RouteBase route) {
-        final authInfo = getAuthInfo(route, "oauth");
-        for (var info in authInfo) {
-            final token = tokens[info["name"]];
-            if(token != null) {
-                route.header("Authorization", "Bearer ${token}");
+    Future<dynamic> onRequest(RequestOptions options) {
+        final authInfo = getAuthInfo(options, 'oauth');
+        for (final info in authInfo) {
+            final token = tokens[info['name']];
+            if (token != null) {
+                options.headers['Authorization'] = 'Bearer ${token}';
                 break;
             }
         }
-        return super.before(route);
-    }
-
-    @override
-    FutureOr after(StringResponse response) {
-        return Future.value(response);
+        return super.onRequest(options);
     }
 }

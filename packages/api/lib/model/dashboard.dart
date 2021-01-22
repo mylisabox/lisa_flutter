@@ -1,45 +1,38 @@
-import 'package:jaguar_serializer/jaguar_serializer.dart';
+//
+// AUTO-GENERATED FILE, DO NOT MODIFY!
+//
+// @dart=2.6
 
+// ignore_for_file: unused_import
 
+import 'package:built_collection/built_collection.dart';
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
 import 'package:lisa_server_sdk/model/device.dart';
 
-part 'dashboard.jser.dart';
+part 'dashboard.g.dart';
 
-class Dashboard {
-  
-  @Alias('id', isNullable: false,  )
-  final int id;
-  
-  @Alias('roomId', isNullable: false,  )
-  final int roomId;
-  
-  @Alias('userId', isNullable: false,  )
-  final int userId;
-  
-  @Alias('widgets', isNullable: false,  )
-  final List<Device> widgets;
-  
+abstract class Dashboard implements Built<Dashboard, DashboardBuilder> {
 
-  Dashboard(
-      
+    @BuiltValueField(wireName: r'id')
+    int get id;
 
-{
-    
-     this.id = null,  
-     this.roomId = null,  
-     this.userId = null,  
-     this.widgets = const [] 
-    }
-  );
+    @nullable
+    @BuiltValueField(wireName: r'roomId')
+    int get roomId;
 
-  @override
-  String toString() {
-    return 'Dashboard[id=$id, roomId=$roomId, userId=$userId, widgets=$widgets, ]';
-  }
-}
+    @BuiltValueField(wireName: r'userId')
+    int get userId;
 
-@GenSerializer(nullableFields: false)
-class DashboardSerializer extends Serializer<Dashboard> with _$DashboardSerializer {
+    @BuiltValueField(wireName: r'widgets')
+    BuiltList<Device> get widgets;
 
+    // Boilerplate code needed to wire-up generated code
+    Dashboard._();
+
+    static void _initializeBuilder(DashboardBuilder b) => b;
+
+    factory Dashboard([void updates(DashboardBuilder b)]) = _$Dashboard;
+    static Serializer<Dashboard> get serializer => _$dashboardSerializer;
 }
 

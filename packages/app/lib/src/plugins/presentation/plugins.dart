@@ -71,7 +71,7 @@ class PluginsStoreWidget extends HookWidget {
                       ButtonBar(
                         children: [
                           Observer(
-                            builder: (context) => FlatButton(
+                            builder: (context) => TextButton(
                               onPressed: store.pluginsAction.contains(plugin)
                                   ? null
                                   : () async {
@@ -85,7 +85,9 @@ class PluginsStoreWidget extends HookWidget {
                                         plugin.installed ? store.uninstall(plugin) : store.install(plugin);
                                       }
                                     },
-                              textColor: plugin.installed ? Theme.of(context).errorColor : Theme.of(context).primaryColor,
+                              style: ButtonStyle(
+                                foregroundColor: MaterialStateProperty.all<Color>(plugin.installed ? Theme.of(context).errorColor : Theme.of(context).primaryColor),
+                              ),
                               child: Text(
                                 plugin.installed ? translations.uninstallPlugin : translations.installPlugin,
                               ),

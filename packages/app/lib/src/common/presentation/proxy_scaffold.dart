@@ -160,7 +160,7 @@ class ProxyScaffold extends HookWidget {
               }
             },
           ),
-        if (defaultTargetPlatform == TargetPlatform.macOS &&
+        if (defaultTargetPlatform == TargetPlatform.macOS && !kIsWeb &&
             currentRoute != null &&
             (currentRoute == '/' || currentRoute.contains('/room') || currentRoute.contains('/orphans')))
           SpeechButton(isFloating: false, roomId: currentRoute.contains('/room') ? currentRoute.split('/').last : null)

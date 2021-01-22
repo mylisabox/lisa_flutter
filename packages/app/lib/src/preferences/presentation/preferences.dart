@@ -34,12 +34,15 @@ class PreferencesWidget extends HookWidget {
                     },
                     barrierDismissible: false,
                   );
-                  await showLoadingDialog(
-                    context,
-                    (_) => Text(translations.saving),
-                    () => userStore.changeLang(selected.languageCode),
-                    onError: (err, stack) => showErrorDialog(context, err, stack),
-                  );
+                  if (selected != null) {
+                    await showLoadingDialog(
+                      context,
+                          (_) => Text(translations.saving),
+                          () => userStore.changeLang(selected.languageCode),
+                      onError: (err, stack) =>
+                          showErrorDialog(context, err, stack),
+                    );
+                  }
                 },
                 leading: Icon(Icons.language),
                 title: Text(translations.prefLanguage),

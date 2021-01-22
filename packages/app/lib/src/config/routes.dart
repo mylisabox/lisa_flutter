@@ -72,7 +72,7 @@ class Router {
     if (settings.name.contains(RoomDashboard.route + '/')) {
       return MaterialPageRoute(
         builder: routes[RoomDashboard.route],
-        settings: settings.copyWith(arguments: Room(id: int.parse(settings.name.split('/').last), name: '')),
+        settings: settings.copyWith(arguments: (RoomBuilder()..id= int.parse(settings.name.split('/').last)..name= '').build()),
       );
     }
 

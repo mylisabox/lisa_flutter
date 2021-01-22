@@ -106,17 +106,25 @@ class SceneWidget extends HookWidget {
           Divider(height: 1),
           ButtonBar(
             children: <Widget>[
-              FlatButton(
+              TextButton(
                 onPressed: () {
                   Navigator.of(context, rootNavigator: true).pop();
                 },
-                textColor: Colors.grey,
+                style: ButtonStyle(
+                  foregroundColor: MaterialStateProperty.all<Color>(Colors.grey),
+                ),
                 child: Text(translations.cancel.toUpperCase()),
               ),
               Observer(
-                builder: (context) => FlatButton(
-                  textColor: Theme.of(context).primaryColor,
-                  disabledColor: Colors.grey[300],
+                builder: (context) => TextButton(
+                  style: ButtonStyle(
+                    foregroundColor: MaterialStateProperty.resolveWith((states) {
+                      if (states.contains(MaterialState.disabled)) {
+                        return  Colors.grey[300];
+                      }
+                      return Theme.of(context).primaryColor;
+                    }),
+                  ),
                   onPressed: store.canSave
                       ? () async {
                           final success = await showLoadingDialog(context, (_) => Text(translations.saving), () => store.saveScene(), onError: (ex, stack) {

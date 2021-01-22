@@ -2,13 +2,15 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>NSAppTransportSecurity</key>
-    <dict>
-         <key>NSAllowsArbitraryLoads</key>
-         <true/>
-         <key>NSAllowsLocalNetworking</key>
-         <true/>
-    </dict>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Need Bluetooth access to setup L.I.S.A. instance</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Need access to speech recognition to send voice command to L.I.S.A.</string>
 	<key>CFBundleDevelopmentRegion</key>

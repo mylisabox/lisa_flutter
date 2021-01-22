@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:built_collection/built_collection.dart';
+import 'package:built_value/json_object.dart';
 import 'package:lisa_flutter/src/common/errors.dart';
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
 import 'package:lisa_server_sdk/api/dashboard_api.dart';
@@ -47,7 +49,7 @@ abstract class _DeviceStore with Store {
     _roomId ??= roomId;
 
     try {
-      _dashboard = await _dashboardApi.getDashboard(_roomId).catchError(handleCaughtError);
+      _dashboard = (await _dashboardApi.getDashboard(_roomId).catchError(handleCaughtError)).data;
       this.devices = ObservableList.of(_dashboard.widgets);
       error = null;
     } on ErrorResultException catch (ex) {
@@ -70,7 +72,7 @@ abstract class _DeviceStore with Store {
 
     try {
       _dashboard = null;
-      this.devices = ObservableList.of(await _deviceApi.getDevices('null').catchError(handleCaughtError));
+      this.devices = ObservableList.of((await _deviceApi.getDevices('null').catchError(handleCaughtError)).data);
       error = null;
     } on ErrorResultException catch (ex) {
       error = ex;
@@ -79,7 +81,7 @@ abstract class _DeviceStore with Store {
 
   @action
   Future<void> saveDevice(Device device, {String name, int roomId}) async {
-    await _deviceApi.saveDeviceInfo(device.id, UpdateDeviceInfoRequest(name: name, roomId: roomId)).catchError(handleCaughtError);
+    await _deviceApi.saveDeviceInfo(device.id, (UpdateDeviceInfoRequestBuilder()..name= name.. roomId= roomId).build()).catchError(handleCaughtError);
     await refreshDevices();
   }
 
@@ -90,12 +92,12 @@ abstract class _DeviceStore with Store {
   }
 
   @action
-  Future deviceChange(String key, dynamic value, {dynamic associatedData}) async {
+  Future deviceChange(String key, Object value, {dynamic associatedData}) async {
     final device = associatedData as Device;
     if (device.pluginName == null) {
-      await _deviceApi.updateGroup(_roomId, device.id, {'key': key, 'value': value});
+      await _deviceApi.updateGroup(_roomId, device.id, BuiltMap<String, JsonObject>({'key': JsonObject(key), 'value': value == null ? JsonObject('') : JsonObject(value)}));
     } else {
-      await _deviceApi.updateDevice(device.id, device.pluginName, {'key': key, 'value': value});
+      await _deviceApi.updateDevice(device.id, device.pluginName, BuiltMap<String, JsonObject>({'key': JsonObject(key), 'value': value == null ? JsonObject('') : JsonObject(value)}));
     }
   }
 

@@ -1,42 +1,35 @@
-import 'package:jaguar_serializer/jaguar_serializer.dart';
+//
+// AUTO-GENERATED FILE, DO NOT MODIFY!
+//
+// @dart=2.6
 
-part 'store_plugin.jser.dart';
+// ignore_for_file: unused_import
 
-class StorePlugin {
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
 
-  @Alias('id', isNullable: false,  )
-  final String id;
+part 'store_plugin.g.dart';
 
-  @Alias('name', isNullable: false,  )
-  final String name;
+abstract class StorePlugin implements Built<StorePlugin, StorePluginBuilder> {
 
-  @Alias('description', isNullable: false,  )
-  final String description;
+    @BuiltValueField(wireName: r'id')
+    String get id;
 
-  @Alias('installed', isNullable: false,  )
-  final bool installed;
+    @BuiltValueField(wireName: r'name')
+    String get name;
 
+    @BuiltValueField(wireName: r'description')
+    String get description;
 
-  StorePlugin(
+    @BuiltValueField(wireName: r'installed')
+    bool get installed;
 
+    // Boilerplate code needed to wire-up generated code
+    StorePlugin._();
 
-{
+    static void _initializeBuilder(StorePluginBuilder b) => b;
 
-     this.id = null,
-     this.name = null,
-     this.description = null,   this.installed = null
-
-    }
-  );
-
-  @override
-  String toString() {
-    return 'StorePlugin[id=$id, name=$name, description=$description, installed=$installed, ]';
-  }
-}
-
-@GenSerializer(nullableFields: false)
-class StorePluginSerializer extends Serializer<StorePlugin> with _$StorePluginSerializer {
-
+    factory StorePlugin([void updates(StorePluginBuilder b)]) = _$StorePlugin;
+    static Serializer<StorePlugin> get serializer => _$storePluginSerializer;
 }
 

@@ -1,50 +1,42 @@
-import 'package:jaguar_serializer/jaguar_serializer.dart';
+//
+// AUTO-GENERATED FILE, DO NOT MODIFY!
+//
+// @dart=2.6
 
-part 'interact_response.jser.dart';
+// ignore_for_file: unused_import
 
-class InteractResponse {
+import 'package:built_collection/built_collection.dart';
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
 
-  @Alias('action', isNullable: false,  )
-  final String action;
+part 'interact_response.g.dart';
 
-  @Alias('lang', isNullable: false,  )
-  final String lang;
+abstract class InteractResponse implements Built<InteractResponse, InteractResponseBuilder> {
 
-  @Alias('userId', isNullable: false,  )
-  final int userId;
+    @BuiltValueField(wireName: r'action')
+    String get action;
 
-  @Alias('userSentence', isNullable: false,  )
-  final String userSentence;
+    @BuiltValueField(wireName: r'lang')
+    String get lang;
 
-  @Alias('response', isNullable: false,  )
-  final String response;
+    @BuiltValueField(wireName: r'userId')
+    int get userId;
 
-  @Alias('responses', isNullable: false,  )
-  final List<String> responses;
+    @BuiltValueField(wireName: r'userSentence')
+    String get userSentence;
 
+    @BuiltValueField(wireName: r'response')
+    String get response;
 
-  InteractResponse(
+    @BuiltValueField(wireName: r'responses')
+    BuiltList<String> get responses;
 
+    // Boilerplate code needed to wire-up generated code
+    InteractResponse._();
 
-{
+    static void _initializeBuilder(InteractResponseBuilder b) => b;
 
-     this.action = null,
-     this.lang = null,
-     this.userId = null,
-     this.userSentence = null,
-     this.response = null,
-     this.responses = const []
-    }
-  );
-
-  @override
-  String toString() {
-    return 'InteractResponse[action=$action, lang=$lang, userId=$userId, userSentence=$userSentence, response=$response, responses=$responses, ]';
-  }
-}
-
-@GenSerializer(nullableFields: false)
-class InteractResponseSerializer extends Serializer<InteractResponse> with _$InteractResponseSerializer {
-
+    factory InteractResponse([void updates(InteractResponseBuilder b)]) = _$InteractResponse;
+    static Serializer<InteractResponse> get serializer => _$interactResponseSerializer;
 }
 

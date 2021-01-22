@@ -1,35 +1,29 @@
-import 'package:jaguar_serializer/jaguar_serializer.dart';
+//
+// AUTO-GENERATED FILE, DO NOT MODIFY!
+//
+// @dart=2.6
 
+// ignore_for_file: unused_import
 
-part 'room.jser.dart';
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
 
-class Room {
-  
-  @Alias('id', isNullable: false,  )
-  final int id;
-  
-  @Alias('name', isNullable: false,  )
-  final String name;
-  
+part 'room.g.dart';
 
-  Room(
-      
+abstract class Room implements Built<Room, RoomBuilder> {
 
-{
-    
-     this.id = null,  
-     this.name = null 
-    }
-  );
+    @BuiltValueField(wireName: r'id')
+    int get id;
 
-  @override
-  String toString() {
-    return 'Room[id=$id, name=$name, ]';
-  }
-}
+    @BuiltValueField(wireName: r'name')
+    String get name;
 
-@GenSerializer(nullableFields: false)
-class RoomSerializer extends Serializer<Room> with _$RoomSerializer {
+    // Boilerplate code needed to wire-up generated code
+    Room._();
 
+    static void _initializeBuilder(RoomBuilder b) => b;
+
+    factory Room([void updates(RoomBuilder b)]) = _$Room;
+    static Serializer<Room> get serializer => _$roomSerializer;
 }
 

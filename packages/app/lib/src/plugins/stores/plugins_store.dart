@@ -12,10 +12,10 @@ class PluginsStore = _PluginsStore with _$PluginsStore;
 
 abstract class _PluginsStore with Store, BaseUrlProvider {
   final BackendApiProvider _apiProvider;
+
   PluginApi get _api => _apiProvider.api.getPluginApi();
 
-  _PluginsStore({BackendApiProvider api})
-      : _apiProvider = api ?? BackendApiProvider();
+  _PluginsStore({BackendApiProvider api}) : _apiProvider = api ?? BackendApiProvider();
 
   @observable
   ObservableFuture<List<StorePlugin>> plugins;
@@ -25,14 +25,14 @@ abstract class _PluginsStore with Store, BaseUrlProvider {
 
   @action
   Future<void> loadPlugins() {
-    plugins = ObservableFuture(_api.getStorePlugins().catchError(handleCaughtError));
+    plugins = ObservableFuture(_api.getStorePlugins().catchError(handleCaughtError).then((value) => value.data.toList()));
     return plugins;
   }
 
   @action
   Future<void> install(StorePlugin plugin) async {
     pluginsAction.add(plugin);
-    await _api.installPlugin(AddPluginRequest(id: plugin.id)).catchError(handleCaughtError);
+    await _api.installPlugin((AddPluginRequestBuilder()..id = plugin.id).build()).catchError(handleCaughtError);
     await loadPlugins();
     pluginsAction.remove(plugin);
   }

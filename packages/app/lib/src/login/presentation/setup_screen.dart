@@ -229,8 +229,10 @@ class _Step1Explanations extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(top: 16.0),
-            child: RaisedButton(
-              textColor: Colors.white,
+            child: ElevatedButton(
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+              ),
               onPressed: () {
                 store.searchAndConnectToBTDevice();
               },
@@ -353,8 +355,10 @@ class _StepError extends StatelessWidget {
           ),
         ),
         if (onRetry != null)
-          RaisedButton(
-            textColor: Colors.white,
+          ElevatedButton(
+            style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+            ),
             onPressed: onRetry,
             child: Text(localization.retry.toUpperCase()),
           )

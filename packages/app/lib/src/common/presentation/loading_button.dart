@@ -95,6 +95,7 @@ class ProgressButton extends HookWidget {
       key: _globalKey,
       width: initialWidth.value == null ? double.infinity : initialWidth.value - ((initialWidth.value - height.value) * _anim),
       height: _isPressed.value ? 55 : null,
+      // ignore: deprecated_member_use
       child: RaisedButton(
         shape: _isPressed.value ? RoundedRectangleBorder(borderRadius: BorderRadius.circular(35)) : null,
         padding: _isPressed.value ? EdgeInsets.zero : padding,

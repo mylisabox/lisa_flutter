@@ -22,6 +22,7 @@ import 'package:lisa_flutter/src/preferences/preferences_provider.dart';
 import 'package:lisa_flutter/src/preferences/stores/preferences_store.dart';
 import 'package:lisa_flutter/src/splash_screen/presentation/splash_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 @pragma('vm:entry-point')
 void mainWear() {
@@ -34,6 +35,12 @@ void main() {
 
 void app(bool isWear) async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SentryFlutter.init(
+        (options) {
+      options.reportSilentFlutterErrors = true;
+      options.dsn = 'https://53c5686c50434e9884c1a763b984af58@sentry.io/1777712';
+    },
+  );
 
   await PreferencesProvider().setup();
   final navigatorKey = GlobalKey<NavigatorState>();
@@ -111,6 +118,11 @@ class MyApp extends HookWidget {
                 buttonColor: _primaryColor,
                 textTheme: ButtonTextTheme.normal,
               ),
+              elevatedButtonTheme: ElevatedButtonThemeData(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(_primaryColor)
+                )
+              ),
               fontFamily: 'Raleway',
               brightness: prefStore.isDarkTheme ? Brightness.dark : Brightness.light,
               primaryColorBrightness: Brightness.dark,
@@ -119,13 +131,18 @@ class MyApp extends HookWidget {
               primaryColorLight: _primaryColor.withOpacity(0.2),
               primaryColorDark: _primaryColor,
               accentColor: _primaryColor,
-              cursorColor: _primaryColor,
+              textSelectionTheme: TextSelectionThemeData(
+                cursorColor: _primaryColor,
+                selectionColor: _primaryColor,
+                selectionHandleColor: _primaryColor,
+              ),
               indicatorColor: _primaryColor,
-              textSelectionColor: _primaryColor,
-              textSelectionHandleColor: _primaryColor,
             ),
             initialRoute: SplashScreen.route,
             navigatorKey: navigatorKey,
+            navigatorObservers: [
+              SentryNavigatorObserver(),
+            ],
             onGenerateRoute: router.onGenerateRoute,
           );
         },

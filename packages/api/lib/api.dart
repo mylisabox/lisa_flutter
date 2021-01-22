@@ -1,9 +1,14 @@
+//
+// AUTO-GENERATED FILE, DO NOT MODIFY!
+//
+// @dart=2.6
+
+// ignore_for_file: unused_import
+
 library lisa_server_sdk.api;
 
-import 'package:http/http.dart' as http;
-import 'package:jaguar_mimetype/jaguar_mimetype.dart';
-import 'package:jaguar_retrofit/jaguar_retrofit.dart';
-import 'package:jaguar_serializer/jaguar_serializer.dart';
+import 'package:built_value/serializer.dart';
+import 'package:dio/dio.dart';
 import 'package:lisa_server_sdk/api/chatbot_api.dart';
 import 'package:lisa_server_sdk/api/config_api.dart';
 import 'package:lisa_server_sdk/api/dashboard_api.dart';
@@ -18,92 +23,46 @@ import 'package:lisa_server_sdk/api/user_api.dart';
 import 'package:lisa_server_sdk/auth/api_key_auth.dart';
 import 'package:lisa_server_sdk/auth/basic_auth.dart';
 import 'package:lisa_server_sdk/auth/oauth.dart';
-import 'package:lisa_server_sdk/model/add_plugin_request.dart';
-import 'package:lisa_server_sdk/model/dashboard.dart';
-import 'package:lisa_server_sdk/model/device.dart';
-import 'package:lisa_server_sdk/model/device_settings.dart';
-import 'package:lisa_server_sdk/model/interact_request.dart';
-import 'package:lisa_server_sdk/model/interact_response.dart';
-import 'package:lisa_server_sdk/model/is_initialized.dart';
-import 'package:lisa_server_sdk/model/login_request.dart';
-import 'package:lisa_server_sdk/model/login_response.dart';
-import 'package:lisa_server_sdk/model/plugin.dart';
-import 'package:lisa_server_sdk/model/room.dart';
-import 'package:lisa_server_sdk/model/scene.dart';
-import 'package:lisa_server_sdk/model/scene_data.dart';
-import 'package:lisa_server_sdk/model/setup_voice_commands.dart';
-import 'package:lisa_server_sdk/model/store_plugin.dart';
-import 'package:lisa_server_sdk/model/update_device_info_request.dart';
-import 'package:lisa_server_sdk/model/user.dart';
-import 'package:lisa_server_sdk/model/user_update.dart';
-
-
-
-final _jsonJaguarRepo = JsonRepo()
-..add(AddPluginRequestSerializer())
-..add(DashboardSerializer())
-..add(DeviceSerializer())
-..add(DeviceSettingsSerializer())
-..add(InteractRequestSerializer())
-..add(InteractResponseSerializer())
-..add(IsInitializedSerializer())
-..add(LoginRequestSerializer())
-..add(LoginResponseSerializer())
-..add(PluginSerializer())
-..add(RoomSerializer())
-..add(SceneSerializer())
-..add(SceneDataSerializer())
-..add(SetupVoiceCommandsSerializer())
-..add(StorePluginSerializer())
-..add(UpdateDeviceInfoRequestSerializer())
-..add(UserSerializer())
-..add(UserUpdateSerializer())
-;
-final Map<String, CodecRepo> defaultConverters = {
-    MimeTypes.json: _jsonJaguarRepo,
-};
-
+import 'package:lisa_server_sdk/serializers.dart';
 
 
 final _defaultInterceptors = [OAuthInterceptor(), BasicAuthInterceptor(), ApiKeyAuthInterceptor()];
 
 class LisaServerSdk {
-    List<Interceptor> interceptors;
-    String basePath = "http://localhost:3000";
-    Route _baseRoute;
-    final Duration timeout;
 
-    /**
-    * Add custom global interceptors, put overrideInterceptors to true to set your interceptors only (auth interceptors will not be added)
-    */
-    LisaServerSdk({List<Interceptor> interceptors, bool overrideInterceptors = false, String baseUrl, this.timeout = const Duration(minutes: 2)}) {
-        _baseRoute = Route(baseUrl ?? basePath).withClient(globalClient ?? http.Client());
-        if(interceptors == null) {
-            this.interceptors = _defaultInterceptors;
-        }
-        else if(overrideInterceptors){
-            this.interceptors = interceptors;
-        }
-        else {
-            this.interceptors = List.from(_defaultInterceptors)..addAll(interceptors);
+    Dio dio;
+    Serializers serializers;
+    String basePath = 'http://localhost:3000';
+
+    LisaServerSdk({this.dio, Serializers serializers, String basePathOverride, List<Interceptor> interceptors}) {
+        if (dio == null) {
+            BaseOptions options = new BaseOptions(
+                baseUrl: basePathOverride ?? basePath,
+                connectTimeout: 5000,
+                receiveTimeout: 3000,
+            );
+            this.dio = new Dio(options);
         }
 
-        this.interceptors.forEach((interceptor) {
-            _baseRoute.before(interceptor.before);
-            _baseRoute.after(interceptor.after);
-        });
+        if (interceptors == null) {
+            this.dio.interceptors.addAll(_defaultInterceptors);
+        } else {
+            this.dio.interceptors.addAll(interceptors);
+        }
+
+        this.serializers = serializers ?? standardSerializers;
     }
 
     void setOAuthToken(String name, String token) {
-        (_defaultInterceptors[0] as OAuthInterceptor).tokens[name] = token;
+        (this.dio.interceptors.firstWhere((element) => element is OAuthInterceptor, orElse: null) as OAuthInterceptor)?.tokens[name] = token;
     }
 
     void setBasicAuth(String name, String username, String password) {
-        (_defaultInterceptors[1] as BasicAuthInterceptor).authInfo[name] = BasicAuthInfo(username, password);
+        (this.dio.interceptors.firstWhere((element) => element is BasicAuthInterceptor, orElse: null) as BasicAuthInterceptor)?.authInfo[name] = BasicAuthInfo(username, password);
     }
 
     void setApiKey(String name, String apiKey) {
-        (_defaultInterceptors[2] as ApiKeyAuthInterceptor).apiKeys[name] = apiKey;
+        (this.dio.interceptors.firstWhere((element) => element is ApiKeyAuthInterceptor, orElse: null) as ApiKeyAuthInterceptor)?.apiKeys[name] = apiKey;
     }
 
 
@@ -111,14 +70,8 @@ class LisaServerSdk {
     * Get ChatbotApi instance, base route and serializer can be overridden by a given but be careful,
     * by doing that all interceptors will not be executed
     */
-    ChatbotApi getChatbotApi({Route base, Map<String, CodecRepo> converters}) {
-        if(base == null) {
-            base = _baseRoute;
-        }
-        if(converters == null) {
-            converters = defaultConverters;
-        }
-        return ChatbotApi(base: base, converters: converters, timeout: timeout);
+    ChatbotApi getChatbotApi() {
+    return ChatbotApi(dio, serializers);
     }
 
 
@@ -126,14 +79,8 @@ class LisaServerSdk {
     * Get ConfigApi instance, base route and serializer can be overridden by a given but be careful,
     * by doing that all interceptors will not be executed
     */
-    ConfigApi getConfigApi({Route base, Map<String, CodecRepo> converters}) {
-        if(base == null) {
-            base = _baseRoute;
-        }
-        if(converters == null) {
-            converters = defaultConverters;
-        }
-        return ConfigApi(base: base, converters: converters, timeout: timeout);
+    ConfigApi getConfigApi() {
+    return ConfigApi(dio, serializers);
     }
 
 
@@ -141,14 +88,8 @@ class LisaServerSdk {
     * Get DashboardApi instance, base route and serializer can be overridden by a given but be careful,
     * by doing that all interceptors will not be executed
     */
-    DashboardApi getDashboardApi({Route base, Map<String, CodecRepo> converters}) {
-        if(base == null) {
-            base = _baseRoute;
-        }
-        if(converters == null) {
-            converters = defaultConverters;
-        }
-        return DashboardApi(base: base, converters: converters, timeout: timeout);
+    DashboardApi getDashboardApi() {
+    return DashboardApi(dio, serializers);
     }
 
 
@@ -156,14 +97,8 @@ class LisaServerSdk {
     * Get DeviceApi instance, base route and serializer can be overridden by a given but be careful,
     * by doing that all interceptors will not be executed
     */
-    DeviceApi getDeviceApi({Route base, Map<String, CodecRepo> converters}) {
-        if(base == null) {
-            base = _baseRoute;
-        }
-        if(converters == null) {
-            converters = defaultConverters;
-        }
-        return DeviceApi(base: base, converters: converters, timeout: timeout);
+    DeviceApi getDeviceApi() {
+    return DeviceApi(dio, serializers);
     }
 
 
@@ -171,14 +106,8 @@ class LisaServerSdk {
     * Get FavoriteApi instance, base route and serializer can be overridden by a given but be careful,
     * by doing that all interceptors will not be executed
     */
-    FavoriteApi getFavoriteApi({Route base, Map<String, CodecRepo> converters}) {
-        if(base == null) {
-            base = _baseRoute;
-        }
-        if(converters == null) {
-            converters = defaultConverters;
-        }
-        return FavoriteApi(base: base, converters: converters, timeout: timeout);
+    FavoriteApi getFavoriteApi() {
+    return FavoriteApi(dio, serializers);
     }
 
 
@@ -186,14 +115,8 @@ class LisaServerSdk {
     * Get LoginApi instance, base route and serializer can be overridden by a given but be careful,
     * by doing that all interceptors will not be executed
     */
-    LoginApi getLoginApi({Route base, Map<String, CodecRepo> converters}) {
-        if(base == null) {
-            base = _baseRoute;
-        }
-        if(converters == null) {
-            converters = defaultConverters;
-        }
-        return LoginApi(base: base, converters: converters, timeout: timeout);
+    LoginApi getLoginApi() {
+    return LoginApi(dio, serializers);
     }
 
 
@@ -201,14 +124,8 @@ class LisaServerSdk {
     * Get PluginApi instance, base route and serializer can be overridden by a given but be careful,
     * by doing that all interceptors will not be executed
     */
-    PluginApi getPluginApi({Route base, Map<String, CodecRepo> converters}) {
-        if(base == null) {
-            base = _baseRoute;
-        }
-        if(converters == null) {
-            converters = defaultConverters;
-        }
-        return PluginApi(base: base, converters: converters, timeout: timeout);
+    PluginApi getPluginApi() {
+    return PluginApi(dio, serializers);
     }
 
 
@@ -216,14 +133,8 @@ class LisaServerSdk {
     * Get RoomApi instance, base route and serializer can be overridden by a given but be careful,
     * by doing that all interceptors will not be executed
     */
-    RoomApi getRoomApi({Route base, Map<String, CodecRepo> converters}) {
-        if(base == null) {
-            base = _baseRoute;
-        }
-        if(converters == null) {
-            converters = defaultConverters;
-        }
-        return RoomApi(base: base, converters: converters, timeout: timeout);
+    RoomApi getRoomApi() {
+    return RoomApi(dio, serializers);
     }
 
 
@@ -231,14 +142,8 @@ class LisaServerSdk {
     * Get SceneApi instance, base route and serializer can be overridden by a given but be careful,
     * by doing that all interceptors will not be executed
     */
-    SceneApi getSceneApi({Route base, Map<String, CodecRepo> converters}) {
-        if(base == null) {
-            base = _baseRoute;
-        }
-        if(converters == null) {
-            converters = defaultConverters;
-        }
-        return SceneApi(base: base, converters: converters, timeout: timeout);
+    SceneApi getSceneApi() {
+    return SceneApi(dio, serializers);
     }
 
 
@@ -246,14 +151,8 @@ class LisaServerSdk {
     * Get SetupApi instance, base route and serializer can be overridden by a given but be careful,
     * by doing that all interceptors will not be executed
     */
-    SetupApi getSetupApi({Route base, Map<String, CodecRepo> converters}) {
-        if(base == null) {
-            base = _baseRoute;
-        }
-        if(converters == null) {
-            converters = defaultConverters;
-        }
-        return SetupApi(base: base, converters: converters, timeout: timeout);
+    SetupApi getSetupApi() {
+    return SetupApi(dio, serializers);
     }
 
 
@@ -261,14 +160,8 @@ class LisaServerSdk {
     * Get UserApi instance, base route and serializer can be overridden by a given but be careful,
     * by doing that all interceptors will not be executed
     */
-    UserApi getUserApi({Route base, Map<String, CodecRepo> converters}) {
-        if(base == null) {
-            base = _baseRoute;
-        }
-        if(converters == null) {
-            converters = defaultConverters;
-        }
-        return UserApi(base: base, converters: converters, timeout: timeout);
+    UserApi getUserApi() {
+    return UserApi(dio, serializers);
     }
 
 

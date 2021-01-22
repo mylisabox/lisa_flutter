@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:built_value/json_object.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -48,7 +49,9 @@ class Dashboard extends HookWidget {
         RemoteIpCameraFactory(baseUrlProvider: () {
           final backend = BackendApiProvider();
           final HostInterceptor interceptor = backend.interceptors.firstWhere((item) => item is HostInterceptor); //get host interceptor
-          final token = (backend.api.interceptors.firstWhere((item) => item is ApiKeyAuthInterceptor) as ApiKeyAuthInterceptor).apiKeys[kAuthKey].replaceFirst('JWT ', '');
+          final token = (backend.api.dio.interceptors.firstWhere((item) => item is ApiKeyAuthInterceptor) as ApiKeyAuthInterceptor)
+              .apiKeys[kAuthKey]
+              .replaceFirst('JWT ', '');
           return interceptor.host + '/api/v1/camera/stream?token=$token&url=';
         }),
         RemoteImageButtonFactory(baseUrlProvider: () => BaseUrlProvider.getBaseUrl())
@@ -88,9 +91,9 @@ class Dashboard extends HookWidget {
                     itemCount: store.devices.length,
                     staggeredTileBuilder: (int index) {
                       final device = store.devices[index];
-                      final int width = device?.template['widgetWidth'] ?? 1;
-                      final int height = device?.template['widgetHeight'] ?? 1;
-                      return StaggeredTile.count(width * _widgetWidthUnit, height * _widgetHeightUnit);
+                      final num width = device?.template['widgetWidth']?.asNum ?? 1;
+                      final num height = device?.template['widgetHeight']?.asNum ?? 1;
+                      return StaggeredTile.count(width * _widgetWidthUnit, height.toDouble() * _widgetHeightUnit);
                     },
                     mainAxisSpacing: kSmallPadding,
                     crossAxisSpacing: kSmallPadding,
@@ -244,8 +247,12 @@ class _DeviceIdle extends StatelessWidget {
               padding: const EdgeInsets.all(kSmallPadding),
               child: RemoteWidget(
                 associatedData: device,
-                definition: device.template,
-                data: device.data,
+                definition: device.template?.toMap()?.map((key, value) {
+                  return MapEntry(key, toPrimitive(value));
+                }),
+                data: device.data?.toMap()?.map((key, value) {
+                  return MapEntry(key, toPrimitive(value));
+                }),
               ),
             ),
           ),
@@ -253,6 +260,22 @@ class _DeviceIdle extends StatelessWidget {
       ),
     );
   }
+}
+
+dynamic toPrimitive(JsonObject value) {
+  var val;
+  if (value is StringJsonObject) {
+    val = value.asString;
+  } else if (value is NumJsonObject) {
+    val = value.asNum;
+  } else if (value is MapJsonObject) {
+    val = value.asMap;
+  } else if (value is BoolJsonObject) {
+    val = value.asBool;
+  } else if (value is ListJsonObject) {
+    val = value.asList;
+  }
+  return val;
 }
 
 class _DeviceEdition extends HookWidget {
@@ -308,8 +331,8 @@ class _DeviceEdition extends HookWidget {
                             selectedRoom.value = room.id;
                           },
                         ),
-                        RaisedButton(
-                          textColor: Colors.white,
+                        ElevatedButton(
+                          //textColor: Colors.white,
                           onPressed: () {
                             Provider.of<DeviceStore>(context, listen: false).saveDevice(device, name: controller.text, roomId: selectedRoom.value);
                           },

@@ -1,10 +1,9 @@
 import 'dart:async';
 
 import 'package:connectivity/connectivity.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:http/http.dart' as http;
-import 'package:jaguar_retrofit/jaguar_retrofit.dart';
 import 'package:lisa_flutter/src/common/config.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/network/local_server_provider.dart';
@@ -13,7 +12,9 @@ import 'package:lisa_flutter/src/common/utils/page_route_builders.dart';
 import 'package:lisa_flutter/src/login/presentation/login_screen.dart';
 import 'package:lisa_flutter/src/preferences/preferences_provider.dart';
 import 'package:lisa_server_sdk/api.dart';
+import 'package:lisa_server_sdk/auth/api_key_auth.dart';
 import 'package:logging/logging.dart';
+import 'package:wifi_info_flutter/wifi_info_flutter.dart';
 
 class HostInterceptor extends Interceptor {
   final _log = Logger('HostInterceptor');
@@ -33,12 +34,12 @@ class HostInterceptor extends Interceptor {
   })  : _connectivity = connectivity ?? Connectivity(),
         _serverProvider = serverProvider ?? LocalServerProvider.create(),
         _preferencesProvider = preferencesProvider ?? PreferencesProvider() {
-    if (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.macOS) {
+    if (!kIsWeb) {
       _connectivity.onConnectivityChanged.listen((connectivityResult) async {
         if (_previousConnectivity != connectivityResult) {
           _host = null; //reset host to trigger another search on next request
         } else if (connectivityResult == ConnectivityResult.wifi) {
-          final ip = await connectivity.getWifiIP();
+          final ip = await WifiInfo().getWifiIP();
           if (_previousWifiIp != ip) {
             _host = null; //reset host to trigger another search on next request because we change wifi network
             _previousWifiIp = ip;
@@ -54,24 +55,25 @@ class HostInterceptor extends Interceptor {
     _host = null;
   }
 
+
+
   @override
-  FutureOr<void> before(RouteBase route) async {
-    final url = route.getUrl;
+  Future onRequest(RequestOptions options) async {
     if (_host == null) {
-      final prefExternalUrl = _preferencesProvider.prefs.getString(PreferencesProvider.keyExternalUrl, defaultValue: url);
-      if (!kIsWeb && (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.macOS)) {
+      final prefExternalUrl = _preferencesProvider.prefs.getString(PreferencesProvider.keyExternalUrl, defaultValue: options.uri.toString());
+      if (!kIsWeb) {
         var connectivityResult = await (_connectivity.checkConnectivity());
         if (connectivityResult == ConnectivityResult.mobile) {
-          _setExternalUrl(route, prefExternalUrl);
+          _setExternalUrl(options, prefExternalUrl);
         } else if (connectivityResult == ConnectivityResult.wifi) {
           final localServer = await _serverProvider.search().catchError((err) {
             return null;
           });
           _log.info('lisa host found at $localServer');
           if (localServer == null) {
-            _setExternalUrl(route, prefExternalUrl);
+            _setExternalUrl(options, prefExternalUrl);
           } else {
-            _setExternalUrl(route, localServer);
+            _setExternalUrl(options, localServer);
           }
         }
       } else {
@@ -80,20 +82,20 @@ class HostInterceptor extends Interceptor {
           return null;
         });
         if (localServer == null) {
-          _setExternalUrl(route, prefExternalUrl);
+          _setExternalUrl(options, prefExternalUrl);
         } else {
-          _setExternalUrl(route, localServer);
+          _setExternalUrl(options, localServer);
         }
       }
     } else {
-      _setExternalUrl(route, _host);
+      _setExternalUrl(options, _host);
     }
     _log.info('lisa host set to $_host');
     return null;
   }
 
-  _setExternalUrl(RouteBase route, String externalUrl) {
-    final urlParts = Uri.parse(route.getUrl);
+  _setExternalUrl(RequestOptions options, String externalUrl) {
+    final urlParts = options.uri;
     final externalUrlParts = Uri.parse(externalUrl);
     if (urlParts.scheme == externalUrlParts.scheme && urlParts.host == externalUrlParts.host && urlParts.port == externalUrlParts.port) {
       if (_host == null) {
@@ -104,35 +106,9 @@ class HostInterceptor extends Interceptor {
 
     final finalUrl = urlParts.replace(host: externalUrlParts.host, scheme: externalUrlParts.scheme, port: externalUrlParts.port);
     _host = externalUrlParts.origin;
-    route.url(externalUrlParts.toString()); //FIXME use finalUrl https://github.com/Jaguar-dart/client/issues/53
+    options.path = finalUrl.toString();
   }
 
-  @override
-  FutureOr after(StringResponse response) {
-    return response;
-  }
-}
-
-class LogInterceptor extends Interceptor {
-  static final _log = Logger('Network');
-
-  @override
-  FutureOr<void> before(RouteBase route) {
-    _log.fine('==> ${route.runtimeType.toString().toUpperCase()} ${route.getUrl}');
-    route.getHeaders.forEach((key, value) => _log.fine('==> $key: $value'));
-    if (route is RouteWithBody) {
-      _log.fine('\n${route.getBody()}');
-    }
-    return null;
-  }
-
-  @override
-  FutureOr after(StringResponse response) {
-    _log.fine('<== ${response.statusCode} ${response.request.url}');
-    response.headers.forEach((key, value) => _log.fine('<== $key: $value'));
-    _log.fine('\n${response.body}');
-    return response;
-  }
 }
 
 class LogoutInterceptor extends Interceptor {
@@ -143,9 +119,9 @@ class LogoutInterceptor extends Interceptor {
   LogoutInterceptor(this.navigatorKey, this.userStore);
 
   @override
-  Future after(StringResponse response) async {
+  Future onResponse(Response response) async {
     //backend tell us our token is not good anymore, let's logout in that case
-    if (response.statusCode == 401 && !response.request.url.path.contains('logout') && !logoutInProgress) {
+    if (response.statusCode == 401 && !response.request.uri.path.contains('logout') && !logoutInProgress) {
       logoutInProgress = true;
       await userStore().logout();
       navigatorKey.currentState.pushAndRemoveUntil(
@@ -163,21 +139,19 @@ class LogoutInterceptor extends Interceptor {
 }
 
 List<Interceptor> getInterceptors({GlobalKey<NavigatorState> navigatorKey, UserStore Function() userStore}) => kNetworkDebug
-    ? [HostInterceptor(), LogInterceptor(), LogoutInterceptor(navigatorKey, userStore)]
-    : <Interceptor>[HostInterceptor(), LogoutInterceptor(navigatorKey, userStore)];
+    ? [HostInterceptor(), ApiKeyAuthInterceptor(), LogInterceptor(requestBody: true, responseBody: true), LogoutInterceptor(navigatorKey, userStore)]
+    : <Interceptor>[HostInterceptor(), ApiKeyAuthInterceptor(), LogoutInterceptor(navigatorKey, userStore)];
 
 class BackendApiProvider {
-  static const connectionTimeout = 30;
-  static const httpTimeout = Duration(minutes: 2);
   final LisaServerSdk api;
   final List<Interceptor> interceptors;
 
   factory BackendApiProvider() => _singleton;
 
-  BackendApiProvider._(this.interceptors, String baseUrl) : api = LisaServerSdk(baseUrl: baseUrl, interceptors: interceptors, timeout: httpTimeout);
+  BackendApiProvider._(this.interceptors, String baseUrl) : api = LisaServerSdk(basePathOverride: baseUrl, interceptors: interceptors);
 
   void clearHost() {
-    final HostInterceptor hostInterceptor = api.interceptors.firstWhere((element) => element is HostInterceptor);
+    final HostInterceptor hostInterceptor = api.dio.interceptors.firstWhere((element) => element is HostInterceptor);
     hostInterceptor.clearHost();
   }
 
@@ -185,10 +159,9 @@ class BackendApiProvider {
   static BackendApiProvider setup(GlobalKey<NavigatorState> navigatorKey, UserStore Function() userStore, {String baseUrl, List<Interceptor> interceptors}) {
     baseUrl ??= Config.kUrl;
     interceptors ??= getInterceptors(navigatorKey: navigatorKey, userStore: userStore);
-
-    globalClient = http.Client();
-
-    return _singleton = BackendApiProvider._(interceptors, baseUrl);
+    _singleton = BackendApiProvider._(interceptors, baseUrl);
+    _singleton.api.dio.options.headers['Accept'] = 'application/json';
+    return _singleton;
   }
 
   static BackendApiProvider _singleton;

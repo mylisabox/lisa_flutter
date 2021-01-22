@@ -1,7 +1,5 @@
-import 'package:jaguar_retrofit/jaguar_retrofit.dart';
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
 import 'package:mobx/mobx.dart';
-import 'package:path/path.dart';
 
 part 'settings_store.g.dart';
 
@@ -18,8 +16,8 @@ abstract class _SettingsStore with Store {
 
   }
 
-  Future<void> saveVoiceCommandsConfig(List<int> configFile, String fileName) async {
+  Future<void> saveVoiceCommandsConfig(List<int> configFile) async {
     final setupApi = _apiProvider.api.getSetupApi();
-    await setupApi.setupVoiceCommands(MultipartFile(configFile, filename: basename(fileName)));
+    await setupApi.setupVoiceCommands(configFile);
   }
 }
