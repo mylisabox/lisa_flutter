@@ -1,4 +1,3 @@
-import 'package:crypted_preferences/crypted_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/errors.dart';
@@ -10,6 +9,7 @@ import 'package:lisa_flutter/src/preferences/preferences_provider.dart';
 import 'package:lisa_server_sdk/api.dart';
 import 'package:lisa_server_sdk/model/login_request.dart';
 import 'package:mobx/mobx.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'login_store.g.dart';
 
@@ -20,7 +20,7 @@ class LoginStore = _LoginStore with _$LoginStore;
 abstract class _LoginStore with Store {
   static const keyLastEmail = 'last_email';
   final BackendApiProvider _apiProvider;
-  final Preferences _preferences;
+  final SharedPreferences _preferences;
   final Validator _validator;
   final UserStore _userStore;
 
@@ -44,7 +44,7 @@ abstract class _LoginStore with Store {
   _LoginStore({
     @required UserStore userStore,
     BackendApiProvider apiProvider,
-    Preferences prefs,
+    SharedPreferences prefs,
     Validator validator,
   })  : _apiProvider = apiProvider ?? BackendApiProvider(),
         _userStore = userStore,
@@ -60,7 +60,7 @@ abstract class _LoginStore with Store {
     if (resetHost) {
       _apiProvider.clearHost();
     }
-    email = _preferences.getString(keyLastEmail, defaultValue: email);
+    email = _preferences.getString(keyLastEmail) ?? email;
     try {
       final response = (await _api.getConfigApi().isInitialized()).data;
       mode = response.initialized ? AuthMode.login : AuthMode.registration;

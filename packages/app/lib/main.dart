@@ -45,7 +45,7 @@ void app(bool isWear) async {
   await PreferencesProvider().setup();
   final navigatorKey = GlobalKey<NavigatorState>();
   UserStore userStore;
-  BackendApiProvider.setup(navigatorKey, () => userStore);
+  BackendApiProvider.setup(navigatorKey, () => userStore, PreferencesProvider().prefs);
   initLogger();
   userStore = UserStore();
   runApp(

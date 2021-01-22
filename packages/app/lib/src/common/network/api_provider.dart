@@ -14,6 +14,7 @@ import 'package:lisa_flutter/src/preferences/preferences_provider.dart';
 import 'package:lisa_server_sdk/api.dart';
 import 'package:lisa_server_sdk/auth/api_key_auth.dart';
 import 'package:logging/logging.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wifi_info_flutter/wifi_info_flutter.dart';
 
 class HostInterceptor extends Interceptor {
@@ -55,12 +56,10 @@ class HostInterceptor extends Interceptor {
     _host = null;
   }
 
-
-
   @override
   Future onRequest(RequestOptions options) async {
     if (_host == null) {
-      final prefExternalUrl = _preferencesProvider.prefs.getString(PreferencesProvider.keyExternalUrl, defaultValue: options.uri.toString());
+      final prefExternalUrl = _preferencesProvider.prefs.getString(PreferencesProvider.keyExternalUrl) ?? options.uri.toString();
       if (!kIsWeb) {
         var connectivityResult = await (_connectivity.checkConnectivity());
         if (connectivityResult == ConnectivityResult.mobile) {
@@ -156,11 +155,16 @@ class BackendApiProvider {
   }
 
   // ignore: prefer_constructors_over_static_methods
-  static BackendApiProvider setup(GlobalKey<NavigatorState> navigatorKey, UserStore Function() userStore, {String baseUrl, List<Interceptor> interceptors}) {
+  static BackendApiProvider setup(GlobalKey<NavigatorState> navigatorKey, UserStore Function() userStore, SharedPreferences preferences, {String baseUrl, List<Interceptor> interceptors}) {
     baseUrl ??= Config.kUrl;
     interceptors ??= getInterceptors(navigatorKey: navigatorKey, userStore: userStore);
     _singleton = BackendApiProvider._(interceptors, baseUrl);
     _singleton.api.dio.options.headers['Accept'] = 'application/json';
+    final token = preferences.getString(PreferencesProvider.keyToken);
+
+    if (token != null) {
+      _singleton.api.setApiKey(kAuthKey, 'JWT $token');
+    }
     return _singleton;
   }
 

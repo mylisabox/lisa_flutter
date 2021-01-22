@@ -1,5 +1,4 @@
-import 'package:crypted_preferences/crypted_preferences.dart';
-import 'package:lisa_flutter/src/common/utils/directory_provider/directory_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferencesProvider {
   static const keyExternalUrl = 'externalUrl';
@@ -13,13 +12,11 @@ class PreferencesProvider {
     return _singleton ??= PreferencesProvider._();
   }
 
-  Preferences _prefs;
+  SharedPreferences _prefs;
 
-  Preferences get prefs => _prefs;
+  SharedPreferences get prefs => _prefs;
 
   Future<void> setup() async {
-    String appDocPath = await kGetMainDirectory();
-    //File('$appDocPath/prefs.json').deleteSync();
-    _prefs = await Preferences.preferences(path: '$appDocPath/prefs.json');
+    _prefs = await SharedPreferences.getInstance();
   }
 }

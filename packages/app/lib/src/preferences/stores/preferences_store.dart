@@ -1,7 +1,7 @@
-import 'package:crypted_preferences/crypted_preferences.dart';
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
 import 'package:lisa_flutter/src/preferences/preferences_provider.dart';
 import 'package:mobx/mobx.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'preferences_store.g.dart';
 
@@ -9,20 +9,20 @@ class PreferencesStore = _PreferencesStore with _$PreferencesStore;
 
 abstract class _PreferencesStore with Store {
   static const _keyDarkTheme = 'darkTheme';
-  final Preferences _prefs;
+  final SharedPreferences _prefs;
   final BackendApiProvider _apiProvider;
   String externalBaseUrl;
 
   @observable
   bool isDarkTheme = false;
 
-  _PreferencesStore({Preferences prefs, BackendApiProvider apiProvider})
+  _PreferencesStore({SharedPreferences prefs, BackendApiProvider apiProvider})
       : _prefs = prefs ?? PreferencesProvider().prefs,
         _apiProvider = apiProvider ?? BackendApiProvider();
 
   @action
   void init() {
-    isDarkTheme = _prefs.getBool(_keyDarkTheme, defaultValue: false);
+    isDarkTheme = _prefs.getBool(_keyDarkTheme) ?? false;
     externalBaseUrl = _prefs.getString(PreferencesProvider.keyExternalUrl);
   }
 

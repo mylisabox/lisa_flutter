@@ -2,6 +2,7 @@ import 'dart:async';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html';
 
+import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/network/local_server_provider.dart';
 
 LocalServerProvider createProvider() => LocalServerProviderWeb();
@@ -10,6 +11,10 @@ LocalServerProvider createProvider() => LocalServerProviderWeb();
 class LocalServerProviderWeb extends LocalServerProvider {
   @override
   Future<String> search() async {
+    if (!kIsProductionMode) {
+      //for debug let's use local lisa instance
+      return Future.value('http://192.168.1.41');
+    }
     return Future.value(window.location.protocol + '//' + window.location.hostname + ':' + _getPort());
   }
 

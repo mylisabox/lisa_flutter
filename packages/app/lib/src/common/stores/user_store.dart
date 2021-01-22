@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:crypted_preferences/crypted_preferences.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
 import 'package:lisa_flutter/src/common/utils/base_url_provider.dart';
@@ -8,18 +7,19 @@ import 'package:lisa_flutter/src/preferences/preferences_provider.dart';
 import 'package:lisa_server_sdk/api.dart';
 import 'package:lisa_server_sdk/model/user.dart';
 import 'package:mobx/mobx.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'user_store.g.dart';
 
 class UserStore = _UserStore with _$UserStore;
 
 abstract class _UserStore with Store, BaseUrlProvider {
-  final Preferences _preferences;
+  final SharedPreferences _preferences;
   final LisaServerSdk _api;
 
   _UserStore({
     LisaServerSdk api,
-    Preferences prefs,
+    SharedPreferences prefs,
   })  : _api = api ?? BackendApiProvider().api,
         _preferences = prefs ?? PreferencesProvider().prefs;
 
