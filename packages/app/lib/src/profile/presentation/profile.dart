@@ -67,7 +67,6 @@ class _ProfileFormController {
       password: password.text.isEmpty ? null : password.text,
       phone: phone.text.isEmpty ? null : phone.text,
       avatarData: avatarData.value?.data,
-      avatarName: avatarData.value?.path,
     );
   }
 }

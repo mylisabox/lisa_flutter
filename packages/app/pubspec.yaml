@@ -13,9 +13,9 @@ dependencies:
   flutter_vector_icons: ^0.2.1
   nymea_network_manager: ^0.0.1
     #path: '../../../nymea_network_manager'
-  flutter_sickchill: ^0.0.2
+  flutter_sickchill: ^0.0.3
     #path: '../../../flutter_sickchill'
-  flutter_transmission: ^0.0.2
+  flutter_transmission: ^0.0.3
     #path: '../../../flutter_transmission'
   sentry_flutter: ^4.0.2
   logging: ^0.11.4

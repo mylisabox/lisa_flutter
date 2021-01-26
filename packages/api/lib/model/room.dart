@@ -12,6 +12,7 @@ part 'room.g.dart';
 
 abstract class Room implements Built<Room, RoomBuilder> {
 
+    @nullable
     @BuiltValueField(wireName: r'id')
     int get id;
 

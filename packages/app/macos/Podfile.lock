@@ -19,6 +19,8 @@ PODS:
     - FlutterMacOS
   - Protobuf (3.11.4)
   - Reachability (3.2)
+  - shared_preferences_macos (0.0.1):
+    - FlutterMacOS
 
 DEPENDENCIES:
   - connectivity_macos (from `Flutter/ephemeral/.symlinks/plugins/connectivity_macos/macos`)
@@ -28,6 +30,7 @@ DEPENDENCIES:
   - FlutterMacOS (from `Flutter/ephemeral`)
   - package_info (from `Flutter/ephemeral/.symlinks/plugins/package_info/macos`)
   - path_provider_macos (from `Flutter/ephemeral/.symlinks/plugins/path_provider_macos/macos`)
+  - shared_preferences_macos (from `Flutter/ephemeral/.symlinks/plugins/shared_preferences_macos/macos`)
 
 SPEC REPOS:
   trunk:
@@ -49,6 +52,8 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/package_info/macos
   path_provider_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/path_provider_macos/macos
+  shared_preferences_macos:
+    :path: Flutter/ephemeral/.symlinks/plugins/shared_preferences_macos/macos
 
 SPEC CHECKSUMS:
   connectivity_macos: 9f30e9d0e67a0bc08a0c563ee82310b51ca6e818
@@ -60,6 +65,7 @@ SPEC CHECKSUMS:
   path_provider_macos: a0a3fd666cb7cd0448e936fb4abad4052961002b
   Protobuf: 176220c526ad8bd09ab1fb40a978eac3fef665f7
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
+  shared_preferences_macos: 480ce071d0666e37cef23fe6c702293a3d21799e
 
 PODFILE CHECKSUM: 0659e99c79e007301f7417784abc96ca77d79e7d
 

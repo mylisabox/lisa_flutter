@@ -48,7 +48,7 @@ class Dashboard extends HookWidget {
         RemoteColorPickerFactory(),
         RemoteIpCameraFactory(baseUrlProvider: () {
           final backend = BackendApiProvider();
-          final HostInterceptor interceptor = backend.interceptors.firstWhere((item) => item is HostInterceptor); //get host interceptor
+          final HostInterceptor interceptor = backend.api.dio.interceptors.firstWhere((item) => item is HostInterceptor); //get host interceptor
           final token = (backend.api.dio.interceptors.firstWhere((item) => item is ApiKeyAuthInterceptor) as ApiKeyAuthInterceptor)
               .apiKeys[kAuthKey]
               .replaceFirst('JWT ', '');

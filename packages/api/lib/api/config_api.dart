@@ -7,9 +7,9 @@
 
 import 'dart:async';
 import 'dart:convert';
-
-import 'package:built_value/serializer.dart';
 import 'package:dio/dio.dart';
+import 'package:built_value/serializer.dart';
+
 import 'package:lisa_server_sdk/model/is_initialized.dart';
 
 class ConfigApi {
@@ -18,10 +18,10 @@ class ConfigApi {
 
     ConfigApi(this._dio, this._serializers);
 
+    /// 
     ///
-    ///
-    ///
-    Future<Response<IsInitialized>> isInitialized({
+    /// 
+    Future<Response<IsInitialized>> isInitialized({ 
         CancelToken cancelToken,
         Map<String, dynamic> headers,
         Map<String, dynamic> extra,

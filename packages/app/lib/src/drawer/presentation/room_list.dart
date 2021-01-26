@@ -57,44 +57,51 @@ class RoomList extends HookWidget {
             AnimatedContainer(
               alignment: Alignment.topCenter,
               duration: Duration(milliseconds: min(drawerStore.roomNumber * 200, 400)),
-              height: drawerStore.isRoomListOpened ? drawerStore.roomNumber * DrawerEntry.height + 1 : .0,
+              height: drawerStore.isRoomListOpened ? drawerStore.roomNumber * _RoomIdle.height : .0,
               child: ClipRect(
                 child: OverflowBox(
-                  maxHeight: drawerStore.roomNumber * _RoomIdle.height + 2,
+                  maxHeight: drawerStore.roomNumber * _RoomIdle.height,
                   alignment: Alignment.topCenter,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       for (var room in drawerStore.rooms) ...[_RoomListEntry(room: room)],
-                      Padding(
-                        padding: const EdgeInsets.only(left: kNormalPadding),
-                        child: HookBuilder(
-                          builder: (context) {
-                            final controller = useTextEditingController();
+                      Container(
+                       // height: _RoomIdle.height,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: kNormalPadding),
+                          child: HookBuilder(
+                            builder: (context) {
+                              final controller = useTextEditingController();
 
-                            return Row(
-                              children: <Widget>[
-                                Expanded(
-                                  child: TextField(
-                                    controller: controller,
-                                    cursorColor: Theme.of(context).primaryColor,
-                                    decoration: InputDecoration(border: InputBorder.none, hintText: translations.menuAddRoom),
+                              return Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: TextField(
+                                      controller: controller,
+                                      cursorColor: Theme.of(context).primaryColor,
+                                      onSubmitted: (value) async {
+                                        await drawerStore.addRoom(controller.text);
+                                        controller.text = '';
+                                      },
+                                      decoration: InputDecoration(border: InputBorder.none, hintText: translations.menuAddRoom),
+                                    ),
                                   ),
-                                ),
-                                IconButton(
-                                  icon: Icon(
-                                    Icons.add,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                  onPressed: () async {
-                                    await drawerStore.addRoom(controller.text);
-                                    controller.text = '';
-                                  },
-                                  tooltip: translations.menuAddRoom,
-                                )
-                              ],
-                            );
-                          },
+                                  IconButton(
+                                    icon: Icon(
+                                      Icons.add,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                    onPressed: () async {
+                                      await drawerStore.addRoom(controller.text);
+                                      controller.text = '';
+                                    },
+                                    tooltip: translations.menuAddRoom,
+                                  )
+                                ],
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ],
@@ -239,7 +246,7 @@ class _RoomEdition extends HookWidget {
     final drawerStore = Provider.of<DrawerStore>(context);
     return Container(
       padding: EdgeInsets.only(left: kSmallPadding),
-      height: DrawerEntry.height,
+      height: _RoomIdle.height,
       child: Row(
         children: <Widget>[
           Expanded(

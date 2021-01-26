@@ -19,12 +19,15 @@ class _$RoomSerializer implements StructuredSerializer<Room> {
   Iterable<Object> serialize(Serializers serializers, Room object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
-      'id',
-      serializers.serialize(object.id, specifiedType: const FullType(int)),
       'name',
       serializers.serialize(object.name, specifiedType: const FullType(String)),
     ];
-
+    if (object.id != null) {
+      result
+        ..add('id')
+        ..add(serializers.serialize(object.id,
+            specifiedType: const FullType(int)));
+    }
     return result;
   }
 
@@ -64,9 +67,6 @@ class _$Room extends Room {
       (new RoomBuilder()..update(updates)).build();
 
   _$Room._({this.id, this.name}) : super._() {
-    if (id == null) {
-      throw new BuiltValueNullFieldError('Room', 'id');
-    }
     if (name == null) {
       throw new BuiltValueNullFieldError('Room', 'name');
     }

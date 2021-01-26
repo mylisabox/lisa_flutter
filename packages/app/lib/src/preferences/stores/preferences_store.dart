@@ -41,6 +41,6 @@ abstract class _PreferencesStore with Store {
     }
     externalBaseUrl = _prefs.getString(PreferencesProvider.keyExternalUrl);
     //clear current host to take the changes into consideration
-    (_apiProvider.interceptors.firstWhere((it) => it is HostInterceptor) as HostInterceptor).clearHost();
+    (_apiProvider.api.dio.interceptors.firstWhere((it) => it is HostInterceptor) as HostInterceptor).clearHost();
   }
 }

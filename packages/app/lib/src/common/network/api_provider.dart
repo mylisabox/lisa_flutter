@@ -143,11 +143,10 @@ List<Interceptor> getInterceptors({GlobalKey<NavigatorState> navigatorKey, UserS
 
 class BackendApiProvider {
   final LisaServerSdk api;
-  final List<Interceptor> interceptors;
 
   factory BackendApiProvider() => _singleton;
 
-  BackendApiProvider._(this.interceptors, String baseUrl) : api = LisaServerSdk(basePathOverride: baseUrl, interceptors: interceptors);
+  BackendApiProvider._(List<Interceptor> interceptors, String baseUrl) : api = LisaServerSdk(basePathOverride: baseUrl, interceptors: interceptors);
 
   void clearHost() {
     final HostInterceptor hostInterceptor = api.dio.interceptors.firstWhere((element) => element is HostInterceptor);

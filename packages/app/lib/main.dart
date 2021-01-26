@@ -36,33 +36,46 @@ void main() {
 void app(bool isWear) async {
   WidgetsFlutterBinding.ensureInitialized();
   await SentryFlutter.init(
-        (options) {
-      options.reportSilentFlutterErrors = true;
-      options.dsn = 'https://53c5686c50434e9884c1a763b984af58@sentry.io/1777712';
-    },
-  );
-
-  await PreferencesProvider().setup();
-  final navigatorKey = GlobalKey<NavigatorState>();
-  UserStore userStore;
-  BackendApiProvider.setup(navigatorKey, () => userStore, PreferencesProvider().prefs);
-  initLogger();
-  userStore = UserStore();
-  runApp(
-    TransmissionScope(
-      baseUrl: 'http://192.168.1.35:9091/transmission/rpc',
-      enableLog: !kIsProductionMode,
-      child: SickChillScope(
-        enableLogs: !kIsProductionMode,
-        baseUrl: 'http://192.168.1.35:8081',
-        apiKey: '6678ab0183ce51868e84c4b1738939cc',
-        child: MyApp(
-          navigatorKey: navigatorKey,
-          userStore: userStore,
-          router: Router(isWear: isWear),
-        ),
-      ),
-    ),
+          (SentryFlutterOptions options) {
+        options.reportSilentFlutterErrors = true;
+        options.dsn =
+        'https://53c5686c50434e9884c1a763b984af58@sentry.io/1777712';
+      },
+      appRunner: () async {
+        await PreferencesProvider().setup();
+        final navigatorKey = GlobalKey<NavigatorState>();
+        UserStore userStore;
+        BackendApiProvider.setup(
+            navigatorKey, () => userStore, PreferencesProvider().prefs);
+        initLogger();
+        userStore = UserStore();
+        if (kIsWeb) {
+          await userStore.init().catchError((_){});
+        }
+        runApp(
+          Observer(
+            builder: (context) =>
+                TransmissionScope(
+                  key: ValueKey('proxy_transmission_${userStore.proxyUrl}'),
+                  proxyUrl: userStore.proxyUrl + 'token=${userStore.currentToken}&url=',
+                  baseUrl: 'http://192.168.1.35:9091/transmission/rpc',
+                  enableLog: !kIsProductionMode,
+                  child: SickChillScope(
+                    key: ValueKey('proxy_sickchill_${userStore.proxyUrl}'),
+                    enableLogs: !kIsProductionMode,
+                    baseUrl: 'http://192.168.1.35:8081',
+                    proxyUrl: userStore.proxyUrl + 'token=${userStore.currentToken}&url=',
+                    apiKey: '6678ab0183ce51868e84c4b1738939cc',
+                    child: MyApp(
+                      navigatorKey: navigatorKey,
+                      userStore: userStore,
+                      router: Router(isWear: isWear),
+                    ),
+                  ),
+                ),
+          ),
+        );
+      }
   );
 }
 
@@ -95,7 +108,8 @@ class MyApp extends HookWidget {
           var locale;
 
           if (userStore.lang != null) {
-            locale = kSupportedLanguages.firstWhere((locale) => locale.languageCode == userStore.lang, orElse: () => null);
+            locale = kSupportedLanguages.firstWhere((locale) => locale
+                .languageCode == userStore.lang, orElse: () => null);
           }
 
           return MaterialApp(
@@ -111,20 +125,23 @@ class MyApp extends HookWidget {
             supportedLocales: kSupportedLanguages,
             theme: ThemeData(
               cupertinoOverrideTheme: CupertinoThemeData(
-                brightness: prefStore.isDarkTheme ? Brightness.dark : Brightness.light,
+                brightness: prefStore.isDarkTheme ? Brightness.dark : Brightness
+                    .light,
                 primaryColor: _primaryColor,
               ),
+              floatingActionButtonTheme: FloatingActionButtonThemeData(foregroundColor: Colors.white),
               buttonTheme: ButtonThemeData(
                 buttonColor: _primaryColor,
                 textTheme: ButtonTextTheme.normal,
               ),
               elevatedButtonTheme: ElevatedButtonThemeData(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(_primaryColor)
-                )
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(_primaryColor)
+                  )
               ),
               fontFamily: 'Raleway',
-              brightness: prefStore.isDarkTheme ? Brightness.dark : Brightness.light,
+              brightness: prefStore.isDarkTheme ? Brightness.dark : Brightness
+                  .light,
               primaryColorBrightness: Brightness.dark,
               accentColorBrightness: Brightness.dark,
               primaryColor: _primaryColor,
@@ -164,7 +181,8 @@ class MyHomePage extends HookWidget {
       value: store,
       child: ProxyScaffold(
         builderDrawer: (context) => AppDrawer(),
-        initialRoute: FavoritesWidget.route, //FIXME why it doesn't work?? check routes.dart userStore.lastRoute ?? FavoritesWidget.route,
+        initialRoute: FavoritesWidget
+            .route, //FIXME why it doesn't work?? check routes.dart userStore.lastRoute ?? FavoritesWidget.route,
       ),
     );
   }
