@@ -13,7 +13,7 @@ class CommonLocalizations {
   CommonLocalizations(this.locale);
 
   static Future<CommonLocalizations> load(Locale locale) {
-    final name = locale.countryCode == null || locale.countryCode.isEmpty ? locale.languageCode : locale.toString();
+    final name = locale.countryCode == null || locale.countryCode!.isEmpty ? locale.languageCode : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) async {
       Intl.defaultLocale = localeName;
@@ -22,7 +22,7 @@ class CommonLocalizations {
     });
   }
 
-  static CommonLocalizations of(BuildContext context) => Localizations.of<CommonLocalizations>(context, CommonLocalizations);
+  static CommonLocalizations of(BuildContext context) => Localizations.of<CommonLocalizations>(context, CommonLocalizations)!;
 
   String get appTitle => Intl.message('L.I.S.A.', name: 'appTitle', desc: 'Action bar title on main screen.');
 
@@ -229,7 +229,7 @@ class CommonLocalizations {
 }
 
 class CommonLocalizationsDelegate extends LocalizationsDelegate<CommonLocalizations> {
-  Locale locale;
+  Locale? locale;
 
   CommonLocalizationsDelegate();
 

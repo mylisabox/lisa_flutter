@@ -2,8 +2,7 @@ import 'dart:async';
 
 import 'package:lisa_flutter/src/common/errors.dart';
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
-import 'package:lisa_server_sdk/api/scene_api.dart';
-import 'package:lisa_server_sdk/model/scene.dart';
+import 'package:lisa_server_sdk/lisa_server_sdk.dart';
 import 'package:logging/logging.dart';
 import 'package:mobx/mobx.dart';
 
@@ -16,18 +15,18 @@ abstract class _ScenesStore with Store {
   final SceneApi _sceneApi;
 
   @observable
-  ObservableList<Scene> scenes;
+  ObservableList<Scene> scenes = ObservableList();
 
   @observable
-  ErrorResultException error;
+  ErrorResultException? error;
 
-  _ScenesStore({SceneApi sceneApi}) : _sceneApi = sceneApi ?? BackendApiProvider().api.getSceneApi();
+  _ScenesStore({SceneApi? sceneApi}) : _sceneApi = sceneApi ?? BackendApiProvider().api.getSceneApi();
 
   @action
   Future<void> loadScenes() async {
     try {
       error = null;
-      scenes = ObservableList.of((await _sceneApi.getScene().catchError(handleCaughtError)).data);
+      scenes = ObservableList.of((await _sceneApi.getScene().catchError(handleCaughtError)).data!);
     } on ErrorResultException catch (ex) {
       error = ex;
     }
@@ -35,7 +34,7 @@ abstract class _ScenesStore with Store {
 
   @action
   Future<void> deleteScenes(int index) async {
-    await _sceneApi.deleteScene(scenes[index].name).catchError(handleCaughtError);
+    await _sceneApi.deleteScene(scene: scenes[index].name).catchError(handleCaughtError);
     scenes.removeAt(index);
   }
 }

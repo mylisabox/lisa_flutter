@@ -4,7 +4,7 @@ class PreferencesProvider {
   static const keyExternalUrl = 'externalUrl';
   static const keyLastRoute = 'lastRoute';
   static const keyToken = 'token';
-  static PreferencesProvider _singleton;
+  static PreferencesProvider? _singleton;
 
   PreferencesProvider._();
 
@@ -12,7 +12,7 @@ class PreferencesProvider {
     return _singleton ??= PreferencesProvider._();
   }
 
-  SharedPreferences _prefs;
+  late SharedPreferences _prefs;
 
   SharedPreferences get prefs => _prefs;
 

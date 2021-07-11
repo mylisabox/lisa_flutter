@@ -9,10 +9,10 @@ All URIs are relative to *http://localhost:3000*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**addRoom**](RoomApi.md#addRoom) | **post** /api/v1/room | 
-[**deleteRoom**](RoomApi.md#deleteRoom) | **delete** /api/v1/room/{roomId} | 
-[**getRooms**](RoomApi.md#getRooms) | **get** /api/v1/room | 
-[**saveRoom**](RoomApi.md#saveRoom) | **put** /api/v1/room/{roomId} | 
+[**addRoom**](RoomApi.md#addroom) | **post** /api/v1/room | 
+[**deleteRoom**](RoomApi.md#deleteroom) | **delete** /api/v1/room/{roomId} | 
+[**getRooms**](RoomApi.md#getrooms) | **get** /api/v1/room | 
+[**saveRoom**](RoomApi.md#saveroom) | **put** /api/v1/room/{roomId} | 
 
 
 # **addRoom**

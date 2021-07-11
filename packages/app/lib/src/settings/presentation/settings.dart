@@ -37,7 +37,7 @@ class SettingsWidget extends HookWidget {
                 Divider(height: 1),
                 ListTile(
                   onTap: () async {
-                    Provider.of<GlobalKey<NavigatorState>>(context, listen: false).currentState.pushNamed(PluginsStoreWidget.route);
+                    Provider.of<GlobalKey<NavigatorState>>(context, listen: false).currentState?.pushNamed(PluginsStoreWidget.route);
                   },
                   leading: Icon(Icons.shop),
                   title: Text(translations.pluginShop),
@@ -57,7 +57,7 @@ Future<void> _showFilePickerDialog(BuildContext context) {
   final translations = CommonLocalizations.of(context);
   final store = Provider.of<SettingsStore>(context, listen: false);
   String name = '';
-  Uint8List data;
+  late Uint8List data;
   return showAppDialog(
       context,
       (_) => Text(translations.voiceCommandSetupTitle),

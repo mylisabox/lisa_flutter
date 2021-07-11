@@ -11,19 +11,19 @@ abstract class _PreferencesStore with Store {
   static const _keyDarkTheme = 'darkTheme';
   final SharedPreferences _prefs;
   final BackendApiProvider _apiProvider;
-  String externalBaseUrl;
+  late String externalBaseUrl;
 
   @observable
   bool isDarkTheme = false;
 
-  _PreferencesStore({SharedPreferences prefs, BackendApiProvider apiProvider})
+  _PreferencesStore({SharedPreferences? prefs, BackendApiProvider? apiProvider})
       : _prefs = prefs ?? PreferencesProvider().prefs,
         _apiProvider = apiProvider ?? BackendApiProvider();
 
   @action
   void init() {
     isDarkTheme = _prefs.getBool(_keyDarkTheme) ?? false;
-    externalBaseUrl = _prefs.getString(PreferencesProvider.keyExternalUrl);
+    externalBaseUrl = _prefs.getString(PreferencesProvider.keyExternalUrl) ?? '';
   }
 
   @action
@@ -34,12 +34,12 @@ abstract class _PreferencesStore with Store {
 
   @action
   Future setExternalUrl(String value) async {
-    if (value == null || value.isEmpty) {
+    if (value.isEmpty) {
       await _prefs.remove(PreferencesProvider.keyExternalUrl);
     } else {
       await _prefs.setString(PreferencesProvider.keyExternalUrl, value);
     }
-    externalBaseUrl = _prefs.getString(PreferencesProvider.keyExternalUrl);
+    externalBaseUrl = _prefs.getString(PreferencesProvider.keyExternalUrl) ?? '';
     //clear current host to take the changes into consideration
     (_apiProvider.api.dio.interceptors.firstWhere((it) => it is HostInterceptor) as HostInterceptor).clearHost();
   }

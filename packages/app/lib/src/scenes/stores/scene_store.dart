@@ -3,9 +3,7 @@ import 'dart:async';
 import 'package:built_collection/built_collection.dart';
 import 'package:lisa_flutter/src/common/errors.dart';
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
-import 'package:lisa_server_sdk/api/scene_api.dart';
-import 'package:lisa_server_sdk/model/scene.dart';
-import 'package:lisa_server_sdk/model/scene_data.dart';
+import 'package:lisa_server_sdk/lisa_server_sdk.dart';
 import 'package:logging/logging.dart';
 import 'package:mobx/mobx.dart';
 
@@ -18,7 +16,7 @@ enum SceneEntryType { sentence, response, command }
 abstract class _SceneStore with Store {
   final _log = Logger('SceneStore');
   final SceneApi _sceneApi;
-  Scene _scene;
+  Scene? _scene;
 
   @observable
   String name = '';
@@ -36,10 +34,10 @@ abstract class _SceneStore with Store {
   bool get canSave => commands.isNotEmpty && responses.isNotEmpty && sentences.isNotEmpty && name.isNotEmpty;
 
   @observable
-  ErrorResultException error;
+  ErrorResultException? error;
 
   _SceneStore({
-    SceneApi sceneApi,
+    SceneApi? sceneApi,
   }) : _sceneApi = sceneApi ?? BackendApiProvider().api.getSceneApi();
 
   @action
@@ -86,7 +84,7 @@ abstract class _SceneStore with Store {
   }
 
   @action
-  void setScene(Scene scene) {
+  void setScene(Scene? scene) {
     _scene = scene;
     if (scene != null) {
       name = scene.displayName;
@@ -102,14 +100,13 @@ abstract class _SceneStore with Store {
       error = null;
       await _sceneApi
           .saveScene(
-            (SceneBuilder()
+            scene: (SceneBuilder()
                   ..name = _scene?.name
                   ..displayName = name
                   ..data = (SceneDataBuilder()
-                        ..commands = ListBuilder(commands)
-                        ..responses = ListBuilder(responses)
-                        ..sentences = ListBuilder(sentences))
-                      )
+                    ..commands = ListBuilder(commands)
+                    ..responses = ListBuilder(responses)
+                    ..sentences = ListBuilder(sentences)))
                 .build(),
           )
           .catchError(handleCaughtError);

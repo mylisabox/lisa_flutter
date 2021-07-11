@@ -1,5 +1,6 @@
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html';
+import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -8,15 +9,15 @@ import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/presentation/file_fields/file_field.dart';
 
 FileField createFileField({
-  Key key,
-  @required OnFileSelected onFileSelected,
+  Key? key,
+  required OnFileSelected onFileSelected,
 }) =>
     FileFieldWeb(key: key, onFileSelected: onFileSelected);
 
 class FileFieldWeb extends FileField {
   FileFieldWeb({
-    Key key,
-    @required OnFileSelected onFileSelected,
+    Key? key,
+    required OnFileSelected onFileSelected,
   }) : super(key: key, onFileSelected: onFileSelected);
 
   @override
@@ -32,11 +33,11 @@ class FileFieldWeb extends FileField {
 
     useEffect(() {
       uploadElement.onChange.listen((e) {
-        File file = (e.target as dynamic).files[0];
+        File? file = (e.target as dynamic).files[0];
         if (file != null) {
           final reader = FileReader();
           reader.onLoad.listen((e) {
-            onFileSelected(reader.result, file.name);
+            onFileSelected(reader.result as Uint8List, file.name);
           });
           reader.onError.listen((e) {
             print(e);

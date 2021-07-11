@@ -24,7 +24,7 @@ class AddDeviceSettingsStep extends HookWidget {
           TextField(
             controller: controller,
             onChanged: (value) {
-              store.formUpdate('name', value, formValidatorKey.currentState.isFormValid());
+              store.formUpdate('name', value, formValidatorKey.currentState!.isFormValid());
             },
             onSubmitted: (_) {
               FocusScope.of(context).nextFocus();
@@ -36,8 +36,8 @@ class AddDeviceSettingsStep extends HookWidget {
             data: store.formData,
             onChanges: (key, value, {associatedData}) {
               //delay form validation check on next frame to let the last change propagate, or we will have one step late on validation
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                store.formUpdate(key, value, formValidatorKey.currentState.isFormValid());
+              WidgetsBinding.instance?.addPostFrameCallback((_) {
+                store.formUpdate(key, value, formValidatorKey.currentState!.isFormValid());
               });
             },
             onSubmit: (formData, {associatedData}) {
@@ -64,7 +64,7 @@ class AddDeviceListStep extends StatelessWidget {
         final singleChoice = store.currentCustomStep['singleChoice'] ?? false;
         final selectedItems = store.currentCustomData[step]; // List of items or selected item if singleChoice
 
-        if (items == null || items.length == 0) {
+        if (items.length == 0) {
           return Center(child: Text(translations.emptyList));
         }
 
@@ -74,7 +74,7 @@ class AddDeviceListStep extends StatelessWidget {
               CheckboxListTile(
                 value: store.allDevicesSelected,
                 onChanged: (selected) {
-                  store.selectAllDevices(selected);
+                  store.selectAllDevices(selected!);
                 },
                 title: Text(translations.selectAll),
               ),
@@ -97,7 +97,7 @@ class AddDeviceListStep extends StatelessWidget {
                   return CheckboxListTile(
                     value: selectedItems?.firstWhere((selectedItem) => item['id'] == selectedItem['id'], orElse: () => null) != null,
                     onChanged: (selected) {
-                      store.selectDevice(item, selected: selected);
+                      store.selectDevice(item, selected: selected!);
                     },
                     title: Text(item['name']),
                   );

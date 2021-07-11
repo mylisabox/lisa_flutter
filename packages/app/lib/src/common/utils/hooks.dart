@@ -1,7 +1,7 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:mobx/mobx.dart';
 
-dynamic useDisposable(dynamic Function() valueBuilder, [List<Object> keys = const <dynamic>[]]) {
+dynamic useDisposable(dynamic Function() valueBuilder, [List<Object> keys = const <Object>[]]) {
   final disposable = useMemoized(valueBuilder, keys);
   useEffect(() => disposable.dispose, [disposable]);
   return disposable;

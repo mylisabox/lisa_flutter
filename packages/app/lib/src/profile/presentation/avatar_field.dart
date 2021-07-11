@@ -9,7 +9,7 @@ typedef OnFileSelected = void Function(Uint8List data, String name);
 abstract class AvatarField extends HookWidget {
   final OnFileSelected onFileSelected;
 
-  factory AvatarField.create({Key key, @required OnFileSelected onFileSelected}) => createAvatarField(key: key, onFileSelected: onFileSelected);
+  factory AvatarField.create({Key? key, required OnFileSelected onFileSelected}) => createAvatarField(key: key, onFileSelected: onFileSelected);
 
-  AvatarField({Key key, @required this.onFileSelected}) : super(key: key);
+  AvatarField({Key? key, required this.onFileSelected}) : super(key: key);
 }

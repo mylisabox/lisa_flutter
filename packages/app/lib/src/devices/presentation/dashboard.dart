@@ -14,8 +14,7 @@ import 'package:lisa_flutter/src/common/presentation/refresh_no_scroll_content.d
 import 'package:lisa_flutter/src/common/utils/base_url_provider.dart';
 import 'package:lisa_flutter/src/devices/stores/device_store.dart';
 import 'package:lisa_flutter/src/rooms/presentation/room_selector.dart';
-import 'package:lisa_server_sdk/auth/api_key_auth.dart';
-import 'package:lisa_server_sdk/model/device.dart';
+import 'package:lisa_server_sdk/lisa_server_sdk.dart';
 import 'package:provider/provider.dart';
 import 'package:remote_color_picker/remote_color_picker.dart';
 import 'package:remote_image_button/remote_image_button.dart';
@@ -26,9 +25,9 @@ class Dashboard extends HookWidget {
   static const _widgetWidthSize = 300.0; //min size in DPI for a widget
   static const _widgetWidthUnit = 8; // width unit in grid for a widget 1 = 8
   static const _widgetHeightUnit = 5; // height unit in grid for a widget 1 = 4
-  final int roomId;
+  final int? roomId;
 
-  const Dashboard({Key key, this.roomId}) : super(key: key);
+  const Dashboard({Key? key, this.roomId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,11 +47,11 @@ class Dashboard extends HookWidget {
         RemoteColorPickerFactory(),
         RemoteIpCameraFactory(baseUrlProvider: () {
           final backend = BackendApiProvider();
-          final HostInterceptor interceptor = backend.api.dio.interceptors.firstWhere((item) => item is HostInterceptor); //get host interceptor
+          final interceptor = backend.api.dio.interceptors.firstWhere((item) => item is HostInterceptor); //get host interceptor
           final token = (backend.api.dio.interceptors.firstWhere((item) => item is ApiKeyAuthInterceptor) as ApiKeyAuthInterceptor)
-              .apiKeys[kAuthKey]
+              .apiKeys[kAuthKey]!
               .replaceFirst('JWT ', '');
-          return interceptor.host + '/api/v1/camera/stream?token=$token&url=';
+          return (interceptor as HostInterceptor).host! + '/api/v1/camera/stream?token=$token&url=';
         }),
         RemoteImageButtonFactory(baseUrlProvider: () => BaseUrlProvider.getBaseUrl())
       ],
@@ -69,7 +68,7 @@ class Dashboard extends HookWidget {
                   return RefreshIndicatorContent(
                     child: Center(
                       child: Text(
-                        store.error.cause.twoLiner(context),
+                        store.error!.cause.twoLiner(context),
                         style: TextStyle(color: Theme.of(context).errorColor),
                         textAlign: TextAlign.center,
                       ),
@@ -91,9 +90,9 @@ class Dashboard extends HookWidget {
                     itemCount: store.devices.length,
                     staggeredTileBuilder: (int index) {
                       final device = store.devices[index];
-                      final num width = device?.template['widgetWidth']?.asNum ?? 1;
-                      final num height = device?.template['widgetHeight']?.asNum ?? 1;
-                      return StaggeredTile.count(width * _widgetWidthUnit, height.toDouble() * _widgetHeightUnit);
+                      final num width = device.template['widgetWidth']?.asNum ?? 1;
+                      final num height = device.template['widgetHeight']?.asNum ?? 1;
+                      return StaggeredTile.count((width * _widgetWidthUnit).toInt(), height.toDouble() * _widgetHeightUnit);
                     },
                     mainAxisSpacing: kSmallPadding,
                     crossAxisSpacing: kSmallPadding,
@@ -122,7 +121,7 @@ class Dashboard extends HookWidget {
 class _DashboardWidget extends HookWidget {
   final Device device;
 
-  const _DashboardWidget({Key key, this.device}) : super(key: key);
+  const _DashboardWidget({Key? key, required this.device}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -160,7 +159,7 @@ class _DashboardWidget extends HookWidget {
 class _DeviceIdle extends StatelessWidget {
   final Device device;
 
-  const _DeviceIdle({Key key, this.device}) : super(key: key);
+  const _DeviceIdle({Key? key, required this.device}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -183,7 +182,7 @@ class _DeviceIdle extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(kSmallPadding),
                     child: Icon(
-                      device.favorite ?? false ? Icons.star : Icons.star_border,
+                      device.favorite ? Icons.star : Icons.star_border,
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
@@ -247,10 +246,10 @@ class _DeviceIdle extends StatelessWidget {
               padding: const EdgeInsets.all(kSmallPadding),
               child: RemoteWidget(
                 associatedData: device,
-                definition: device.template?.toMap()?.map((key, value) {
+                definition: device.template.toMap().map((key, value) {
                   return MapEntry(key, toPrimitive(value));
                 }),
-                data: device.data?.toMap()?.map((key, value) {
+                data: device.data == null ? {} : device.data!.toMap().map((key, value) {
                   return MapEntry(key, toPrimitive(value));
                 }),
               ),
@@ -281,7 +280,7 @@ dynamic toPrimitive(JsonObject value) {
 class _DeviceEdition extends HookWidget {
   final Device device;
 
-  const _DeviceEdition({Key key, this.device}) : super(key: key);
+  const _DeviceEdition({Key? key, required this.device}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -328,7 +327,7 @@ class _DeviceEdition extends HookWidget {
                           isExpanded: true,
                           selected: selectedRoom.value,
                           onRoomSelected: (room) {
-                            selectedRoom.value = room.id;
+                            selectedRoom.value = room.id!;
                           },
                         ),
                         ElevatedButton(

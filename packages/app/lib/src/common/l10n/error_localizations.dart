@@ -12,14 +12,14 @@ class ErrorLocalizations {
   ErrorLocalizations(this.locale);
 
   static Future<ErrorLocalizations> load(Locale locale) {
-    final name = locale.countryCode == null || locale.countryCode.isEmpty ? locale.languageCode : locale.toString();
+    final name = locale.countryCode == null || locale.countryCode!.isEmpty ? locale.languageCode : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       return ErrorLocalizations(locale);
     });
   }
 
-  static ErrorLocalizations of(BuildContext context) => Localizations.of<ErrorLocalizations>(context, ErrorLocalizations);
+  static ErrorLocalizations of(BuildContext context) => Localizations.of<ErrorLocalizations>(context, ErrorLocalizations)!;
 
   String get dialogErrorTitle => Intl.message('Oops!', name: 'dialogErrorTitle', desc: 'The title of a dialog where something went wrong');
 
@@ -41,7 +41,7 @@ class ErrorLocalizations {
 }
 
 class ErrorLocalizationsDelegate extends LocalizationsDelegate<ErrorLocalizations> {
-  Locale locale;
+  late Locale locale;
   ErrorLocalizationsDelegate();
 
   @override

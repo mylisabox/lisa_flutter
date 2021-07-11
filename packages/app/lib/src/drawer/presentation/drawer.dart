@@ -38,7 +38,7 @@ class AppDrawer extends StatelessWidget {
                   icon: Icons.star_border,
                   onTap: () {
                     if (drawerStore.currentSelectedRoute != FavoritesWidget.route) {
-                      Provider.of<GlobalKey<NavigatorState>>(context, listen: false).currentState.pushNamed(FavoritesWidget.route);
+                      Provider.of<GlobalKey<NavigatorState>>(context, listen: false).currentState?.pushNamed(FavoritesWidget.route);
                       _closeDrawer(context);
                       drawerStore.selectRoute(FavoritesWidget.route);
                     }
@@ -52,7 +52,7 @@ class AppDrawer extends StatelessWidget {
                   icon: Icons.device_hub,
                   onTap: () {
                     if (drawerStore.currentSelectedRoute != OrphansWidget.route) {
-                      Provider.of<GlobalKey<NavigatorState>>(context, listen: false).currentState.pushNamed(OrphansWidget.route);
+                      Provider.of<GlobalKey<NavigatorState>>(context, listen: false).currentState?.pushNamed(OrphansWidget.route);
                       _closeDrawer(context);
                       drawerStore.selectRoute(OrphansWidget.route);
                     }
@@ -64,7 +64,7 @@ class AppDrawer extends StatelessWidget {
                   icon: Icons.perm_media,
                   onTap: () {
                     if (drawerStore.currentSelectedRoute != MultimediaWidget.route) {
-                      Provider.of<GlobalKey<NavigatorState>>(context, listen: false).currentState.pushNamed(MultimediaWidget.route);
+                      Provider.of<GlobalKey<NavigatorState>>(context, listen: false).currentState?.pushNamed(MultimediaWidget.route);
                       _closeDrawer(context);
                       drawerStore.selectRoute(MultimediaWidget.route);
                     }
@@ -76,7 +76,7 @@ class AppDrawer extends StatelessWidget {
                   icon: Icons.filter_frames,
                   onTap: () {
                     if (drawerStore.currentSelectedRoute != ScenesWidget.route) {
-                      Provider.of<GlobalKey<NavigatorState>>(context, listen: false).currentState.pushNamed(ScenesWidget.route);
+                      Provider.of<GlobalKey<NavigatorState>>(context, listen: false).currentState?.pushNamed(ScenesWidget.route);
                       _closeDrawer(context);
                       drawerStore.selectRoute(ScenesWidget.route);
                     }
@@ -88,7 +88,7 @@ class AppDrawer extends StatelessWidget {
                   icon: Icons.assignment,
                   onTap: () {
                     if (drawerStore.currentSelectedRoute != PreferencesWidget.route) {
-                      Provider.of<GlobalKey<NavigatorState>>(context, listen: false).currentState.pushNamed(PreferencesWidget.route);
+                      Provider.of<GlobalKey<NavigatorState>>(context, listen: false).currentState?.pushNamed(PreferencesWidget.route);
                       _closeDrawer(context);
                       drawerStore.selectRoute(PreferencesWidget.route);
                     }
@@ -100,7 +100,7 @@ class AppDrawer extends StatelessWidget {
                   icon: Icons.settings,
                   onTap: () {
                     if (drawerStore.currentSelectedRoute != SettingsWidget.route) {
-                      Provider.of<GlobalKey<NavigatorState>>(context, listen: false).currentState.pushNamed(SettingsWidget.route);
+                      Provider.of<GlobalKey<NavigatorState>>(context, listen: false).currentState?.pushNamed(SettingsWidget.route);
                       _closeDrawer(context);
                       drawerStore.selectRoute(SettingsWidget.route);
                     }
@@ -159,10 +159,10 @@ class DrawerEntry extends StatelessWidget {
   static const height = 60.0;
   final String text;
   final IconData icon;
-  final VoidCallback onTap;
-  final Widget trailing;
+  final VoidCallback? onTap;
+  final Widget? trailing;
 
-  const DrawerEntry({Key key, this.icon, this.text, this.onTap, this.trailing}) : super(key: key);
+  const DrawerEntry({Key? key, required this.icon, required this.text, this.onTap, this.trailing}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -187,7 +187,7 @@ class DrawerEntry extends StatelessWidget {
                   style: TextStyle(color: Theme.of(context).primaryColor),
                 ),
               ),
-              if (trailing != null) trailing
+              if (trailing != null) trailing!
             ],
           ),
         ),

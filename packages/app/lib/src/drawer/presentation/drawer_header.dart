@@ -31,7 +31,7 @@ class AppDrawerHeader extends StatelessWidget {
                 children: <Widget>[
                   CircleAvatar(
                     radius: 30,
-                    backgroundImage: userStore.avatar == null ? ExactAssetImage('assets/images/lisa.png') : NetworkImage(userStore.avatar),
+                    backgroundImage: (userStore.avatar == null ? ExactAssetImage('assets/images/lisa.png') : NetworkImage(userStore.avatar!)) as ImageProvider,
                     child: Material(
                       type: MaterialType.circle,
                       clipBehavior: Clip.hardEdge,

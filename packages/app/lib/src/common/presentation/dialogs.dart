@@ -8,12 +8,12 @@ import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 typedef DialogCallback = Function(BuildContext context);
 
 class DialogAction {
-  final DialogCallback callback;
+  final DialogCallback? callback;
   final String text;
   final bool isDefaultAction;
   final bool isDestructiveAction;
 
-  DialogAction({@required this.callback, @required this.text, this.isDefaultAction = false, this.isDestructiveAction = false});
+  DialogAction({required this.callback, required this.text, this.isDefaultAction = false, this.isDestructiveAction = false});
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is DialogAction && runtimeType == other.runtimeType && text == other.text;
@@ -22,8 +22,8 @@ class DialogAction {
   int get hashCode => text.hashCode;
 }
 
-Future<bool> showConfirm(BuildContext context, String title, String content, {bool barrierDismissible = true, bool isDestructive = false}) {
-  return showAppDialog(context, (_) => Text(title), (_) => Text(content), barrierDismissible: barrierDismissible, actions: [
+Future<bool> showConfirm(BuildContext context, String title, String content, {bool barrierDismissible = true, bool isDestructive = false}) async {
+  return (await showAppDialog(context, (_) => Text(title), (_) => Text(content), barrierDismissible: barrierDismissible, actions: [
     DialogAction(
       text: MaterialLocalizations.of(context).cancelButtonLabel,
       callback: (context) {
@@ -38,10 +38,10 @@ Future<bool> showConfirm(BuildContext context, String title, String content, {bo
         Navigator.of(context).pop(true);
       },
     ),
-  ]);
+  ]) ?? false);
 }
 
-Future<String> showPrompt<T>(BuildContext context, String title, {TextEditingController controller, String initialValue, bool barrierDismissible = true, String hint}) {
+Future<String?> showPrompt<T>(BuildContext context, String title, {TextEditingController? controller, String? initialValue, bool barrierDismissible = true, String? hint}) {
   controller ??= TextEditingController(text: initialValue ?? '');
   return showAppDialog(
       context,
@@ -50,7 +50,7 @@ Future<String> showPrompt<T>(BuildContext context, String title, {TextEditingCon
           color: Colors.transparent,
           child: HookBuilder(
             builder: (context) {
-              final fieldController = useMemoized(() => controller, [controller]);
+              final fieldController = useMemoized(() => controller!, [controller]);
 
               useEffect(() {
                 return fieldController.dispose;
@@ -60,7 +60,7 @@ Future<String> showPrompt<T>(BuildContext context, String title, {TextEditingCon
                 autofocus: true,
                 controller: fieldController,
                 onSubmitted: (_) {
-                  Navigator.of(context).pop(controller.text);
+                  Navigator.of(context).pop(fieldController.text);
                 },
                 decoration: InputDecoration(
                   filled: true,
@@ -82,7 +82,7 @@ Future<String> showPrompt<T>(BuildContext context, String title, {TextEditingCon
           isDefaultAction: true,
           text: MaterialLocalizations.of(context).okButtonLabel,
           callback: (context) {
-            Navigator.of(context).pop(controller.text);
+            Navigator.of(context).pop(controller!.text);
           },
         ),
       ]);
@@ -124,16 +124,16 @@ Color _getColorForAction(BuildContext context, DialogAction action) {
   return Theme.of(context).primaryColor;
 }
 
-Future<T> showSelectDialog<T>(BuildContext context, WidgetBuilder title, List<T> data, IndexedWidgetBuilder itemBuilder,
+Future<T?> showSelectDialog<T>(BuildContext context, WidgetBuilder title, List<T> data, IndexedWidgetBuilder itemBuilder,
     {bool barrierDismissible = true, itemExtent = 35.0}) {
   if (defaultTargetPlatform == TargetPlatform.iOS) {
-    final Future<T> Function({BuildContext context, WidgetBuilder builder}) showCupertino = barrierDismissible ? showCupertinoModalPopup : showCupertinoDialog;
-    return showCupertino(
+    return showCupertinoModalPopup<T>(
         context: context,
+        barrierDismissible: barrierDismissible,
         builder: (context) {
           return HookBuilder(
             builder: (context) {
-              final selectedData = useState<T>(null);
+              final selectedData = useState<T?>(null);
               return Column(
                 children: <Widget>[
                   Spacer(),
@@ -204,7 +204,7 @@ Widget getAppDialog(BuildContext context, WidgetBuilder title, WidgetBuilder con
                   action.text,
                   style: TextStyle(color: _getColorForAction(context, action)),
                 ),
-                onPressed: action.callback == null ? null : () => action.callback(context),
+                onPressed: action.callback == null ? null : () => action.callback!(context),
                 isDestructiveAction: action.isDestructiveAction,
                 isDefaultAction: action.isDefaultAction,
               ))
@@ -220,18 +220,18 @@ Widget getAppDialog(BuildContext context, WidgetBuilder title, WidgetBuilder con
                   action.text,
                   style: TextStyle(color: _getColorForAction(context, action)),
                 ),
-                onPressed: action.callback == null ? null : () => action.callback(context),
+                onPressed: action.callback == null ? null : () => action.callback!(context),
               ))
           .toList(growable: false),
     );
   }
 }
 
-Future<T> showPlatformDialog<T>(BuildContext context, WidgetBuilder builder, {bool barrierDismissible = true}) {
+Future<T?> showPlatformDialog<T>(BuildContext context, WidgetBuilder builder, {bool barrierDismissible = true}) {
   if (defaultTargetPlatform == TargetPlatform.iOS) {
-    final Future<T> Function({BuildContext context, WidgetBuilder builder}) showCupertino = barrierDismissible ? showCupertinoDialog : showCupertinoModalPopup;
-    return showCupertino(
+    return showCupertinoModalPopup<T>(
       context: context,
+      barrierDismissible: barrierDismissible,
       builder: (context) {
         return builder(context);
       },
@@ -246,12 +246,12 @@ Future<T> showPlatformDialog<T>(BuildContext context, WidgetBuilder builder, {bo
       barrierDismissible: barrierDismissible);
 }
 
-Future<T> showAppDialog<T>(BuildContext context, WidgetBuilder title, WidgetBuilder content,
+Future<T?> showAppDialog<T>(BuildContext context, WidgetBuilder title, WidgetBuilder content,
     {bool barrierDismissible = true, List<DialogAction> actions = const []}) {
   if (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.macOS) {
-    final Future<T> Function({BuildContext context, WidgetBuilder builder}) showCupertino = barrierDismissible ? showCupertinoDialog : showCupertinoModalPopup;
-    return showCupertino(
+    return showCupertinoModalPopup<T>(
       context: context,
+      barrierDismissible: barrierDismissible,
       builder: (context) {
         return getAppDialog(context, title, content, actions: actions);
       },
@@ -270,10 +270,10 @@ Future<bool> showLoadingDialog(
   BuildContext mainContext,
   WidgetBuilder title,
   Future Function() until, {
-  void Function(dynamic error, dynamic stack) onError,
+  void Function(dynamic error, dynamic stack)? onError,
   bool barrierDismissible = false,
-}) {
-  return showAppDialog<bool>(
+}) async {
+  return (await showAppDialog<bool>(
       mainContext,
       title,
       (dialogContext) => IntrinsicHeight(
@@ -282,11 +282,11 @@ Future<bool> showLoadingDialog(
                 builder: (context) {
                   useEffect(() {
                     until().then((_) {
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                      WidgetsBinding.instance?.addPostFrameCallback((_) {
                         Navigator.of(dialogContext).pop(true);
                       });
                     }).catchError((err, stack) {
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                      WidgetsBinding.instance?.addPostFrameCallback((_) {
                         Navigator.of(dialogContext).pop(false);
                         if (onError == null) {
                           showErrorDialog(mainContext, err, stack);
@@ -303,19 +303,19 @@ Future<bool> showLoadingDialog(
               ),
             ),
           ),
-      barrierDismissible: barrierDismissible);
+      barrierDismissible: barrierDismissible) ?? false);
 }
 
-Future showErrorDialog(context, error, stack, {WidgetBuilder title, WidgetBuilder content}) {
+Future showErrorDialog(context, error, stack, {WidgetBuilder? title, WidgetBuilder? content}) {
   return showAppDialog(
       context,
-      title == null ? (_) => Text(CommonLocalizations.of(context).dialogErrorTitle) : title(context),
-      content == null
+      (title == null ? (_) => Text(CommonLocalizations.of(context).dialogErrorTitle) : title(context) as WidgetBuilder),
+      (content == null
           ? (context) => Text(
                 handleError(error, stack).cause.twoLiner(context),
                 style: TextStyle(color: Colors.red),
               )
-          : content(context),
+          : content(context) as WidgetBuilder),
       actions: [
         DialogAction(
             text: MaterialLocalizations.of(context).okButtonLabel,

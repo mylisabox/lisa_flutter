@@ -2,7 +2,7 @@ PODS:
   - connectivity_macos (0.0.1):
     - FlutterMacOS
     - Reachability
-  - file_chooser (0.0.2):
+  - file_selector_macos (0.0.1):
     - FlutterMacOS
   - flutter_blue (0.0.1):
     - flutter_blue/Protos (= 0.0.1)
@@ -13,58 +13,71 @@ PODS:
   - flutter_speech (0.0.1):
     - FlutterMacOS
   - FlutterMacOS (1.0.0)
-  - package_info (0.0.1):
+  - package_info_plus_macos (0.0.1):
     - FlutterMacOS
   - path_provider_macos (0.0.1):
     - FlutterMacOS
   - Protobuf (3.11.4)
   - Reachability (3.2)
+  - Sentry (7.1.3):
+    - Sentry/Core (= 7.1.3)
+  - Sentry/Core (7.1.3)
+  - sentry_flutter (0.0.1):
+    - Flutter
+    - FlutterMacOS
+    - Sentry (~> 7.1.3)
   - shared_preferences_macos (0.0.1):
     - FlutterMacOS
 
 DEPENDENCIES:
   - connectivity_macos (from `Flutter/ephemeral/.symlinks/plugins/connectivity_macos/macos`)
-  - file_chooser (from `Flutter/ephemeral/.symlinks/plugins/file_chooser/macos`)
+  - file_selector_macos (from `Flutter/ephemeral/.symlinks/plugins/file_selector_macos/macos`)
   - flutter_blue (from `Flutter/ephemeral/.symlinks/plugins/flutter_blue/macos`)
   - flutter_speech (from `Flutter/ephemeral/.symlinks/plugins/flutter_speech/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
-  - package_info (from `Flutter/ephemeral/.symlinks/plugins/package_info/macos`)
+  - package_info_plus_macos (from `Flutter/ephemeral/.symlinks/plugins/package_info_plus_macos/macos`)
   - path_provider_macos (from `Flutter/ephemeral/.symlinks/plugins/path_provider_macos/macos`)
+  - sentry_flutter (from `Flutter/ephemeral/.symlinks/plugins/sentry_flutter/macos`)
   - shared_preferences_macos (from `Flutter/ephemeral/.symlinks/plugins/shared_preferences_macos/macos`)
 
 SPEC REPOS:
   trunk:
     - Protobuf
     - Reachability
+    - Sentry
 
 EXTERNAL SOURCES:
   connectivity_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/connectivity_macos/macos
-  file_chooser:
-    :path: Flutter/ephemeral/.symlinks/plugins/file_chooser/macos
+  file_selector_macos:
+    :path: Flutter/ephemeral/.symlinks/plugins/file_selector_macos/macos
   flutter_blue:
     :path: Flutter/ephemeral/.symlinks/plugins/flutter_blue/macos
   flutter_speech:
     :path: Flutter/ephemeral/.symlinks/plugins/flutter_speech/macos
   FlutterMacOS:
     :path: Flutter/ephemeral
-  package_info:
-    :path: Flutter/ephemeral/.symlinks/plugins/package_info/macos
+  package_info_plus_macos:
+    :path: Flutter/ephemeral/.symlinks/plugins/package_info_plus_macos/macos
   path_provider_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/path_provider_macos/macos
+  sentry_flutter:
+    :path: Flutter/ephemeral/.symlinks/plugins/sentry_flutter/macos
   shared_preferences_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/shared_preferences_macos/macos
 
 SPEC CHECKSUMS:
   connectivity_macos: 9f30e9d0e67a0bc08a0c563ee82310b51ca6e818
-  file_chooser: 24432cf5dc836722b05c11c2a0a30d19c3c9b996
+  file_selector_macos: ff6dc948d4ddd34e8602a1f60b7d0b4cc6051a47
   flutter_blue: 2756506bb10a51e075832da287b48bf5377bdc28
   flutter_speech: 5ef621aa91ebefe17ec7a585b3e2032c230b275f
   FlutterMacOS: 57701585bf7de1b3fc2bb61f6378d73bbdea8424
-  package_info: 6eba2fd8d3371dda2d85c8db6fe97488f24b74b2
+  package_info_plus_macos: f010621b07802a241d96d01876d6705f15e77c1c
   path_provider_macos: a0a3fd666cb7cd0448e936fb4abad4052961002b
   Protobuf: 176220c526ad8bd09ab1fb40a978eac3fef665f7
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
+  Sentry: 6d963d64804dd06d96e778be729613f481394312
+  sentry_flutter: f20d4f199442900fbdab2b8496f1d2091d8b94d9
   shared_preferences_macos: 480ce071d0666e37cef23fe6c702293a3d21799e
 
 PODFILE CHECKSUM: 0659e99c79e007301f7417784abc96ca77d79e7d

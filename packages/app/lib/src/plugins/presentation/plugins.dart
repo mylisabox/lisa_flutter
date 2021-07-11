@@ -23,7 +23,7 @@ class PluginsStoreWidget extends HookWidget {
       color: Theme.of(context).scaffoldBackgroundColor,
       child: Observer(
         builder: (context) {
-          if (store.plugins == null || store.plugins.status == FutureStatus.pending) {
+          if (store.plugins.status == FutureStatus.pending) {
             return Center(child: CircularProgressIndicator());
           }
           if (store.plugins.status == FutureStatus.rejected) {
@@ -35,7 +35,7 @@ class PluginsStoreWidget extends HookWidget {
               childAspectRatio: 0.8,
             ),
             itemBuilder: (context, index) {
-              final plugin = store.plugins.value[index];
+              final plugin = store.plugins.value![index];
               return Card(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8.0, right: 8.0, left: 8.0),
@@ -101,7 +101,7 @@ class PluginsStoreWidget extends HookWidget {
               );
             },
             padding: EdgeInsets.all(16),
-            itemCount: store.plugins.value.length,
+            itemCount: store.plugins.value!.length,
           );
         },
       ),

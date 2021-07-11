@@ -7,12 +7,12 @@ import 'package:lisa_flutter/src/common/presentation/refresh_no_scroll_content.d
 import 'package:lisa_flutter/src/common/utils/page_route_builders.dart';
 import 'package:lisa_flutter/src/scenes/presentation/scene.dart';
 import 'package:lisa_flutter/src/scenes/stores/scenes_store.dart';
-import 'package:lisa_server_sdk/model/scene.dart';
+import 'package:lisa_server_sdk/lisa_server_sdk.dart';
 
 class ScenesWidget extends HookWidget {
   static const route = '/scenes';
 
-  void editScene(BuildContext context, Scene scene, GlobalKey<RefreshIndicatorState> refreshKey) async {
+  void editScene(BuildContext context, Scene? scene, GlobalKey<RefreshIndicatorState> refreshKey) async {
     final needRefresh = await Navigator.of(context, rootNavigator: true).push(
       FromBottomPageRoute(
         builder: (context) => SceneWidget(scene: scene),
@@ -22,7 +22,7 @@ class ScenesWidget extends HookWidget {
         false;
 
     if (needRefresh) {
-      refreshKey.currentState.show();
+      refreshKey.currentState!.show();
     }
   }
 
@@ -50,7 +50,7 @@ class ScenesWidget extends HookWidget {
               return RefreshIndicatorContent(
                 child: Center(
                   child: Text(
-                    store.error.cause.twoLiner(context),
+                    store.error!.cause.twoLiner(context),
                     style: TextStyle(color: Theme.of(context).errorColor),
                     textAlign: TextAlign.center,
                   ),
@@ -78,7 +78,7 @@ class ScenesWidget extends HookWidget {
                     for (var i = 0; i < store.scenes.length; i++)
                       DataRow(
                         onSelectChanged: (selected) {
-                          if (selected) {
+                          if (selected!) {
                             editScene(context, store.scenes[i], refreshKey);
                           }
                         },

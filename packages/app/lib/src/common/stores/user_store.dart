@@ -5,8 +5,7 @@ import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
 import 'package:lisa_flutter/src/common/utils/base_url_provider.dart';
 import 'package:lisa_flutter/src/preferences/preferences_provider.dart';
-import 'package:lisa_server_sdk/api.dart';
-import 'package:lisa_server_sdk/model/user.dart';
+import 'package:lisa_server_sdk/lisa_server_sdk.dart';
 import 'package:mobx/mobx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -19,35 +18,35 @@ abstract class _UserStore with Store, BaseUrlProvider {
   final LisaServerSdk _api;
 
   _UserStore({
-    LisaServerSdk api,
-    SharedPreferences prefs,
+    LisaServerSdk? api,
+    SharedPreferences? prefs,
   })  : _api = api ?? BackendApiProvider().api,
         _preferences = prefs ?? PreferencesProvider().prefs;
 
   @observable
-  User user;
+  User? user;
 
   @observable
   String proxyUrl = '';
 
   @observable
-  String currentToken = '';
+  String? currentToken;
 
   @computed
-  String get avatar => user?.avatar == null ? null : '$baseUrl${user.avatar}';
+  String? get avatar => user?.avatar == null ? null : '$baseUrl${user!.avatar}';
 
   @computed
-  String get lang => user?.lang;
+  String? get lang => user?.lang;
 
   @computed
-  String get fullName => user?.firstname == null ? user?.email ?? '' : user.firstname;
+  String get fullName => user?.firstname == null ? user?.email ?? '' : user!.firstname!;
 
-  String get lastRoute => _preferences.getString(PreferencesProvider.keyLastRoute);
+  String? get lastRoute => _preferences.getString(PreferencesProvider.keyLastRoute);
 
   @action
   Future init() async {
     final token = _preferences.getString(PreferencesProvider.keyToken);
-    if(user != null) {
+    if (user != null) {
       //already initialized
       return;
     }
@@ -56,9 +55,9 @@ abstract class _UserStore with Store, BaseUrlProvider {
       _api.setApiKey(kAuthKey, 'JWT $token');
       try {
         user = (await _api.getUserApi().getProfile()).data;
-      } on DioError catch(err, stack) {
+      } on DioError catch (err) {
         proxyUrl = getProxyUrl();
-        if (err.response.statusCode == 401) {
+        if (err.response?.statusCode == 401) {
           _preferences.remove(PreferencesProvider.keyToken);
         }
         rethrow;
@@ -73,45 +72,47 @@ abstract class _UserStore with Store, BaseUrlProvider {
 
   @action
   Future changeLang(String lang) async {
-    if (lang != user.lang) {
+    if (lang != user?.lang) {
       final result = (await _api.getUserApi().saveProfile(
-            user.id,
-            user.email,
-            user.firstname,
-            lang,
-            user.lastname,
-            user.mobile,
-            null,
-            null,
-          )).data;
+                id: user!.id,
+                email: user!.email,
+                firstname: user!.firstname,
+                lang: lang,
+                lastname: user!.lastname,
+                mobile: user!.mobile,
+                avatar: null,
+                password: null,
+              ))
+          .data;
       setUser(result);
     }
   }
 
   @action
-  void setUser(User user) {
+  void setUser(User? user) {
     this.user = user;
   }
 
   @action
   Future updateUser({
-    String email,
-    String firstName,
-    String lastName,
-    String phone,
-    String password,
-    Uint8List avatarData,
+    required String email,
+    String? firstName,
+    String? lastName,
+    String? phone,
+    String? password,
+    Uint8List? avatarData,
   }) async {
     final result = (await _api.getUserApi().saveProfile(
-          user.id,
-          email,
-          firstName,
-          user.lang,
-          lastName,
-          phone,
-          password,
-          avatarData)
-        ).data;
+              id: user!.id,
+              email: email,
+              firstname: firstName,
+              lang: user!.lang,
+              lastname: lastName,
+              mobile: phone,
+              password: password,
+              avatar: avatarData,
+            ))
+        .data;
 
     setUser(result);
   }
@@ -126,5 +127,4 @@ abstract class _UserStore with Store, BaseUrlProvider {
       //shallow errors as token might be expired
     }
   }
-
 }

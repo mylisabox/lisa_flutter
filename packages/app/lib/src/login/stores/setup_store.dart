@@ -11,26 +11,26 @@ abstract class _SetupStore with Store {
   final NymeaNetworkManager _networkManager;
 
   _SetupStore({
-    NymeaNetworkManager networkManager,
+    NymeaNetworkManager? networkManager,
   })  : _networkManager = networkManager ?? NymeaNetworkManager(advertisingName: 'mylisabox', enableLogs: true);
 
   @observable
   NetworkMode currentMode = NetworkMode.idle;
 
   @observable
-  ObservableFuture btConnecting;
+  ObservableFuture? btConnecting;
 
   @observable
-  ObservableFuture<List<WiFiNetwork>> searchingNetworks;
+  late ObservableFuture<List<WiFiNetwork>> searchingNetworks;
 
   @observable
-  ObservableFuture savingNetwork;
+  late ObservableFuture savingNetwork;
 
   @action
   Future<void> searchAndConnectToBTDevice() {
     currentMode = NetworkMode.connectingBT;
     btConnecting = ObservableFuture(_networkManager.connect());
-    return btConnecting.then((value) => searchRemoteNetworks());
+    return btConnecting!.then((value) => searchRemoteNetworks());
   }
 
   @action

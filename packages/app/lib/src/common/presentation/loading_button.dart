@@ -10,19 +10,13 @@ class ProgressButton extends HookWidget {
   final Color color;
   final Widget child;
   final double elevation;
-  final ProgressButtonState state;
-  final VoidCallback onTap;
-  final Future Function() until;
-  final Function(dynamic, dynamic) onError;
-  final Function(dynamic) onSuccess;
+  final ProgressButtonState? state;
+  final VoidCallback? onTap;
+  final Future Function()? until;
+  final Function(dynamic, dynamic)? onError;
+  final Function(dynamic)? onSuccess;
 
-  ProgressButton.withFuture(
-      {Key key, this.padding, this.color, this.child, this.elevation, @required this.until, @required this.onError, @required this.onSuccess})
-      : state = null,
-        onTap = null,
-        super(key: key);
-
-  ProgressButton.withState({Key key, this.padding, this.color, this.child, this.elevation, @required this.onTap, @required this.state})
+  ProgressButton.withState({Key? key, required this.padding, required this.color, required this.child, this.elevation = 0, required this.onTap, required this.state})
       : until = null,
         onError = null,
         onSuccess = null,
@@ -37,21 +31,21 @@ class ProgressButton extends HookWidget {
     final _controller = useAnimationController(duration: Duration(milliseconds: 500));
     final isFinish = useState<bool>(false);
     final _anim = useAnimation(Tween(begin: 0.0, end: 1.0).animate(_controller));
-    final initialWidth = useState<double>(null);
-    final height = useState<double>(null);
+    final initialWidth = useState<double?>(null);
+    final height = useState<double?>(null);
     final result = useState<dynamic>(null);
 
     final _onStart = (bool fromTap) async {
       if (_state.value == ProgressButtonState.idle || initialWidth.value == null) {
-        initialWidth.value = _globalKey.currentContext.size.width;
-        height.value = _globalKey.currentContext.size.height;
+        initialWidth.value = _globalKey.currentContext!.size!.width;
+        height.value = _globalKey.currentContext!.size!.height;
       }
 
       _isPressed.value = true;
 
       if (until == null) {
         if (fromTap) {
-          onTap();
+          onTap?.call();
         }
       } else {
         if (_state.value == ProgressButtonState.idle) {
@@ -59,14 +53,14 @@ class ProgressButton extends HookWidget {
           _state.value = ProgressButtonState.progress;
         }
         try {
-          result.value = await until();
+          result.value = await until?.call();
           _state.value = ProgressButtonState.done;
           isFinish.value = true;
           if (_controller.isCompleted) {
-            onSuccess(result);
+            onSuccess?.call(result);
           }
         } catch (err, stacktrace) {
-          onError(err, stacktrace);
+          onError?.call(err, stacktrace);
           _controller.reverse();
           reset(_state, _width, _isPressed, initialWidth);
         }
@@ -75,7 +69,7 @@ class ProgressButton extends HookWidget {
 
     useEffect(() {
       if (state != null && _state.value != state) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
+        WidgetsBinding.instance!.addPostFrameCallback((_) {
           _onStart(false);
           if (state == ProgressButtonState.idle) {
             _controller.reverse();
@@ -85,7 +79,7 @@ class ProgressButton extends HookWidget {
           } else {
             isFinish.value = true;
           }
-          _state.value = state;
+          _state.value = state!;
         });
       }
       return null;
@@ -93,7 +87,7 @@ class ProgressButton extends HookWidget {
 
     return Container(
       key: _globalKey,
-      width: initialWidth.value == null ? double.infinity : initialWidth.value - ((initialWidth.value - height.value) * _anim),
+      width: initialWidth.value == null ? double.infinity : initialWidth.value! - ((initialWidth.value! - height.value!) * _anim),
       height: _isPressed.value ? 55 : null,
       // ignore: deprecated_member_use
       child: RaisedButton(
@@ -128,7 +122,7 @@ class ProgressButton extends HookWidget {
     ValueNotifier<ProgressButtonState> state,
     ValueNotifier<double> width,
     ValueNotifier<bool> isPressed,
-    ValueNotifier<double> initialWidth,
+    ValueNotifier<double?> initialWidth,
   ) {
     isPressed.value = false;
     width.value = double.infinity;

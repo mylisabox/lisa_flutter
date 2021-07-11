@@ -9,11 +9,11 @@ All URIs are relative to *http://localhost:3000*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**getStorePlugins**](PluginApi.md#getStorePlugins) | **get** /api/v1/plugin/store | 
-[**installPlugin**](PluginApi.md#installPlugin) | **post** /api/v1/plugin/install | 
+[**getStorePlugins**](PluginApi.md#getstoreplugins) | **get** /api/v1/plugin/store | 
+[**installPlugin**](PluginApi.md#installplugin) | **post** /api/v1/plugin/install | 
 [**pairing**](PluginApi.md#pairing) | **post** /api/v1/plugin/{pluginName}/drivers/{driver}/pairing | 
-[**searchPlugins**](PluginApi.md#searchPlugins) | **get** /api/v1/plugin/search | 
-[**uninstallPlugin**](PluginApi.md#uninstallPlugin) | **delete** /api/v1/plugin/{pluginName}/uninstall | 
+[**searchPlugins**](PluginApi.md#searchplugins) | **get** /api/v1/plugin/search | 
+[**uninstallPlugin**](PluginApi.md#uninstallplugin) | **delete** /api/v1/plugin/{pluginName}/uninstall | 
 
 
 # **getStorePlugins**

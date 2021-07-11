@@ -9,6 +9,7 @@ import 'package:lisa_flutter/src/common/utils/platform_detector/platform_detecto
 import 'package:lisa_flutter/src/config/routes.dart';
 import 'package:lisa_flutter/src/devices/presentation/add_device.dart';
 import 'package:lisa_flutter/src/drawer/stores/drawer_store.dart';
+import 'package:lisa_server_sdk/lisa_server_sdk.dart';
 import 'package:provider/provider.dart';
 import 'package:proxy_layout/proxy_layout.dart';
 
@@ -16,22 +17,22 @@ class _NestedNavigatorAndroidSupport extends StatelessWidget {
   final Widget child;
   final GlobalKey<NavigatorState> navigatorKey;
 
-  const _NestedNavigatorAndroidSupport({Key key, this.child, this.navigatorKey}) : super(key: key);
+  const _NestedNavigatorAndroidSupport({Key? key, required this.child, required this.navigatorKey}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     if (defaultTargetPlatform == TargetPlatform.iOS) {
       return child;
     }
-    return WillPopScope(child: child, onWillPop: () async => !await navigatorKey.currentState.maybePop());
+    return WillPopScope(child: child, onWillPop: () async => !await navigatorKey.currentState!.maybePop());
   }
 }
 
 class ProxyScaffold extends HookWidget {
-  final WidgetBuilder builderDrawer;
+  final WidgetBuilder? builderDrawer;
   final String initialRoute;
 
-  const ProxyScaffold({Key key, this.builderDrawer, this.initialRoute}) : super(key: key);
+  const ProxyScaffold({Key? key, this.builderDrawer, required this.initialRoute}) : super(key: key);
 
   static bool isMobileView(BuildContext context) {
     return DeviceProxy.isMobile(context) || (DeviceProxy.isTablet(context) && OrientationProxy.isPortrait(context));
@@ -45,14 +46,18 @@ class ProxyScaffold extends HookWidget {
     final canPopState = useState(false);
 
     final onTitleChange = (title, route) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        currentRoute.value = route;
-        titleState.value = title;
-      });
-      Provider.of<DrawerStore>(context, listen: false).selectRoute(route);
+      if (route != null) {
+        WidgetsBinding.instance?.addPostFrameCallback((_) {
+          currentRoute.value = route;
+          titleState.value = title;
+        });
+        Provider.of<DrawerStore>(context, listen: false).selectRoute(route);
+      }
     };
     final onCanPopChange = (canPop) {
-      canPopState.value = canPop;
+      WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+        canPopState.value = canPop;
+      });
     };
 
     final navigatorKey = useMemoized(() => GlobalKey<NavigatorState>());
@@ -63,7 +68,7 @@ class ProxyScaffold extends HookWidget {
       child: DeviceProxy(
         mobileBuilder: (context) {
           return Scaffold(
-            drawer: builderDrawer == null ? null : Drawer(child: builderDrawer(context)),
+            drawer: builderDrawer == null ? null : Drawer(child: builderDrawer!(context)),
             body: ClipRect(
               clipBehavior: Clip.hardEdge,
               child: _NestedNavigatorAndroidSupport(
@@ -86,7 +91,7 @@ class ProxyScaffold extends HookWidget {
                 appBar: _getAppBar(context, currentRoute.value, titleState.value, canPopState.value, navigatorKey, observers),
                 body: Row(
                   children: <Widget>[
-                    if (builderDrawer != null) Expanded(child: builderDrawer(context), flex: 1),
+                    if (builderDrawer != null) Expanded(child: builderDrawer!(context), flex: 1),
                     if (builderDrawer != null) VerticalDivider(width: 1),
                     Expanded(
                         child: ClipRect(
@@ -108,7 +113,7 @@ class ProxyScaffold extends HookWidget {
             },
             portraitBuilder: (context) {
               return Scaffold(
-                drawer: builderDrawer == null ? null : Drawer(child: builderDrawer(context)),
+                drawer: builderDrawer == null ? null : Drawer(child: builderDrawer!(context)),
                 appBar: _getAppBar(context, currentRoute.value, titleState.value, canPopState.value, navigatorKey, observers),
                 body: _NestedNavigatorAndroidSupport(
                   navigatorKey: navigatorKey,
@@ -128,16 +133,16 @@ class ProxyScaffold extends HookWidget {
   }
 
   AppBar _getAppBar(
-      BuildContext context, String currentRoute, String title, bool canPop, GlobalKey<NavigatorState> navigatorKey, List<NavigatorObserver> observers) {
+      BuildContext context, String? currentRoute, String title, bool canPop, GlobalKey<NavigatorState> navigatorKey, List<NavigatorObserver> observers) {
     final translations = CommonLocalizations.of(context);
     kDebugLogger.info('Current route: $currentRoute');
     return AppBar(
-      leading: canPop && !isMobileView(context) && navigatorKey.currentState.canPop()
+      leading: canPop && !isMobileView(context) && navigatorKey.currentState!.canPop()
           ? IconButton(
               icon: const BackButtonIcon(),
               tooltip: MaterialLocalizations.of(context).backButtonTooltip,
               onPressed: () {
-                navigatorKey.currentState.pop();
+                navigatorKey.currentState!.pop();
               },
             )
           : null,
@@ -153,7 +158,7 @@ class ProxyScaffold extends HookWidget {
             tooltip: translations.addDevice,
             onPressed: () {
               if (DeviceProxy.isTablet(context)) {
-                showPlatformDialog(context, (_) => AddDeviceDialog(room: ModalRoute.of(context).settings.arguments));
+                showPlatformDialog(context, (_) => AddDeviceDialog(room: ModalRoute.of(context)!.settings.arguments! as Room));
               } else {
                 final args = (observers.firstWhere((item) => item is HistoryNavigatorObserver) as HistoryNavigatorObserver).arguments;
                 Navigator.of(context, rootNavigator: true).pushNamed(AddDeviceScreen.route, arguments: args);

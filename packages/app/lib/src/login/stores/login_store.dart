@@ -1,5 +1,4 @@
 
-import 'package:flutter/cupertino.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/errors.dart';
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
@@ -7,8 +6,7 @@ import 'package:lisa_flutter/src/common/presentation/loading_button.dart';
 import 'package:lisa_flutter/src/common/stores/user_store.dart';
 import 'package:lisa_flutter/src/common/utils/validator.dart';
 import 'package:lisa_flutter/src/preferences/preferences_provider.dart';
-import 'package:lisa_server_sdk/api.dart';
-import 'package:lisa_server_sdk/model/login_request.dart';
+import 'package:lisa_server_sdk/lisa_server_sdk.dart';
 import 'package:mobx/mobx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -35,18 +33,18 @@ abstract class _LoginStore with Store {
   String email = '';
 
   @observable
-  ErrorResult emailError;
+  ErrorResult? emailError;
 
   String password = '';
 
   @observable
-  ErrorResult passwordError;
+  ErrorResult? passwordError;
 
   _LoginStore({
-    @required UserStore userStore,
-    BackendApiProvider apiProvider,
-    SharedPreferences prefs,
-    Validator validator,
+    required UserStore userStore,
+    BackendApiProvider? apiProvider,
+    SharedPreferences? prefs,
+    Validator? validator,
   })  : _apiProvider = apiProvider ?? BackendApiProvider(),
         _userStore = userStore,
         _validator = validator ?? Validator(),
@@ -63,7 +61,7 @@ abstract class _LoginStore with Store {
     }
     email = _preferences.getString(keyLastEmail) ?? email;
     try {
-      final response = (await _api.getConfigApi().isInitialized()).data;
+      final response = (await _api.getConfigApi().isInitialized()).data!;
       mode = response.initialized ? AuthMode.login : AuthMode.registration;
     } catch (err) {
       mode = AuthMode.noHost;
@@ -73,29 +71,29 @@ abstract class _LoginStore with Store {
 
   @action
   Future login() async {
-    if (password == null || password.isEmpty) {
+    if (password.isEmpty) {
       passwordError = ErrorResult.fieldRequired;
     }
 
-    if (email == null || email.isEmpty) {
+    if (email.isEmpty) {
       emailError = ErrorResult.fieldRequired;
     }
 
-    if (email != null && !_validator.isEmail(email)) {
+    if (!_validator.isEmail(email)) {
       emailError = ErrorResult.wrongEmail;
     }
 
     if (hasError) {
-      throw ErrorResultException(emailError ?? passwordError);
+      throw ErrorResultException(emailError ?? passwordError!);
     } else {
       try {
         loginState = ProgressButtonState.progress;
         final method = mode == AuthMode.login ? _api.getLoginApi().login : _api.getLoginApi().register;
-        final response = (await method((LoginRequestBuilder()
+        final response = (await method(loginRequest: (LoginRequestBuilder()
                   ..email = email
                   ..password = password)
                 .build()))
-            .data;
+            .data!;
         _preferences.setString(PreferencesProvider.keyToken, response.token);
         _preferences.setString(keyLastEmail, email);
         _api.setApiKey(kAuthKey, 'JWT ${response.token}');
@@ -110,28 +108,28 @@ abstract class _LoginStore with Store {
 
   @action
   Future register() async {
-    if (password == null || password.isEmpty) {
+    if (password.isEmpty) {
       passwordError = ErrorResult.fieldRequired;
     }
 
-    if (email == null || email.isEmpty) {
+    if (email.isEmpty) {
       emailError = ErrorResult.fieldRequired;
     }
 
-    if (email != null && !_validator.isEmail(email)) {
+    if (!_validator.isEmail(email)) {
       emailError = ErrorResult.wrongEmail;
     }
 
     if (hasError) {
-      throw ErrorResultException(emailError ?? passwordError); //todo generic form error ?
+      throw ErrorResultException(emailError ?? passwordError!); //todo generic form error ?
     } else {
       try {
         loginState = ProgressButtonState.progress;
-        final response = (await _api.getLoginApi().register((LoginRequestBuilder()
+        final response = (await _api.getLoginApi().register(loginRequest: (LoginRequestBuilder()
                   ..email = email
                   ..password = password)
                 .build()))
-            .data;
+            .data!;
         _preferences.setString(PreferencesProvider.keyToken, response.token);
         _api.setApiKey(kAuthKey, 'JWT ${response.token}');
         await _userStore.init();

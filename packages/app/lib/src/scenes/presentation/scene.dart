@@ -5,13 +5,13 @@ import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
 import 'package:lisa_flutter/src/scenes/stores/scene_store.dart';
-import 'package:lisa_server_sdk/model/scene.dart';
+import 'package:lisa_server_sdk/lisa_server_sdk.dart';
 
 class SceneWidget extends HookWidget {
   static const route = '/scenes/scene';
-  final Scene scene;
+  final Scene? scene;
 
-  const SceneWidget({Key key, this.scene}) : super(key: key);
+  const SceneWidget({Key? key, this.scene}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -178,7 +178,7 @@ class _Section extends ExpansionPanel {
   final Function(int index) onDeleteClicked;
   final bool isExpanded;
 
-  _Section({this.title, this.contentBuilder, this.onAddClicked, this.isExpanded, this.onDeleteClicked})
+  _Section({required this.title, required this.contentBuilder, required this.onAddClicked, required this.isExpanded, required this.onDeleteClicked})
       : super(
           isExpanded: isExpanded,
           headerBuilder: (BuildContext context, bool isExpanded) {

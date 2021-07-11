@@ -28,15 +28,26 @@ class MultimediaWidget extends HookWidget {
             onTap: () {
               final isMobile = DeviceProxy.isMobile(context);
               final color = HSLColor.fromColor(Theme.of(context).primaryColor).withLightness(0.3);
-              Navigator.of(context, rootNavigator: isMobile).push(MaterialPageRoute(builder: (context) => TransmissionScreen(headless: !isMobile, iconActiveColor: color.toColor()), settings: RouteSettings(name: routeTransmission)));
+              Navigator.of(context, rootNavigator: isMobile).push(MaterialPageRoute(
+                  builder: (context) => IconTheme(
+                        data: IconThemeData(color: Colors.white),
+                        child: TransmissionScreen(
+                          headless: !isMobile,
+                          iconActiveColor: color.toColor(),
+                        ),
+                      ),
+                  settings: RouteSettings(name: routeTransmission)));
             },
           ),
-          Divider(height: 1,),
+          Divider(
+            height: 1,
+          ),
           ListTile(
             title: Text('SickChill'),
             onTap: () {
               final isMobile = DeviceProxy.isMobile(context);
-              Navigator.of(context, rootNavigator: isMobile).push(MaterialPageRoute(builder: (context) => SickChillScreen(headless: !isMobile), settings: RouteSettings(name: routeSickChill)));
+              Navigator.of(context, rootNavigator: isMobile)
+                  .push(MaterialPageRoute(builder: (context) => SickChillScreen(headless: !isMobile), settings: RouteSettings(name: routeSickChill)));
             },
           ),
         ],

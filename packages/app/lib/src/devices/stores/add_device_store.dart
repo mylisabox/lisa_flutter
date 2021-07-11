@@ -4,12 +4,7 @@ import 'package:lisa_flutter/src/common/errors.dart';
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
 import 'package:lisa_flutter/src/common/utils/base_url_provider.dart';
 import 'package:lisa_flutter/src/devices/presentation/dashboard.dart';
-import 'package:lisa_server_sdk/api/device_api.dart';
-import 'package:lisa_server_sdk/api/plugin_api.dart';
-import 'package:lisa_server_sdk/model/device.dart';
-import 'package:lisa_server_sdk/model/device_settings.dart';
-import 'package:lisa_server_sdk/model/plugin.dart';
-import 'package:lisa_server_sdk/model/room.dart';
+import 'package:lisa_server_sdk/lisa_server_sdk.dart';
 import 'package:mobx/mobx.dart';
 
 part 'add_device_store.g.dart';
@@ -23,7 +18,7 @@ abstract class _AddDeviceStore with Store, BaseUrlProvider {
   /// Global management
   List<Map<String, dynamic>> stepHistory = [];
 
-  List<ReactionDisposer> _disposers;
+  late List<ReactionDisposer> _disposers;
 
   @observable
   bool canContinue = false;
@@ -45,21 +40,21 @@ abstract class _AddDeviceStore with Store, BaseUrlProvider {
 
   /// Plugins list
   @observable
-  ObservableList<Plugin> plugins;
+  ObservableList<Plugin> plugins = ObservableList();
 
   @observable
-  String searchQuery;
+  String searchQuery = ' ';
 
   @observable
-  ErrorResultException searchQueryError;
+  ErrorResultException? searchQueryError;
 
   /// Plugin device selection
-  Plugin selectedPlugin;
+  Plugin? selectedPlugin;
 
   @observable
-  DeviceSettings selectedDeviceTemplate;
+  DeviceSettings? selectedDeviceTemplate;
 
-  final Room room;
+  final Room? room;
 
   /// Settings by list
   List<Map<String, dynamic>> availableDevices = [];
@@ -70,8 +65,8 @@ abstract class _AddDeviceStore with Store, BaseUrlProvider {
 
   _AddDeviceStore({
     this.room,
-    PluginApi pluginApi,
-    DeviceApi deviceApi,
+    PluginApi? pluginApi,
+    DeviceApi? deviceApi,
   })  : _pluginApi = pluginApi ?? BackendApiProvider().api.getPluginApi(),
         _deviceApi = deviceApi ?? BackendApiProvider().api.getDeviceApi() {
     _disposers = [reaction((_) => searchQuery, _search, delay: 500)];
@@ -92,7 +87,7 @@ abstract class _AddDeviceStore with Store, BaseUrlProvider {
   Future<void> _search(String query) async {
     try {
       searchQueryError = null;
-      plugins = ObservableList.of((await _pluginApi.searchPlugins(query, activated: true)).data);
+      plugins = ObservableList.of((await _pluginApi.searchPlugins(query: query, activated: true)).data!);
     } catch (ex, stack) {
       searchQueryError = handleError(ex, stack);
     }
@@ -103,16 +98,16 @@ abstract class _AddDeviceStore with Store, BaseUrlProvider {
     this.selectedPlugin = selectedPlugin;
     selectedDeviceTemplate = selectedDevice;
 
-    if (selectedDeviceTemplate.pairing == 'settings') {
+    if (selectedDeviceTemplate!.pairing == 'settings') {
       currentCustomStep = ObservableMap.of({'step': 'settings'});
-      _manageSettingsStep(selectedDeviceTemplate.settings.map((k, v) => MapEntry<String, Object>(k, toPrimitive(v))).toMap());
-    } else if (selectedDeviceTemplate.pairing == 'list') {
+      _manageSettingsStep(selectedDeviceTemplate!.settings!.map((k, v) => MapEntry<String, Object>(k, toPrimitive(v))).toMap());
+    } else if (selectedDeviceTemplate!.pairing == 'list') {
       currentCustomStep = ObservableMap.of({'step': 'list'});
       _getDevicesList();
-    } else if (selectedDeviceTemplate.pairing == 'image') {
+    } else if (selectedDeviceTemplate!.pairing == 'image') {
       currentCustomStep = ObservableMap.of({'step': 'image'});
       _manageImageStep('TODO');
-    } else if (selectedDeviceTemplate.pairing == 'custom') {
+    } else if (selectedDeviceTemplate!.pairing == 'custom') {
       await _goToNextCustomStep();
     }
   }
@@ -149,7 +144,7 @@ abstract class _AddDeviceStore with Store, BaseUrlProvider {
   }
 
   void _manageImageStep(String image) {
-    currentCustomStep['image'] = getPluginImageUrl(selectedPlugin.id, image);
+    currentCustomStep['image'] = getPluginImageUrl(selectedPlugin!.id, image);
   }
 
   Future<void> _getDevicesList() async {
@@ -158,7 +153,7 @@ abstract class _AddDeviceStore with Store, BaseUrlProvider {
   }
 
   Future<bool> _goToNextCustomStep() async {
-    final data = (await _pluginApi.pairing(selectedDeviceTemplate.pluginName, selectedDeviceTemplate.driver, BuiltMap<String, JsonObject>(currentCustomData.map((key, value) => MapEntry(key, JsonObject(value)))))).data;
+    final data = (await _pluginApi.pairing(pluginName: selectedDeviceTemplate!.pluginName, driver: selectedDeviceTemplate!.driver, requestBody: BuiltMap<String, JsonObject>(currentCustomData.map((key, value) => MapEntry(key, JsonObject(value)))))).data!;
     currentCustomStep = ObservableMap.of(data.map((k, v) => MapEntry<String, Object>(k, toPrimitive(v))).toMap());
     return _manageCurrentStep();
   }
@@ -174,7 +169,7 @@ abstract class _AddDeviceStore with Store, BaseUrlProvider {
     } else {
       final previous = stepHistory.removeLast();
       currentCustomData[currentCustomStep['step']] = null;
-      currentCustomStep = previous;
+      currentCustomStep =  ObservableMap.of(previous);
       _manageCurrentStep();
       canContinue = true;
     }
@@ -222,12 +217,12 @@ abstract class _AddDeviceStore with Store, BaseUrlProvider {
   Future<bool> next() async {
     isLoading = true;
     stepHistory.add(currentCustomStep);
-    if (selectedDeviceTemplate.pairing == 'custom') {
+    if (selectedDeviceTemplate!.pairing == 'custom') {
       return await _goToNextCustomStep().then((finished) {
         isLoading = false;
         return finished;
       });
-    } else if (selectedDeviceTemplate.pairing == 'settings') {
+    } else if (selectedDeviceTemplate!.pairing == 'settings') {
       await _saveDevice();
       return true;
     }
@@ -236,13 +231,13 @@ abstract class _AddDeviceStore with Store, BaseUrlProvider {
   }
 
   Future<void> _saveDevice() {
-    return _deviceApi.addDevice((DeviceBuilder()
+    return _deviceApi.addDevice(device: (DeviceBuilder()
       ..name= formData['name']
       ..roomId= room?.id
-      ..template= formData['template'] ?? selectedDeviceTemplate.template
-      ..type= formData['type'] ?? selectedDeviceTemplate.type
-    ..driver= formData['driver'] ?? selectedDeviceTemplate.driver
-    ..pluginName= selectedDeviceTemplate.pluginName
+      ..template= formData['template'] ?? selectedDeviceTemplate!.template
+      ..type= formData['type'] ?? selectedDeviceTemplate!.type
+    ..driver= formData['driver'] ?? selectedDeviceTemplate!.driver
+    ..pluginName= selectedDeviceTemplate!.pluginName
     ..data= MapBuilder<String, JsonObject>(formData)
     ).build());
   }

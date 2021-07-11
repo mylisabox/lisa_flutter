@@ -2,8 +2,7 @@ import 'package:lisa_flutter/src/common/errors.dart';
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
 import 'package:lisa_flutter/src/favorites/presentation/favorites.dart';
 import 'package:lisa_flutter/src/preferences/preferences_provider.dart';
-import 'package:lisa_server_sdk/api/room_api.dart';
-import 'package:lisa_server_sdk/model/room.dart';
+import 'package:lisa_server_sdk/lisa_server_sdk.dart';
 import 'package:logging/logging.dart';
 import 'package:mobx/mobx.dart';
 
@@ -18,8 +17,8 @@ abstract class _DrawerStore with Store {
   final _log = Logger('DrawerStore');
 
   _DrawerStore({
-    RoomApi roomApi,
-    PreferencesProvider preferencesProvider,
+    RoomApi? roomApi,
+    PreferencesProvider? preferencesProvider,
   })  : _roomApi = roomApi ?? BackendApiProvider().api.getRoomApi(),
         _preferencesProvider = preferencesProvider ?? PreferencesProvider();
 
@@ -47,26 +46,26 @@ abstract class _DrawerStore with Store {
   @action
   Future loadRooms({bool force: false}) async {
     if (rooms.isEmpty || force) {
-      rooms = ObservableList.of((await _roomApi.getRooms()).data);
+      rooms = ObservableList.of((await _roomApi.getRooms()).data!);
       isRoomListOpened = _preferencesProvider.prefs.getBool(_keyRoomListOpened) ?? false;
     }
   }
 
   @action
   Future addRoom(String name) async {
-    if (name != null && name.length > 3) {
-      await _roomApi.addRoom((RoomBuilder()..name = name).build()).catchError(handleCaughtError);
+    if (name.length > 3) {
+      await _roomApi.addRoom(room: (RoomBuilder()..name = name).build()).catchError(handleCaughtError);
       await loadRooms(force: true);
     }
   }
 
   @action
   Future renameRoom(Room room, String name) async {
-    if (name != null && name.length > 3) {
+    if (name.length > 3) {
       await _roomApi
           .saveRoom(
-              room.id,
-              (RoomBuilder()
+              roomId: room.id!,
+              room: (RoomBuilder()
                     ..id = room.id
                     ..name = name)
                   .build())
@@ -77,7 +76,7 @@ abstract class _DrawerStore with Store {
 
   @action
   Future deleteRoom(int id) async {
-    await _roomApi.deleteRoom(id).catchError(handleCaughtError);
+    await _roomApi.deleteRoom(roomId: id).catchError(handleCaughtError);
     rooms.remove(rooms.firstWhere((item) => item.id == id));
   }
 

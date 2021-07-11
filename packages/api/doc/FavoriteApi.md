@@ -9,9 +9,9 @@ All URIs are relative to *http://localhost:3000*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**addToFavorite**](FavoriteApi.md#addToFavorite) | **put** /api/v1/favorite/{deviceId} | 
-[**deleteFromFavorite**](FavoriteApi.md#deleteFromFavorite) | **delete** /api/v1/favorite/{deviceId} | 
-[**getFavorites**](FavoriteApi.md#getFavorites) | **get** /api/v1/favorite | 
+[**addToFavorite**](FavoriteApi.md#addtofavorite) | **put** /api/v1/favorite/{deviceId} | 
+[**deleteFromFavorite**](FavoriteApi.md#deletefromfavorite) | **delete** /api/v1/favorite/{deviceId} | 
+[**getFavorites**](FavoriteApi.md#getfavorites) | **get** /api/v1/favorite | 
 
 
 # **addToFavorite**

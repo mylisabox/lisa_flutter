@@ -61,7 +61,7 @@ void _memLog(LogRecord record) {
   }
 }
 
-String _currentVersion;
+String? _currentVersion;
 
 void _log(LogRecord record) async {
   // log to crashlytics
@@ -85,7 +85,7 @@ void _log(LogRecord record) async {
         extra: {'log': _logs.toList(growable: false)},
         culprit: record.error.toString(),
         logger: record.loggerName,
-        exception: record.error,
+        throwable: record.error,
       ),
       stackTrace: record.stackTrace,
     );

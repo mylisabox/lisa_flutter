@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
 import 'package:mobx/mobx.dart';
 
@@ -8,7 +10,7 @@ class SettingsStore = _SettingsStore with _$SettingsStore;
 abstract class _SettingsStore with Store {
   final BackendApiProvider _apiProvider;
 
-  _SettingsStore({BackendApiProvider apiProvider})
+  _SettingsStore({BackendApiProvider? apiProvider})
       : _apiProvider = apiProvider ?? BackendApiProvider();
 
   @action
@@ -16,8 +18,8 @@ abstract class _SettingsStore with Store {
 
   }
 
-  Future<void> saveVoiceCommandsConfig(List<int> configFile) async {
+  Future<void> saveVoiceCommandsConfig(Uint8List configFile) async {
     final setupApi = _apiProvider.api.getSetupApi();
-    await setupApi.setupVoiceCommands(configFile);
+    await setupApi.setupVoiceCommands(config: configFile);
   }
 }

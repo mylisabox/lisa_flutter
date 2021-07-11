@@ -1,9 +1,10 @@
 import 'dart:async';
+
 import 'package:flutter/widgets.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/l10n/error_localizations.dart';
 
-Future handleCaughtError(error, stackTrace) {
+FutureOr<dynamic> handleCaughtError(error, stackTrace) {
   throw handleError(error, stackTrace);
 }
 
@@ -66,11 +67,10 @@ class ErrorResult {
       case _ErrorType.fieldRequired:
         return localizations.fieldRequired;
     }
-    return null;
   }
 
   String twoLiner(BuildContext context) {
-    return '${getMessage(context)}\n${getHint(context) ?? ''}';
+    return '${getMessage(context)}\n${getHint(context)}';
   }
 
   String getHint(BuildContext context) {
@@ -88,7 +88,6 @@ class ErrorResult {
       case _ErrorType.fieldRequired:
         return localizations.fieldRequiredHint;
     }
-    return null;
   }
 
   @override

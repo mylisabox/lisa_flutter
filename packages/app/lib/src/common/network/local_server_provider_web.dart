@@ -15,7 +15,7 @@ class LocalServerProviderWeb extends LocalServerProvider {
       //for debug let's use local lisa instance
       //return Future.value('http://192.168.1.41');
     }
-    return Future.value(window.location.protocol + '//' + window.location.hostname + ':' + _getPort());
+    return Future.value(window.location.protocol + '//' + window.location.hostname! + ':' + _getPort());
   }
 
   String _getPort() {

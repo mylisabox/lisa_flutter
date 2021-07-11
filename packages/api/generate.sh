@@ -10,7 +10,7 @@ rm -R ${WORKDIR}/lib/auth
 
 executable="./openapi-generator-cli.jar"
 # Generate client
-ags="$@ generate -i api.yml -g dart-dio --skip-validate-spec -o ${WORKDIR} --additional-properties pubName=lisa_server_sdk,hideGenerationTimestamp=true,nullableFields=false"
+ags="$@ generate -i api.yml -g dart-dio-next --skip-validate-spec -o ${WORKDIR} --additional-properties pubName=lisa_server_sdk,hideGenerationTimestamp=true,nullableFields=false"
 java ${JAVA_OPTS} -jar ${executable} ${ags}
 
 cd ${WORKDIR}

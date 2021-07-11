@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:android_multicast_lock/android_multicast_lock.dart';
 import 'package:flutter/foundation.dart';
 import 'package:lisa_flutter/src/common/network/local_server_provider.dart';
 import 'package:logging/logging.dart';
-import 'package:multicast_lock/multicast_lock.dart';
 
 LocalServerProvider createProvider() => LocalServerProviderIO();
 
@@ -14,11 +14,8 @@ class LocalServerProviderIO extends LocalServerProvider {
   final _log = Logger('LocalServerProvider');
 
   Future<String> search() async {
-    MulticastLock multicastLock;
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      multicastLock = MulticastLock();
-      await multicastLock.acquire();
-    }
+    MulticastLock multicastLock = MulticastLock();
+    await multicastLock.acquire();
 
     final completer = Completer<String>();
     const searchQuery = 'lisa-server-search';
@@ -47,7 +44,7 @@ class LocalServerProviderIO extends LocalServerProvider {
     }
     final subscription = udpSocket.listen(
       (e) {
-        Datagram dg = udpSocket.receive();
+        final dg = udpSocket.receive();
         if (dg == null) return;
 
         String message = new String.fromCharCodes(dg.data);
@@ -74,9 +71,7 @@ class LocalServerProviderIO extends LocalServerProvider {
     }, test: (err) => err is TimeoutException).whenComplete(
       () {
         subscription.cancel();
-        if (defaultTargetPlatform == TargetPlatform.android) {
-          multicastLock.release();
-        }
+        multicastLock.release();
       },
     );
   }

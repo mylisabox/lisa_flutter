@@ -48,12 +48,12 @@ class SetupScreen extends HookWidget {
                         if (store.btConnecting == null) {
                           return _Step1Explanations();
                         }
-                        if (store.btConnecting.status == FutureStatus.pending) {
+                        if (store.btConnecting!.status == FutureStatus.pending) {
                           return _StepLoading(message: localization.btConnecting);
                         }
-                        if (store.btConnecting.status == FutureStatus.rejected) {
+                        if (store.btConnecting!.status == FutureStatus.rejected) {
                           return _StepError(
-                            error: store.btConnecting.error is NoDeviceException ? localization.noDeviceFound : store.btConnecting.error.toString(),
+                            error: store.btConnecting!.error is NoDeviceException ? localization.noDeviceFound : store.btConnecting!.error.toString(),
                             onRetry: () => store.searchAndConnectToBTDevice(),
                           );
                         }
@@ -143,7 +143,7 @@ class _SetupStatusBar extends StatelessWidget {
     );
   }
 
-  double _getBTValue(NetworkMode mode) {
+  double? _getBTValue(NetworkMode mode) {
     if (mode == NetworkMode.connectingBT) {
       return null;
     }
@@ -155,7 +155,7 @@ class _SetupStatusBar extends StatelessWidget {
     return 0;
   }
 
-  double _getWifiValue(NetworkMode mode) {
+  double? _getWifiValue(NetworkMode mode) {
     if (mode == NetworkMode.searchingNetworks) {
       return null;
     }
@@ -167,7 +167,7 @@ class _SetupStatusBar extends StatelessWidget {
     return 0;
   }
 
-  double _getLinkValue(NetworkMode mode) {
+  double? _getLinkValue(NetworkMode mode) {
     if (mode == NetworkMode.savingNetwork) {
       return null;
     }
@@ -182,16 +182,16 @@ class _SetupStatusBar extends StatelessWidget {
 
 class _LoadingIcon extends StatelessWidget {
   final IconData icon;
-  final double value;
+  final double? value;
   final Color backgroundColor;
 
-  const _LoadingIcon({Key key, this.icon, this.value, this.backgroundColor}) : super(key: key);
+  const _LoadingIcon({Key? key, required this.icon, this.value, required this.backgroundColor}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Material(
       shape: CircleBorder(),
-      color: backgroundColor ?? Colors.grey,
+      color: backgroundColor,
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -277,7 +277,7 @@ class _Step2NetworkList extends StatelessWidget {
     return Observer(builder: (context) {
       return ListView.separated(
         itemBuilder: (context, index) {
-          final item = store.searchingNetworks.value[index];
+          final item = store.searchingNetworks.value![index];
           return ListTile(
             title: Text(item.ssid),
             onTap: () async {
@@ -296,7 +296,7 @@ class _Step2NetworkList extends StatelessWidget {
         separatorBuilder: (context, index) {
           return Divider();
         },
-        itemCount: store.searchingNetworks.value.length,
+        itemCount: store.searchingNetworks.value!.length,
       );
     });
   }
@@ -319,7 +319,7 @@ class _Step3NetworkSaved extends StatelessWidget {
 class _StepLoading extends StatelessWidget {
   final String message;
 
-  const _StepLoading({Key key, this.message}) : super(key: key);
+  const _StepLoading({Key? key, required this.message}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -328,7 +328,7 @@ class _StepLoading extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Text(message ?? '', textAlign: TextAlign.center),
+          child: Text(message, textAlign: TextAlign.center),
         ),
         Center(child: CircularProgressIndicator()),
       ],
@@ -338,9 +338,9 @@ class _StepLoading extends StatelessWidget {
 
 class _StepError extends StatelessWidget {
   final String error;
-  final VoidCallback onRetry;
+  final VoidCallback? onRetry;
 
-  const _StepError({Key key, this.error, this.onRetry}) : super(key: key);
+  const _StepError({Key? key, required this.error, this.onRetry}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -350,7 +350,7 @@ class _StepError extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: Text(
-            error ?? '',
+            error,
             textAlign: TextAlign.center,
           ),
         ),

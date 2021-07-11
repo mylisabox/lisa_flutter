@@ -20,13 +20,13 @@ class AvatarData {
 
 _ProfileFormController useProfileManager(BuildContext context) {
   final userStore = Provider.of<UserStore>(context);
-  final controllerEmail = useTextEditingController(text: userStore.user.email);
-  final controllerFirst = useTextEditingController(text: userStore.user.firstname);
-  final controllerLast = useTextEditingController(text: userStore.user.lastname);
-  final controllerPhone = useTextEditingController(text: userStore.user.mobile);
+  final controllerEmail = useTextEditingController(text: userStore.user?.email ?? '');
+  final controllerFirst = useTextEditingController(text: userStore.user?.firstname ?? '');
+  final controllerLast = useTextEditingController(text: userStore.user?.lastname ?? '');
+  final controllerPhone = useTextEditingController(text: userStore.user?.mobile ?? '');
   final controllerPassword = useTextEditingController();
   final controllerPasswordConfirmation = useTextEditingController();
-  final avatar = useState<AvatarData>(null);
+  final avatar = useState<AvatarData?>(null);
 
   return _ProfileFormController(
     lastName: controllerLast,
@@ -46,16 +46,16 @@ class _ProfileFormController {
   final TextEditingController phone;
   final TextEditingController password;
   final TextEditingController passwordConfirm;
-  final ValueNotifier<AvatarData> avatarData;
+  final ValueNotifier<AvatarData?> avatarData;
 
   _ProfileFormController({
-    this.lastName,
-    this.firstName,
-    this.email,
-    this.phone,
-    this.password,
-    this.passwordConfirm,
-    this.avatarData,
+    required this.lastName,
+    required this.firstName,
+    required this.email,
+    required this.phone,
+    required this.password,
+    required this.passwordConfirm,
+    required this.avatarData,
   });
 
   Future<void> save(BuildContext context) {

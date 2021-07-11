@@ -35,7 +35,7 @@ class AddDeviceSearch extends HookWidget {
                       padding: const EdgeInsets.all(kNormalPadding),
                       child: Center(
                         child: Text(
-                          store.searchQueryError.cause.twoLiner(context),
+                          store.searchQueryError!.cause.twoLiner(context),
                           style: TextStyle(color: Theme.of(context).errorColor),
                         ),
                       ),
@@ -87,7 +87,7 @@ class AddDeviceSearch extends HookWidget {
                                       spacing: 15,
                                       runSpacing: 15,
                                       children: plugins[i]
-                                          .devicesSettings
+                                          .devicesSettings!
                                           .map(
                                             (settings) => _PluginDevice(
                                               settings: settings,
@@ -118,9 +118,9 @@ class AddDeviceSearch extends HookWidget {
 
 class _PluginDevice extends StatelessWidget with BaseUrlProvider {
   final DeviceSettings settings;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
-  _PluginDevice({Key key, this.settings, this.onTap}) : super(key: key);
+  _PluginDevice({Key? key, required this.settings, this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

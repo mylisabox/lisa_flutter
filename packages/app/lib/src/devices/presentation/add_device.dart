@@ -7,8 +7,7 @@ import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
 import 'package:lisa_flutter/src/common/utils/base_url_provider.dart';
 import 'package:lisa_flutter/src/devices/stores/add_device_store.dart';
 import 'package:lisa_flutter/src/devices/stores/device_store.dart';
-import 'package:lisa_server_sdk/model/device_settings.dart';
-import 'package:lisa_server_sdk/model/room.dart';
+import 'package:lisa_server_sdk/lisa_server_sdk.dart';
 import 'package:provider/provider.dart';
 import 'package:proxy_layout/proxy_layout.dart';
 import 'package:remote_form/remote_form.dart';
@@ -18,14 +17,14 @@ part 'add_device_steps.dart';
 
 class AddDeviceScreen extends StatelessWidget {
   static const route = '/addDevice';
-  final Room room;
+  final Room? room;
 
-  AddDeviceScreen({Key key, @required this.room}) : super(key: key);
+  AddDeviceScreen({Key? key, this.room}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final translations = CommonLocalizations.of(context);
-    return Provider(
+    return Provider<AddDeviceStore>(
       create: (_) {
         return AddDeviceStore(room: room);
       },
@@ -35,7 +34,7 @@ class AddDeviceScreen extends StatelessWidget {
           final store = Provider.of<AddDeviceStore>(context);
           return Scaffold(
             appBar: AppBar(
-              title: Text(room == null ? translations.addDevice : translations.addDeviceTo(room.name)),
+              title: Text(room == null ? translations.addDevice : translations.addDeviceTo(room!.name)),
             ),
             body: Observer(
               builder: (context) => Column(
@@ -87,7 +86,7 @@ class AddDeviceWidget extends HookWidget {
     final store = Provider.of<AddDeviceStore>(context);
 
     return Observer(builder: (context) {
-      if (store.selectedDeviceTemplate == null || store.currentCustomStep == null || store.currentCustomStep.isEmpty) {
+      if (store.selectedDeviceTemplate == null || store.currentCustomStep.isEmpty) {
         return AddDeviceSearch();
       }
 
@@ -109,14 +108,14 @@ class AddDeviceWidget extends HookWidget {
 }
 
 class AddDeviceDialog extends StatelessWidget {
-  final Room room;
+  final Room? room;
 
-  const AddDeviceDialog({Key key, @required this.room}) : super(key: key);
+  const AddDeviceDialog({Key? key, this.room}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final translations = CommonLocalizations.of(context);
-    return Provider(
+    return Provider<AddDeviceStore>(
       create: (_) {
         return AddDeviceStore(room: room);
       },
@@ -126,7 +125,7 @@ class AddDeviceDialog extends StatelessWidget {
           final store = Provider.of<AddDeviceStore>(context);
           return getAppDialog(
             context,
-            (_) => Text(room == null ? translations.addDevice : translations.addDeviceTo(room.name)),
+            (_) => Text(room == null ? translations.addDevice : translations.addDeviceTo(room!.name)),
             (_) => Container(
               width: 600,
               height: 500,
@@ -164,9 +163,9 @@ class AddDeviceDialog extends StatelessWidget {
 }
 
 class AddDeviceFloatingButton extends StatelessWidget {
-  final Room room;
+  final Room? room;
 
-  const AddDeviceFloatingButton({Key key, this.room}) : super(key: key);
+  const AddDeviceFloatingButton({Key? key, this.room}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

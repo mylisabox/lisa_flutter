@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart' hide Router;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Router;
@@ -44,9 +45,9 @@ void app(bool isWear) async {
       appRunner: () async {
         await PreferencesProvider().setup();
         final navigatorKey = GlobalKey<NavigatorState>();
-        UserStore userStore;
+        late UserStore userStore;
         BackendApiProvider.setup(
-            navigatorKey, () => userStore, PreferencesProvider().prefs);
+            navigatorKey, () => userStore, PreferencesProvider().prefs, baseUrl: 'http://localhost');
         initLogger();
         userStore = UserStore();
         if (kIsWeb) {
@@ -79,13 +80,33 @@ void app(bool isWear) async {
   );
 }
 
+MaterialColor createMaterialColor(Color color) {
+  final strengths = <double>[.05];
+  final swatch = <int, Color>{};
+  final int r = color.red, g = color.green, b = color.blue;
+
+  for (int i = 1; i < 10; i++) {
+    strengths.add(0.1 * i);
+  }
+  strengths.forEach((strength) {
+    final double ds = 0.5 - strength;
+    swatch[(strength * 1000).round()] = Color.fromRGBO(
+      r + ((ds < 0 ? r : (255 - r)) * ds).round(),
+      g + ((ds < 0 ? g : (255 - g)) * ds).round(),
+      b + ((ds < 0 ? b : (255 - b)) * ds).round(),
+      1,
+    );
+  });
+  return MaterialColor(color.value, swatch);
+}
+
 class MyApp extends HookWidget {
   static const _primaryColor = Color(0xff1bbc9b);
   final GlobalKey<NavigatorState> navigatorKey;
   final UserStore userStore;
   final Router router;
 
-  MyApp({this.navigatorKey, this.userStore, this.router});
+  MyApp({required this.navigatorKey, required this.userStore, required this.router});
 
   @override
   Widget build(BuildContext context) {
@@ -108,8 +129,8 @@ class MyApp extends HookWidget {
           var locale;
 
           if (userStore.lang != null) {
-            locale = kSupportedLanguages.firstWhere((locale) => locale
-                .languageCode == userStore.lang, orElse: () => null);
+            locale = kSupportedLanguages.firstWhereOrNull((locale) => locale
+                .languageCode == userStore.lang);
           }
 
           return MaterialApp(
@@ -124,6 +145,7 @@ class MyApp extends HookWidget {
             ],
             supportedLocales: kSupportedLanguages,
             theme: ThemeData(
+              primarySwatch: createMaterialColor(_primaryColor),
               cupertinoOverrideTheme: CupertinoThemeData(
                 brightness: prefStore.isDarkTheme ? Brightness.dark : Brightness
                     .light,
@@ -153,6 +175,8 @@ class MyApp extends HookWidget {
                 selectionColor: _primaryColor,
                 selectionHandleColor: _primaryColor,
               ),
+              iconTheme: IconThemeData(color: _primaryColor),
+
               indicatorColor: _primaryColor,
             ),
             initialRoute: SplashScreen.route,
@@ -171,7 +195,7 @@ class MyApp extends HookWidget {
 class MyHomePage extends HookWidget {
   static const route = 'home';
 
-  MyHomePage({Key key}) : super(key: key);
+  MyHomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -9,8 +9,8 @@ All URIs are relative to *http://localhost:3000*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**getDashboard**](DashboardApi.md#getDashboard) | **get** /api/v1/dashboard/room/{roomId} | 
-[**saveDashboard**](DashboardApi.md#saveDashboard) | **post** /api/v1/dashboard/room/{roomId} | 
+[**getDashboard**](DashboardApi.md#getdashboard) | **get** /api/v1/dashboard/room/{roomId} | 
+[**saveDashboard**](DashboardApi.md#savedashboard) | **post** /api/v1/dashboard/room/{roomId} | 
 
 
 # **getDashboard**

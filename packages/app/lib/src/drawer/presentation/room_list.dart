@@ -10,7 +10,7 @@ import 'package:lisa_flutter/src/common/presentation/proxy_scaffold.dart';
 import 'package:lisa_flutter/src/drawer/presentation/drawer.dart';
 import 'package:lisa_flutter/src/drawer/stores/drawer_store.dart';
 import 'package:lisa_flutter/src/rooms/presentation/room_dashboard.dart';
-import 'package:lisa_server_sdk/model/room.dart';
+import 'package:lisa_server_sdk/lisa_server_sdk.dart';
 import 'package:provider/provider.dart';
 
 class RoomList extends HookWidget {
@@ -57,10 +57,10 @@ class RoomList extends HookWidget {
             AnimatedContainer(
               alignment: Alignment.topCenter,
               duration: Duration(milliseconds: min(drawerStore.roomNumber * 200, 400)),
-              height: drawerStore.isRoomListOpened ? drawerStore.roomNumber * _RoomIdle.height : .0,
+              height: drawerStore.isRoomListOpened ? drawerStore.roomNumber * _RoomIdle.height: .0,
               child: ClipRect(
                 child: OverflowBox(
-                  maxHeight: drawerStore.roomNumber * _RoomIdle.height,
+                  maxHeight: drawerStore.roomNumber * _RoomIdle.height + 2,
                   alignment: Alignment.topCenter,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -119,7 +119,7 @@ class RoomList extends HookWidget {
 class _RoomListEntry extends HookWidget {
   final Room room;
 
-  const _RoomListEntry({Key key, this.room}) : super(key: key);
+  const _RoomListEntry({Key? key, required this.room}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +154,7 @@ class _RoomIdle extends StatelessWidget {
   final Room room;
   static const height = 55.0;
 
-  const _RoomIdle({Key key, this.room}) : super(key: key);
+  const _RoomIdle({Key? key, required this.room}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -179,7 +179,7 @@ class _RoomIdle extends StatelessWidget {
                 if (action == _RoomAction.delete) {
                   final confirm = await showConfirm(context, translations.deleteItem(room.name), translations.deleteConfirm);
                   if (confirm) {
-                    showLoadingDialog(context, (_) => Text(translations.deleting), () => Provider.of<DrawerStore>(context, listen: false).deleteRoom(room.id));
+                    showLoadingDialog(context, (_) => Text(translations.deleting), () => Provider.of<DrawerStore>(context, listen: false).deleteRoom(room.id!));
                   }
                 } else if (action == _RoomAction.rename) {
                   Provider.of<ValueNotifier<_RoomState>>(context, listen: false).value = _RoomState.edition;
@@ -219,7 +219,7 @@ class _RoomIdle extends StatelessWidget {
       onTap: () {
         final route = '${RoomDashboard.route}/${room.id}';
         if (drawerStore.currentSelectedRoute != route) {
-          Provider.of<GlobalKey<NavigatorState>>(context, listen: false).currentState.pushNamed(RoomDashboard.route, arguments: room);
+          Provider.of<GlobalKey<NavigatorState>>(context, listen: false).currentState?.pushNamed(RoomDashboard.route, arguments: room);
           _closeDrawer(context);
           drawerStore.selectRoute(route);
         }
@@ -237,7 +237,7 @@ class _RoomIdle extends StatelessWidget {
 class _RoomEdition extends HookWidget {
   final Room room;
 
-  const _RoomEdition({Key key, this.room}) : super(key: key);
+  const _RoomEdition({Key? key, required this.room}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

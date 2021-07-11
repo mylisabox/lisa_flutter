@@ -9,12 +9,12 @@ All URIs are relative to *http://localhost:3000*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**addDevice**](DeviceApi.md#addDevice) | **post** /api/v1/device/ | 
-[**deleteDevice**](DeviceApi.md#deleteDevice) | **delete** /api/v1/device/{deviceId} | 
-[**getDevices**](DeviceApi.md#getDevices) | **get** /api/v1/device/ | 
-[**saveDeviceInfo**](DeviceApi.md#saveDeviceInfo) | **patch** /api/v1/device/{deviceId} | 
-[**updateDevice**](DeviceApi.md#updateDevice) | **post** /api/v1/plugins/{pluginName}/{deviceId} | 
-[**updateGroup**](DeviceApi.md#updateGroup) | **post** /api/v1/devices/group/{roomId}/{groupId} | 
+[**addDevice**](DeviceApi.md#adddevice) | **post** /api/v1/device/ | 
+[**deleteDevice**](DeviceApi.md#deletedevice) | **delete** /api/v1/device/{deviceId} | 
+[**getDevices**](DeviceApi.md#getdevices) | **get** /api/v1/device/ | 
+[**saveDeviceInfo**](DeviceApi.md#savedeviceinfo) | **patch** /api/v1/device/{deviceId} | 
+[**updateDevice**](DeviceApi.md#updatedevice) | **post** /api/v1/plugins/{pluginName}/{deviceId} | 
+[**updateGroup**](DeviceApi.md#updategroup) | **post** /api/v1/devices/group/{roomId}/{groupId} | 
 
 
 # **addDevice**
@@ -133,7 +133,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **roomId** | **String**|  | 
+ **roomId** | **String**|  | [optional] 
 
 ### Return type
 

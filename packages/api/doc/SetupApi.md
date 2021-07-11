@@ -9,7 +9,7 @@ All URIs are relative to *http://localhost:3000*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**setupVoiceCommands**](SetupApi.md#setupVoiceCommands) | **post** /api/v1/setup/voice_commands | 
+[**setupVoiceCommands**](SetupApi.md#setupvoicecommands) | **post** /api/v1/setup/voice_commands | 
 
 
 # **setupVoiceCommands**

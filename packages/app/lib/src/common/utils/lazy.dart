@@ -2,7 +2,7 @@
 typedef S ItemCreator<S>();
 
 class Lazy<T> {
-  T instance;
+  late T instance;
   final ItemCreator<T> creator;
 
   Lazy(this.creator);

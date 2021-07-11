@@ -9,7 +9,7 @@ All URIs are relative to *http://localhost:3000*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**isInitialized**](ConfigApi.md#isInitialized) | **get** /api/v1/initialized | 
+[**isInitialized**](ConfigApi.md#isinitialized) | **get** /api/v1/initialized | 
 
 
 # **isInitialized**

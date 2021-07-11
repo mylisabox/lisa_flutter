@@ -4,7 +4,7 @@ class FadePageRoute extends PageRouteBuilder {
   final WidgetBuilder builder;
   final RouteSettings settings;
 
-  FadePageRoute({this.builder, this.settings})
+  FadePageRoute({required this.builder, required this.settings})
       : super(
           pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
             return builder(context);
@@ -26,7 +26,7 @@ class FromBottomPageRoute extends PageRouteBuilder {
   final WidgetBuilder builder;
   final RouteSettings settings;
 
-  FromBottomPageRoute({this.builder, this.settings})
+  FromBottomPageRoute({required this.builder, required this.settings})
       : super(
           pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
             return builder(context);

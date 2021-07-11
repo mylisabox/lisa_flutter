@@ -10,21 +10,21 @@ import 'package:lisa_flutter/src/profile/presentation/avatar_field.dart';
 import 'package:provider/provider.dart';
 
 AvatarField createAvatarField({
-  Key key,
-  @required OnFileSelected onFileSelected,
+  Key? key,
+  required OnFileSelected onFileSelected,
 }) =>
     AvatarFieldWeb(key: key, onFileSelected: onFileSelected);
 
 class AvatarFieldWeb extends AvatarField {
   AvatarFieldWeb({
-    Key key,
-    @required OnFileSelected onFileSelected,
+    Key? key,
+    required OnFileSelected onFileSelected,
   }) : super(key: key, onFileSelected: onFileSelected);
 
   @override
   Widget build(BuildContext context) {
     final userStore = Provider.of<UserStore>(context);
-    ImageProvider avatarImage = userStore.avatar == null ? null : NetworkImage(userStore.avatar);
+    ImageProvider? avatarImage = userStore.avatar == null ? null : NetworkImage(userStore.avatar!);
     final uploadElement = useMemoized(() => FileUploadInputElement());
     uploadElement.id = 'profileAvatar';
     uploadElement.className = 'profileAvatar';
@@ -33,20 +33,20 @@ class AvatarFieldWeb extends AvatarField {
       width: 60px;
       opacity: 0;''');
 
-    final avatar = useState<Uint8List>(null);
+    final avatar = useState<Uint8List?>(null);
 
     if (avatar.value != null) {
-      avatarImage = MemoryImage(avatar.value);
+      avatarImage = MemoryImage(avatar.value!);
     }
 
     useEffect(() {
       uploadElement.onChange.listen((e) {
-        File file = (e.target as dynamic).files[0];
+        var file = (e.target as dynamic).files[0];
         if (file != null) {
           final reader = FileReader();
           reader.onLoad.listen((e) {
-            avatar.value = reader.result;
-            onFileSelected(reader.result, file.name);
+            avatar.value = reader.result as Uint8List;
+            onFileSelected(reader.result as Uint8List, file.name);
           });
           reader.onError.listen((e) {
             print(e);

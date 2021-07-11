@@ -9,7 +9,7 @@ typedef OnFileSelected = void Function(Uint8List data, String name);
 abstract class FileField extends HookWidget {
   final OnFileSelected onFileSelected;
 
-  factory FileField.create({Key key, @required OnFileSelected onFileSelected}) => createFileField(key: key, onFileSelected: onFileSelected);
+  factory FileField.create({Key? key, required OnFileSelected onFileSelected}) => createFileField(key: key, onFileSelected: onFileSelected);
 
-  FileField({Key key, @required this.onFileSelected}) : super(key: key);
+  FileField({Key? key, required this.onFileSelected}) : super(key: key);
 }

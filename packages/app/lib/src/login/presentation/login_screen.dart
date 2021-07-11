@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:keyboard_avoider/keyboard_avoider.dart';
 import 'package:lisa_flutter/main.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
@@ -39,6 +38,7 @@ class LoginScreen extends HookWidget {
       value: store,
       child: Theme(
         data: ThemeData(
+          primarySwatch: createMaterialColor(_primaryColor),
           cupertinoOverrideTheme: CupertinoThemeData(
             brightness: Brightness.light,
             primaryColor: _primaryColor,
@@ -79,19 +79,16 @@ class LoginScreen extends HookWidget {
                     if (store.mode == AuthMode.noHost) {
                       return _NoHost();
                     }
-                    return KeyboardAvoider(
-                      autoScroll: true,
-                      child: OrientationProxy(
-                        landscapeBuilder: (context) {
-                          return DeviceProxy(
-                            tabletBuilder: (_) => _LoginPortrait(),
-                            mobileBuilder: (_) => _LoginLandscape(),
-                          );
-                        },
-                        portraitBuilder: (context) {
-                          return _LoginPortrait();
-                        },
-                      ),
+                    return OrientationProxy(
+                      landscapeBuilder: (context) {
+                        return DeviceProxy(
+                          tabletBuilder: (_) => _LoginPortrait(),
+                          mobileBuilder: (_) => _LoginLandscape(),
+                        );
+                      },
+                      portraitBuilder: (context) {
+                        return _LoginPortrait();
+                      },
                     );
                   },
                 ),

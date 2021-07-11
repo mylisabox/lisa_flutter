@@ -9,7 +9,7 @@ import 'package:lisa_server_sdk/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **int** |  | 
-**roomId** | **int** |  | [optional] 
+**roomId** | **int** |  | 
 **name** | **String** |  | 
 **driver** | **String** |  | [optional] 
 **pluginName** | **String** |  | [optional] 

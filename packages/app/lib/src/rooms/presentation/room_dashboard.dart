@@ -7,21 +7,21 @@ import 'package:lisa_flutter/src/common/utils/platform_detector/platform_detecto
 import 'package:lisa_flutter/src/devices/presentation/add_device.dart';
 import 'package:lisa_flutter/src/devices/presentation/dashboard.dart';
 import 'package:lisa_flutter/src/devices/stores/device_store.dart';
-import 'package:lisa_server_sdk/model/room.dart';
+import 'package:lisa_server_sdk/lisa_server_sdk.dart' hide Dashboard;
 import 'package:provider/provider.dart';
 
 class RoomDashboard extends HookWidget {
   static const route = '/room';
-  final Room room;
+  final Room? room;
 
-  const RoomDashboard({Key key, this.room}) : super(key: key);
+  const RoomDashboard({Key? key, required this.room}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final store = useMemoized(() => DeviceStore());
 
     useEffect(() {
-      store.loadDevices(roomId: room.id).catchError((err, stack) {
+      store.loadDevices(roomId: room?.id).catchError((err, stack) {
         showErrorDialog(context, err, stack);
       });
       return null;
@@ -32,7 +32,7 @@ class RoomDashboard extends HookWidget {
       child: RoomContainer(
         room: room,
         child: Dashboard(
-          roomId: room.id,
+          roomId: room?.id,
         ),
       ),
     );
@@ -41,9 +41,9 @@ class RoomDashboard extends HookWidget {
 
 class RoomContainer extends HookWidget {
   final Widget child;
-  final Room room;
+  final Room? room;
 
-  const RoomContainer({Key key, this.child, this.room}) : super(key: key);
+  const RoomContainer({Key? key, required this.child, this.room}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

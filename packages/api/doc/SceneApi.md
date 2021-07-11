@@ -9,9 +9,9 @@ All URIs are relative to *http://localhost:3000*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**deleteScene**](SceneApi.md#deleteScene) | **delete** /api/v1/chatbot/userBot/{scene} | 
-[**getScene**](SceneApi.md#getScene) | **get** /api/v1/chatbot/userBot | 
-[**saveScene**](SceneApi.md#saveScene) | **post** /api/v1/chatbot/userBot | 
+[**deleteScene**](SceneApi.md#deletescene) | **delete** /api/v1/chatbot/userBot/{scene} | 
+[**getScene**](SceneApi.md#getscene) | **get** /api/v1/chatbot/userBot | 
+[**saveScene**](SceneApi.md#savescene) | **post** /api/v1/chatbot/userBot | 
 
 
 # **deleteScene**

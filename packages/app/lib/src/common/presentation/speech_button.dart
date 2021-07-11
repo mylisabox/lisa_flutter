@@ -4,15 +4,14 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_speech/flutter_speech.dart';
 import 'package:lisa_flutter/src/common/stores/speech_store.dart';
 import 'package:provider/provider.dart';
-import 'package:toast/toast.dart';
 
 class SpeechButton extends HookWidget {
-  final void Function(String text) onResults;
+  final void Function(String text)? onResults;
   final bool isFloating;
-  final String roomId;
+  final String? roomId;
 
   const SpeechButton({
-    Key key,
+    Key? key,
     this.isFloating = true,
     this.onResults,
     this.roomId,
@@ -30,19 +29,23 @@ class SpeechButton extends HookWidget {
       });
       speech.setRecognitionCompleteHandler((text) async {
         isListening.value = false;
-        Toast.show(text, context, duration: Toast.LENGTH_LONG);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text), action: SnackBarAction(onPressed: () {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        }, label: 'Ok',)));
         if (onResults == null) {
           final response = await Provider.of<SpeechStore>(context, listen: false).sendSentence(text, Localizations.localeOf(context).languageCode, roomId);
-          Toast.show(response, context, duration: Toast.LENGTH_LONG);
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(response), action: SnackBarAction(onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          }, label: 'Ok')));
         } else {
-          onResults(text);
+          onResults!(text);
         }
       });
       return null;
     }, const []);
 
     useEffect(() {
-      return () {
+      return () async {
         return speech.stop();
       };
     }, [this]);
