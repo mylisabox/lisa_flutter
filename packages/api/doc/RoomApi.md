@@ -5,18 +5,18 @@
 import 'package:lisa_server_sdk/api.dart';
 ```
 
-All URIs are relative to *http://localhost:3000*
+All URIs are relative to *http://mylisabox:3000*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**addRoom**](RoomApi.md#addroom) | **post** /api/v1/room | 
-[**deleteRoom**](RoomApi.md#deleteroom) | **delete** /api/v1/room/{roomId} | 
-[**getRooms**](RoomApi.md#getrooms) | **get** /api/v1/room | 
-[**saveRoom**](RoomApi.md#saveroom) | **put** /api/v1/room/{roomId} | 
+[**addRoom**](RoomApi.md#addroom) | **POST** /api/v1/rooms | 
+[**deleteRoom**](RoomApi.md#deleteroom) | **DELETE** /api/v1/room/{roomId} | 
+[**getRooms**](RoomApi.md#getrooms) | **GET** /api/v1/rooms | 
+[**saveRoom**](RoomApi.md#saveroom) | **PUT** /api/v1/room/{roomId} | 
 
 
 # **addRoom**
-> addRoom(room)
+> Room addRoom(room)
 
 
 
@@ -28,12 +28,13 @@ import 'package:lisa_server_sdk/api.dart';
 // uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 //defaultApiClient.getAuthentication<ApiKeyAuth>('Bearer').apiKeyPrefix = 'Bearer';
 
-var api_instance = new RoomApi();
-var room = new Room(); // Room | 
+final api = LisaServerSdk().getRoomApi();
+final Room room = ; // Room | 
 
 try { 
-    api_instance.addRoom(room);
-} catch (e) {
+    final response = api.addRoom(room);
+    print(response);
+} catch on DioError (e) {
     print('Exception when calling RoomApi->addRoom: $e\n');
 }
 ```
@@ -46,7 +47,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-void (empty response body)
+[**Room**](Room.md)
 
 ### Authorization
 
@@ -55,7 +56,7 @@ void (empty response body)
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: Not defined
+ - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -72,12 +73,12 @@ import 'package:lisa_server_sdk/api.dart';
 // uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 //defaultApiClient.getAuthentication<ApiKeyAuth>('Bearer').apiKeyPrefix = 'Bearer';
 
-var api_instance = new RoomApi();
-var roomId = 56; // int | 
+final api = LisaServerSdk().getRoomApi();
+final int roomId = 56; // int | 
 
 try { 
-    api_instance.deleteRoom(roomId);
-} catch (e) {
+    api.deleteRoom(roomId);
+} catch on DioError (e) {
     print('Exception when calling RoomApi->deleteRoom: $e\n');
 }
 ```
@@ -116,12 +117,12 @@ import 'package:lisa_server_sdk/api.dart';
 // uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 //defaultApiClient.getAuthentication<ApiKeyAuth>('Bearer').apiKeyPrefix = 'Bearer';
 
-var api_instance = new RoomApi();
+final api = LisaServerSdk().getRoomApi();
 
 try { 
-    var result = api_instance.getRooms();
-    print(result);
-} catch (e) {
+    final response = api.getRooms();
+    print(response);
+} catch on DioError (e) {
     print('Exception when calling RoomApi->getRooms: $e\n');
 }
 ```
@@ -131,7 +132,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**BuiltList<Room>**](Room.md)
+[**BuiltList&lt;Room&gt;**](Room.md)
 
 ### Authorization
 
@@ -157,13 +158,13 @@ import 'package:lisa_server_sdk/api.dart';
 // uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 //defaultApiClient.getAuthentication<ApiKeyAuth>('Bearer').apiKeyPrefix = 'Bearer';
 
-var api_instance = new RoomApi();
-var roomId = 56; // int | 
-var room = new Room(); // Room | 
+final api = LisaServerSdk().getRoomApi();
+final int roomId = 56; // int | 
+final Room room = ; // Room | 
 
 try { 
-    api_instance.saveRoom(roomId, room);
-} catch (e) {
+    api.saveRoom(roomId, room);
+} catch on DioError (e) {
     print('Exception when calling RoomApi->saveRoom: $e\n');
 }
 ```

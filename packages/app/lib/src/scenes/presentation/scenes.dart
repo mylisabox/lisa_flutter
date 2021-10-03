@@ -4,21 +4,34 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
 import 'package:lisa_flutter/src/common/presentation/refresh_no_scroll_content.dart';
+import 'package:lisa_flutter/src/common/utils/extensions.dart';
 import 'package:lisa_flutter/src/common/utils/page_route_builders.dart';
 import 'package:lisa_flutter/src/scenes/presentation/scene.dart';
 import 'package:lisa_flutter/src/scenes/stores/scenes_store.dart';
 import 'package:lisa_server_sdk/lisa_server_sdk.dart';
 
-class ScenesWidget extends HookWidget {
+class ScenesScreen extends StatelessWidget {
   static const route = '/scenes';
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(context.localizations.menuScenes),
+      ),
+      body: ScenesWidget(),
+    );
+  }
+}
+
+class ScenesWidget extends HookWidget {
   void editScene(BuildContext context, Scene? scene, GlobalKey<RefreshIndicatorState> refreshKey) async {
     final needRefresh = await Navigator.of(context, rootNavigator: true).push(
-      FromBottomPageRoute(
-        builder: (context) => SceneWidget(scene: scene),
-        settings: RouteSettings(name: SceneWidget.route),
-      ),
-    ) ??
+          FromBottomPageRoute(
+            builder: (context) => SceneWidget(scene: scene),
+            settings: RouteSettings(name: SceneWidget.route),
+          ),
+        ) ??
         false;
 
     if (needRefresh) {
@@ -62,7 +75,7 @@ class ScenesWidget extends HookWidget {
               return Center(child: CircularProgressIndicator());
             }
 
-            if (store.scenes.length == 0) {
+            if (store.scenes!.length == 0) {
               return RefreshIndicatorContent(
                 child: Center(child: Text(translations.emptyList)),
               );
@@ -75,11 +88,11 @@ class ScenesWidget extends HookWidget {
                   showCheckboxColumn: false,
                   sortAscending: false,
                   rows: <DataRow>[
-                    for (var i = 0; i < store.scenes.length; i++)
+                    for (var i = 0; i < store.scenes!.length; i++)
                       DataRow(
                         onSelectChanged: (selected) {
                           if (selected!) {
-                            editScene(context, store.scenes[i], refreshKey);
+                            editScene(context, store.scenes![i], refreshKey);
                           }
                         },
                         cells: [
@@ -89,7 +102,7 @@ class ScenesWidget extends HookWidget {
                                 IconButton(
                                   icon: Icon(Icons.edit),
                                   onPressed: () async {
-                                    editScene(context, store.scenes[i], refreshKey);
+                                    editScene(context, store.scenes![i], refreshKey);
                                   },
                                 ),
                                 IconButton(
@@ -103,10 +116,10 @@ class ScenesWidget extends HookWidget {
                               ],
                             ),
                           ),
-                          DataCell(Text(store.scenes[i].displayName)),
-                          DataCell(Text(store.scenes[i].data.sentences.length.toString())),
-                          DataCell(Text(store.scenes[i].data.responses.length.toString())),
-                          DataCell(Text(store.scenes[i].data.commands.length.toString())),
+                          DataCell(Text(store.scenes![i].displayName)),
+                          DataCell(Text(store.scenes![i].data.sentences.length.toString())),
+                          DataCell(Text(store.scenes![i].data.responses.length.toString())),
+                          DataCell(Text(store.scenes![i].data.commands.length.toString())),
                         ],
                       ),
                   ],

@@ -9,9 +9,8 @@ All URIs are relative to *http://localhost:3000*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**login**](LoginApi.md#login) | **post** /api/v1/auth/local | 
-[**logout**](LoginApi.md#logout) | **get** /api/v1/auth/logout | 
-[**register**](LoginApi.md#register) | **post** /api/v1/auth/local/register | 
+[**login**](LoginApi.md#login) | **POST** /api/v1/auth/login | 
+[**register**](LoginApi.md#register) | **POST** /api/v1/auth/register | 
 
 
 # **login**
@@ -23,13 +22,13 @@ Method | HTTP request | Description
 ```dart
 import 'package:lisa_server_sdk/api.dart';
 
-var api_instance = new LoginApi();
-var loginRequest = new LoginRequest(); // LoginRequest | 
+final api = LisaServerSdk().getLoginApi();
+final LoginRequest loginRequest = ; // LoginRequest | 
 
 try { 
-    var result = api_instance.login(loginRequest);
-    print(result);
-} catch (e) {
+    final response = api.login(loginRequest);
+    print(response);
+} catch on DioError (e) {
     print('Exception when calling LoginApi->login: $e\n');
 }
 ```
@@ -55,48 +54,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **logout**
-> logout()
-
-
-
-### Example 
-```dart
-import 'package:lisa_server_sdk/api.dart';
-// TODO Configure API key authorization: Bearer
-//defaultApiClient.getAuthentication<ApiKeyAuth>('Bearer').apiKey = 'YOUR_API_KEY';
-// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-//defaultApiClient.getAuthentication<ApiKeyAuth>('Bearer').apiKeyPrefix = 'Bearer';
-
-var api_instance = new LoginApi();
-
-try { 
-    api_instance.logout();
-} catch (e) {
-    print('Exception when calling LoginApi->logout: $e\n');
-}
-```
-
-### Parameters
-This endpoint does not need any parameter.
-
-### Return type
-
-void (empty response body)
-
-### Authorization
-
-[Bearer](../README.md#Bearer)
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: Not defined
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
 # **register**
-> LoginResponse register(loginRequest)
+> LoginResponse register(userUpdate)
 
 
 
@@ -104,13 +63,13 @@ void (empty response body)
 ```dart
 import 'package:lisa_server_sdk/api.dart';
 
-var api_instance = new LoginApi();
-var loginRequest = new LoginRequest(); // LoginRequest | 
+final api = LisaServerSdk().getLoginApi();
+final UserUpdate userUpdate = ; // UserUpdate | 
 
 try { 
-    var result = api_instance.register(loginRequest);
-    print(result);
-} catch (e) {
+    final response = api.register(userUpdate);
+    print(response);
+} catch on DioError (e) {
     print('Exception when calling LoginApi->register: $e\n');
 }
 ```
@@ -119,7 +78,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **loginRequest** | [**LoginRequest**](LoginRequest.md)|  | 
+ **userUpdate** | [**UserUpdate**](UserUpdate.md)|  | 
 
 ### Return type
 

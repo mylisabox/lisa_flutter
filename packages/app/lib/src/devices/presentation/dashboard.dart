@@ -4,13 +4,10 @@ import 'package:built_value/json_object.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
-import 'package:lisa_flutter/src/common/presentation/refresh_no_scroll_content.dart';
 import 'package:lisa_flutter/src/common/utils/base_url_provider.dart';
 import 'package:lisa_flutter/src/devices/stores/device_store.dart';
 import 'package:lisa_flutter/src/rooms/presentation/room_selector.dart';
@@ -34,7 +31,7 @@ class Dashboard extends HookWidget {
     final translations = CommonLocalizations.of(context);
     final store = Provider.of<DeviceStore>(context);
     final callback = useMemoized(
-      () => (String key, value, {associatedData}) => store.deviceChange(key, value, associatedData: associatedData).catchError(
+      () => (String key, value, {associatedData}) => store.deviceChange(key, value).catchError(
             (err, stack) {
               showErrorDialog(context, err, stack);
             },
@@ -59,12 +56,13 @@ class Dashboard extends HookWidget {
       child: LayoutBuilder(
         builder: (context, constraints) {
           return RefreshIndicator(
-            onRefresh: () {
-              return store.refreshDevices();
+            onRefresh: () async {
+              return null;//store.refreshDevices();
             },
             child: Observer(
               builder: (context) {
-                if (store.error != null) {
+                return Container();
+                /* if (store.error != null) {
                   return RefreshIndicatorContent(
                     child: Center(
                       child: Text(
@@ -75,11 +73,10 @@ class Dashboard extends HookWidget {
                     ),
                   );
                 }
-
                 if (store.devices == null) {
                   return Center(child: CircularProgressIndicator());
                 }
-                if (store.devices.length == 0) {
+                if (store.devices!.length == 0) {
                   return RefreshIndicatorContent(
                     child: Center(child: Text(translations.emptyList)),
                   );
@@ -87,17 +84,17 @@ class Dashboard extends HookWidget {
                 return AnimationLimiter(
                   child: StaggeredGridView.countBuilder(
                     crossAxisCount: (constraints.maxWidth / _widgetWidthSize).floor() * _widgetWidthUnit,
-                    itemCount: store.devices.length,
+                    itemCount: store.devices!.length,
                     staggeredTileBuilder: (int index) {
-                      final device = store.devices[index];
-                      final num width = device.template['widgetWidth']?.asNum ?? 1;
-                      final num height = device.template['widgetHeight']?.asNum ?? 1;
+                      final device = store.devices![index];
+                      final num width = device.template!['widgetWidth']?.asNum ?? 1;
+                      final num height = device.template!['widgetHeight']?.asNum ?? 1;
                       return StaggeredTile.count((width * _widgetWidthUnit).toInt(), height.toDouble() * _widgetHeightUnit);
                     },
                     mainAxisSpacing: kSmallPadding,
                     crossAxisSpacing: kSmallPadding,
                     itemBuilder: (context, index) {
-                      final device = store.devices[index];
+                      final device = store.devices![index];
                       return AnimationConfiguration.staggeredList(
                         position: index,
                         duration: const Duration(milliseconds: 450),
@@ -108,7 +105,7 @@ class Dashboard extends HookWidget {
                       );
                     },
                   ),
-                );
+                );*/
               },
             ),
           );
@@ -188,11 +185,11 @@ class _DeviceIdle extends StatelessWidget {
                   ),
                   onTap: () {
                     final store = Provider.of<DeviceStore>(context, listen: false);
-                    store.toggleFavorite(device.id, device.favorite).catchError(
+                    /*store.toggleFavorite(device.id, device.favorite).catchError(
                       (err, stack) {
                         showErrorDialog(context, err, stack);
                       },
-                    );
+                    );*/
                   },
                 ),
               ),
@@ -246,7 +243,7 @@ class _DeviceIdle extends StatelessWidget {
               padding: const EdgeInsets.all(kSmallPadding),
               child: RemoteWidget(
                 associatedData: device,
-                definition: device.template.toMap().map((key, value) {
+                definition: device.template!.toMap().map((key, value) {
                   return MapEntry(key, toPrimitive(value));
                 }),
                 data: device.data == null ? {} : device.data!.toMap().map((key, value) {
@@ -261,7 +258,7 @@ class _DeviceIdle extends StatelessWidget {
   }
 }
 
-dynamic toPrimitive(JsonObject value) {
+dynamic toPrimitive(JsonObject? value) {
   var val;
   if (value is StringJsonObject) {
     val = value.asString;

@@ -1,5 +1,17 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:lisa_flutter/src/common/utils/app_lifecycle_observer.dart';
 import 'package:mobx/mobx.dart';
+
+void useAppLifeCycleObserver(VoidCallback notAuthenticated) {
+  final observer = useMemoized(() => AppLifeCycleObserver(notAuthenticated));
+  useEffect(() {
+    WidgetsBinding.instance?.addObserver(observer);
+    return () {
+      WidgetsBinding.instance?.removeObserver(observer);
+    };
+  }, const []);
+}
 
 dynamic useDisposable(dynamic Function() valueBuilder, [List<Object> keys = const <Object>[]]) {
   final disposable = useMemoized(valueBuilder, keys);

@@ -2,7 +2,9 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_speech/flutter_speech.dart';
+import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/stores/speech_store.dart';
+import 'package:lisa_flutter/src/common/utils/extensions.dart';
 import 'package:provider/provider.dart';
 
 class SpeechButton extends HookWidget {
@@ -29,14 +31,23 @@ class SpeechButton extends HookWidget {
       });
       speech.setRecognitionCompleteHandler((text) async {
         isListening.value = false;
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text), action: SnackBarAction(onPressed: () {
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        }, label: 'Ok',)));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(text),
+            action: SnackBarAction(
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              },
+              label: 'Ok',
+            )));
         if (onResults == null) {
           final response = await Provider.of<SpeechStore>(context, listen: false).sendSentence(text, Localizations.localeOf(context).languageCode, roomId);
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(response), action: SnackBarAction(onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          }, label: 'Ok')));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(response),
+              action: SnackBarAction(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  },
+                  label: 'Ok')));
         } else {
           onResults!(text);
         }
@@ -52,11 +63,11 @@ class SpeechButton extends HookWidget {
 
     return isFloating
         ? FloatingActionButton(
-            heroTag: null,
-            backgroundColor: isAvailable.value ? Theme.of(context).primaryColor : Colors.grey,
+            heroTag: 'voiceCommand',
+            backgroundColor: isAvailable.value ? context.theme.bottomAppBarColor : kDisabledColor,
             onPressed: isAvailable.value ? () => onSpeechClicked(context, isListening, speech) : null,
             child: isListening.value
-                ? Container(
+                ? SizedBox(
                     width: 25,
                     child: FlareActor(
                       'assets/animations/AudioWave.flr',
@@ -64,23 +75,25 @@ class SpeechButton extends HookWidget {
                       isPaused: false,
                       shouldClip: false,
                       animation: 'loop',
+                      color: context.primaryColor,
                     ),
                   )
-                : Icon(Icons.mic, color: Colors.white),
+                : Icon(Icons.mic, color: context.primaryColor),
           )
         : IconButton(
             icon: isListening.value
-                ? Container(
-              width: 25,
-              child: FlareActor(
-                'assets/animations/AudioWave.flr',
-                fit: BoxFit.contain,
-                isPaused: false,
-                shouldClip: false,
-                animation: 'loop',
-              ),
-            )
-                : Icon(Icons.mic, color: Colors.white),
+                ? SizedBox(
+                    width: 25,
+                    child: FlareActor(
+                      'assets/animations/AudioWave.flr',
+                      fit: BoxFit.contain,
+                      isPaused: false,
+                      shouldClip: false,
+                      animation: 'loop',
+                      color: context.primaryColor,
+                    ),
+                  )
+                : Icon(Icons.mic, color: context.primaryColor),
             onPressed: isAvailable.value ? () => onSpeechClicked(context, isListening, speech) : null,
           );
   }

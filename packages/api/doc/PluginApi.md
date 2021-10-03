@@ -5,15 +5,15 @@
 import 'package:lisa_server_sdk/api.dart';
 ```
 
-All URIs are relative to *http://localhost:3000*
+All URIs are relative to *http://mylisabox:3000*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**getStorePlugins**](PluginApi.md#getstoreplugins) | **get** /api/v1/plugin/store | 
-[**installPlugin**](PluginApi.md#installplugin) | **post** /api/v1/plugin/install | 
-[**pairing**](PluginApi.md#pairing) | **post** /api/v1/plugin/{pluginName}/drivers/{driver}/pairing | 
-[**searchPlugins**](PluginApi.md#searchplugins) | **get** /api/v1/plugin/search | 
-[**uninstallPlugin**](PluginApi.md#uninstallplugin) | **delete** /api/v1/plugin/{pluginName}/uninstall | 
+[**getStorePlugins**](PluginApi.md#getstoreplugins) | **GET** /api/v1/plugins/store | 
+[**installPlugin**](PluginApi.md#installplugin) | **POST** /api/v1/plugins/install | 
+[**pairing**](PluginApi.md#pairing) | **POST** /api/v1/plugins/{pluginName}/drivers/{driver}/pairing | 
+[**searchPlugins**](PluginApi.md#searchplugins) | **GET** /api/v1/plugins/search | 
+[**uninstallPlugin**](PluginApi.md#uninstallplugin) | **DELETE** /api/v1/plugins/{pluginName}/uninstall | 
 
 
 # **getStorePlugins**
@@ -29,12 +29,12 @@ import 'package:lisa_server_sdk/api.dart';
 // uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 //defaultApiClient.getAuthentication<ApiKeyAuth>('Bearer').apiKeyPrefix = 'Bearer';
 
-var api_instance = new PluginApi();
+final api = LisaServerSdk().getPluginApi();
 
 try { 
-    var result = api_instance.getStorePlugins();
-    print(result);
-} catch (e) {
+    final response = api.getStorePlugins();
+    print(response);
+} catch on DioError (e) {
     print('Exception when calling PluginApi->getStorePlugins: $e\n');
 }
 ```
@@ -44,7 +44,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**BuiltList<StorePlugin>**](StorePlugin.md)
+[**BuiltList&lt;StorePlugin&gt;**](StorePlugin.md)
 
 ### Authorization
 
@@ -70,12 +70,12 @@ import 'package:lisa_server_sdk/api.dart';
 // uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 //defaultApiClient.getAuthentication<ApiKeyAuth>('Bearer').apiKeyPrefix = 'Bearer';
 
-var api_instance = new PluginApi();
-var addPluginRequest = new AddPluginRequest(); // AddPluginRequest | 
+final api = LisaServerSdk().getPluginApi();
+final AddPluginRequest addPluginRequest = ; // AddPluginRequest | 
 
 try { 
-    api_instance.installPlugin(addPluginRequest);
-} catch (e) {
+    api.installPlugin(addPluginRequest);
+} catch on DioError (e) {
     print('Exception when calling PluginApi->installPlugin: $e\n');
 }
 ```
@@ -114,15 +114,15 @@ import 'package:lisa_server_sdk/api.dart';
 // uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 //defaultApiClient.getAuthentication<ApiKeyAuth>('Bearer').apiKeyPrefix = 'Bearer';
 
-var api_instance = new PluginApi();
-var pluginName = pluginName_example; // String | 
-var driver = driver_example; // String | 
-var requestBody = new BuiltMap<String, JsonObject>(); // BuiltMap<String, JsonObject> | 
+final api = LisaServerSdk().getPluginApi();
+final String pluginName = pluginName_example; // String | 
+final String driver = driver_example; // String | 
+final BuiltMap<String, JsonObject> requestBody = Object; // BuiltMap<String, JsonObject> | 
 
 try { 
-    var result = api_instance.pairing(pluginName, driver, requestBody);
-    print(result);
-} catch (e) {
+    final response = api.pairing(pluginName, driver, requestBody);
+    print(response);
+} catch on DioError (e) {
     print('Exception when calling PluginApi->pairing: $e\n');
 }
 ```
@@ -133,11 +133,11 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **pluginName** | **String**|  | 
  **driver** | **String**|  | 
- **requestBody** | [**BuiltMap<String, JsonObject>**](JsonObject.md)|  | 
+ **requestBody** | [**BuiltMap&lt;String, JsonObject&gt;**](JsonObject.md)|  | 
 
 ### Return type
 
-[**BuiltMap<String, JsonObject>**](JsonObject.md)
+[**BuiltMap&lt;String, JsonObject&gt;**](JsonObject.md)
 
 ### Authorization
 
@@ -163,14 +163,14 @@ import 'package:lisa_server_sdk/api.dart';
 // uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 //defaultApiClient.getAuthentication<ApiKeyAuth>('Bearer').apiKeyPrefix = 'Bearer';
 
-var api_instance = new PluginApi();
-var query = query_example; // String | 
-var activated = true; // bool | 
+final api = LisaServerSdk().getPluginApi();
+final String query = query_example; // String | 
+final bool activated = true; // bool | 
 
 try { 
-    var result = api_instance.searchPlugins(query, activated);
-    print(result);
-} catch (e) {
+    final response = api.searchPlugins(query, activated);
+    print(response);
+} catch on DioError (e) {
     print('Exception when calling PluginApi->searchPlugins: $e\n');
 }
 ```
@@ -184,7 +184,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**BuiltList<Plugin>**](Plugin.md)
+[**BuiltList&lt;Plugin&gt;**](Plugin.md)
 
 ### Authorization
 
@@ -210,12 +210,12 @@ import 'package:lisa_server_sdk/api.dart';
 // uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 //defaultApiClient.getAuthentication<ApiKeyAuth>('Bearer').apiKeyPrefix = 'Bearer';
 
-var api_instance = new PluginApi();
-var pluginName = pluginName_example; // String | 
+final api = LisaServerSdk().getPluginApi();
+final String pluginName = pluginName_example; // String | 
 
 try { 
-    api_instance.uninstallPlugin(pluginName);
-} catch (e) {
+    api.uninstallPlugin(pluginName);
+} catch on DioError (e) {
     print('Exception when calling PluginApi->uninstallPlugin: $e\n');
 }
 ```

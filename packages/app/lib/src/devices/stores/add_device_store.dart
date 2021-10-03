@@ -1,8 +1,10 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/json_object.dart';
 import 'package:lisa_flutter/src/common/errors.dart';
+import 'package:lisa_flutter/src/common/utils/extensions.dart';
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
 import 'package:lisa_flutter/src/common/utils/base_url_provider.dart';
+import 'package:lisa_flutter/src/common/utils/disposable.dart';
 import 'package:lisa_flutter/src/devices/presentation/dashboard.dart';
 import 'package:lisa_server_sdk/lisa_server_sdk.dart';
 import 'package:mobx/mobx.dart';
@@ -11,7 +13,7 @@ part 'add_device_store.g.dart';
 
 class AddDeviceStore = _AddDeviceStore with _$AddDeviceStore;
 
-abstract class _AddDeviceStore with Store, BaseUrlProvider {
+abstract class _AddDeviceStore with Store, Disposable, BaseUrlProvider {
   final PluginApi _pluginApi;
   final DeviceApi _deviceApi;
 
@@ -40,7 +42,7 @@ abstract class _AddDeviceStore with Store, BaseUrlProvider {
 
   /// Plugins list
   @observable
-  ObservableList<Plugin> plugins = ObservableList();
+  ObservableList<Plugin>? plugins;
 
   @observable
   String searchQuery = ' ';
@@ -54,7 +56,8 @@ abstract class _AddDeviceStore with Store, BaseUrlProvider {
   @observable
   DeviceSettings? selectedDeviceTemplate;
 
-  final Room? room;
+  @observable
+  Room? room;
 
   /// Settings by list
   List<Map<String, dynamic>> availableDevices = [];
@@ -64,7 +67,6 @@ abstract class _AddDeviceStore with Store, BaseUrlProvider {
   Map<String, dynamic> deviceSettings = {};
 
   _AddDeviceStore({
-    this.room,
     PluginApi? pluginApi,
     DeviceApi? deviceApi,
   })  : _pluginApi = pluginApi ?? BackendApiProvider().api.getPluginApi(),
@@ -97,19 +99,21 @@ abstract class _AddDeviceStore with Store, BaseUrlProvider {
   Future<void> selectPluginDeviceTemplate(Plugin selectedPlugin, DeviceSettings selectedDevice) async {
     this.selectedPlugin = selectedPlugin;
     selectedDeviceTemplate = selectedDevice;
+    this.isLoading = true;
 
     if (selectedDeviceTemplate!.pairing == 'settings') {
       currentCustomStep = ObservableMap.of({'step': 'settings'});
       _manageSettingsStep(selectedDeviceTemplate!.settings!.map((k, v) => MapEntry<String, Object>(k, toPrimitive(v))).toMap());
     } else if (selectedDeviceTemplate!.pairing == 'list') {
       currentCustomStep = ObservableMap.of({'step': 'list'});
-      _getDevicesList();
+      await _getDevicesList();
     } else if (selectedDeviceTemplate!.pairing == 'image') {
       currentCustomStep = ObservableMap.of({'step': 'image'});
       _manageImageStep('TODO');
     } else if (selectedDeviceTemplate!.pairing == 'custom') {
       await _goToNextCustomStep();
     }
+    this.isLoading = false;
   }
 
   @action
@@ -120,14 +124,14 @@ abstract class _AddDeviceStore with Store, BaseUrlProvider {
         currentCustomData[currentCustomStep['step']] = device;
       }
     } else {
-      if (currentCustomData[currentCustomStep['step']] == null) {
-        currentCustomData[currentCustomStep['step']] = [];
-      }
+      final data = currentCustomData[currentCustomStep['step']] ?? [];
+
       if (selected) {
-        currentCustomData[currentCustomStep['step']].add(device);
+        data.add(device);
       } else {
-        currentCustomData[currentCustomStep['step']].remove(device);
+        data.remove(device);
       }
+      currentCustomData[currentCustomStep['step']] = List.from(data);
     }
     canContinue = true;
   }
@@ -153,7 +157,11 @@ abstract class _AddDeviceStore with Store, BaseUrlProvider {
   }
 
   Future<bool> _goToNextCustomStep() async {
-    final data = (await _pluginApi.pairing(pluginName: selectedDeviceTemplate!.pluginName, driver: selectedDeviceTemplate!.driver, requestBody: BuiltMap<String, JsonObject>(currentCustomData.map((key, value) => MapEntry(key, JsonObject(value)))))).data!;
+    final data = (await _pluginApi.pairing(
+            pluginName: selectedDeviceTemplate!.pluginName,
+            driver: selectedDeviceTemplate!.driver,
+            requestBody: BuiltMap<String, JsonObject>(currentCustomData.map((key, value) => MapEntry(key, JsonObject(value))))))
+        .data!;
     currentCustomStep = ObservableMap.of(data.map((k, v) => MapEntry<String, Object>(k, toPrimitive(v))).toMap());
     return _manageCurrentStep();
   }
@@ -162,14 +170,16 @@ abstract class _AddDeviceStore with Store, BaseUrlProvider {
   bool back() {
     canContinue = false;
 
-    if (selectedPlugin == null) {
+    if (room == null) {
       return true;
+    } else if (room != null && selectedPlugin == null) {
+      room = null;
     } else if (stepHistory.isEmpty) {
       _resetFlow();
     } else {
       final previous = stepHistory.removeLast();
       currentCustomData[currentCustomStep['step']] = null;
-      currentCustomStep =  ObservableMap.of(previous);
+      currentCustomStep = ObservableMap.of(previous);
       _manageCurrentStep();
       canContinue = true;
     }
@@ -231,17 +241,19 @@ abstract class _AddDeviceStore with Store, BaseUrlProvider {
   }
 
   Future<void> _saveDevice() {
-    return _deviceApi.addDevice(device: (DeviceBuilder()
-      ..name= formData['name']
-      ..roomId= room?.id
-      ..template= formData['template'] ?? selectedDeviceTemplate!.template
-      ..type= formData['type'] ?? selectedDeviceTemplate!.type
-    ..driver= formData['driver'] ?? selectedDeviceTemplate!.driver
-    ..pluginName= selectedDeviceTemplate!.pluginName
-    ..data= MapBuilder<String, JsonObject>(formData)
-    ).build());
+    return _deviceApi.addDevice(
+        createDevice: (CreateDeviceBuilder()
+              ..name = formData['name']
+              ..roomId = room?.id
+              ..template = formData['template'] ?? MapBuilder(selectedDeviceTemplate!.template.toMap())
+              ..type = formData['type'] ?? DeviceTypeEnum.valueOf(selectedDeviceTemplate!.type!)
+              ..driver = formData['driver'] ?? selectedDeviceTemplate!.driver
+              ..pluginName = selectedDeviceTemplate!.pluginName
+              ..data = MapBuilder<String, JsonObject>(formData.map((key, value) => MapEntry(key, JsonObject(value)))))
+            .build());
   }
 
+  @override
   void dispose() {
     for (final d in _disposers) {
       d();

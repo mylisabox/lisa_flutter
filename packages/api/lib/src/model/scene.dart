@@ -8,8 +8,12 @@ import 'package:lisa_server_sdk/src/model/scene_data.dart';
 
 part 'scene.g.dart';
 
-
-
+/// Scene
+///
+/// Properties:
+/// * [name]
+/// * [displayName]
+/// * [data]
 abstract class Scene implements Built<Scene, SceneBuilder> {
     @BuiltValueField(wireName: r'name')
     String get name;
@@ -22,7 +26,8 @@ abstract class Scene implements Built<Scene, SceneBuilder> {
 
     Scene._();
 
-    static void _initializeBuilder(SceneBuilder b) => b;
+    @BuiltValueHook(initializeBuilder: true)
+    static void _defaults(SceneBuilder b) => b;
 
     factory Scene([void updates(SceneBuilder b)]) = _$Scene;
 

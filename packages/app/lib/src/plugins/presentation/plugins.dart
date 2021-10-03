@@ -3,12 +3,25 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
+import 'package:lisa_flutter/src/common/utils/extensions.dart';
 import 'package:lisa_flutter/src/plugins/stores/plugins_store.dart';
 import 'package:mobx/mobx.dart';
 
-class PluginsStoreWidget extends HookWidget {
+class PluginsStoreScreen extends StatelessWidget {
   static const route = '/pluginsStore';
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(context.localizations.pluginShop),
+      ),
+      body: PluginsStoreWidget(),
+    );
+  }
+}
+
+class PluginsStoreWidget extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final translations = CommonLocalizations.of(context);
@@ -51,7 +64,7 @@ class PluginsStoreWidget extends HookWidget {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Image.network(
-                            store.baseUrl + '/assets/plugins/${plugin.id}.png',
+                            store.getPluginImageUrl(plugin.id, plugin.image ?? ''),
                             errorBuilder: (_, __, ___) {
                               return Image.asset('assets/images/logo.png');
                             },
@@ -86,7 +99,8 @@ class PluginsStoreWidget extends HookWidget {
                                       }
                                     },
                               style: ButtonStyle(
-                                foregroundColor: MaterialStateProperty.all<Color>(plugin.installed ? Theme.of(context).errorColor : Theme.of(context).primaryColor),
+                                foregroundColor:
+                                    MaterialStateProperty.all<Color>(plugin.installed ? Theme.of(context).errorColor : Theme.of(context).primaryColor),
                               ),
                               child: Text(
                                 plugin.installed ? translations.uninstallPlugin : translations.installPlugin,

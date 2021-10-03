@@ -9,8 +9,12 @@ import 'package:built_value/serializer.dart';
 
 part 'interact_request.g.dart';
 
-
-
+/// InteractRequest
+///
+/// Properties:
+/// * [sentence]
+/// * [lang]
+/// * [context]
 abstract class InteractRequest implements Built<InteractRequest, InteractRequestBuilder> {
     @BuiltValueField(wireName: r'sentence')
     String get sentence;
@@ -23,7 +27,8 @@ abstract class InteractRequest implements Built<InteractRequest, InteractRequest
 
     InteractRequest._();
 
-    static void _initializeBuilder(InteractRequestBuilder b) => b;
+    @BuiltValueHook(initializeBuilder: true)
+    static void _defaults(InteractRequestBuilder b) => b;
 
     factory InteractRequest([void updates(InteractRequestBuilder b)]) = _$InteractRequest;
 

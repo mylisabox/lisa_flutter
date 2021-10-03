@@ -7,6 +7,7 @@ import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
 import 'package:lisa_flutter/src/common/stores/user_store.dart';
+import 'package:lisa_flutter/src/common/utils/extensions.dart';
 import 'package:lisa_flutter/src/profile/presentation/avatar_field.dart';
 import 'package:provider/provider.dart';
 import 'package:proxy_layout/proxy_layout.dart';
@@ -21,17 +22,19 @@ class AvatarData {
 _ProfileFormController useProfileManager(BuildContext context) {
   final userStore = Provider.of<UserStore>(context);
   final controllerEmail = useTextEditingController(text: userStore.user?.email ?? '');
-  final controllerFirst = useTextEditingController(text: userStore.user?.firstname ?? '');
-  final controllerLast = useTextEditingController(text: userStore.user?.lastname ?? '');
+  final controllerFirst = useTextEditingController(text: userStore.user?.firstName ?? '');
+  final controllerLast = useTextEditingController(text: userStore.user?.lastName ?? '');
   final controllerPhone = useTextEditingController(text: userStore.user?.mobile ?? '');
   final controllerPassword = useTextEditingController();
   final controllerPasswordConfirmation = useTextEditingController();
   final avatar = useState<AvatarData?>(null);
+  final lang = useState<String>(userStore.user?.lang ?? kSupportedLanguages.first.languageCode);
 
   return _ProfileFormController(
     lastName: controllerLast,
     firstName: controllerFirst,
     email: controllerEmail,
+    lang: lang,
     phone: controllerPhone,
     password: controllerPassword,
     passwordConfirm: controllerPasswordConfirmation,
@@ -47,8 +50,10 @@ class _ProfileFormController {
   final TextEditingController password;
   final TextEditingController passwordConfirm;
   final ValueNotifier<AvatarData?> avatarData;
+  final ValueNotifier<String> lang;
 
   _ProfileFormController({
+    required this.lang,
     required this.lastName,
     required this.firstName,
     required this.email,
@@ -62,6 +67,7 @@ class _ProfileFormController {
     final userStore = Provider.of<UserStore>(context, listen: false);
     return userStore.updateUser(
       email: email.text,
+      lang: lang.value,
       firstName: firstName.text.isEmpty ? null : firstName.text,
       lastName: lastName.text.isEmpty ? null : lastName.text,
       password: password.text.isEmpty ? null : password.text,
@@ -185,6 +191,19 @@ class _ProfileWidget extends HookWidget {
                     )
                   ],
                 ),
+                DropdownButtonFormField<String>(
+                  decoration: InputDecoration(labelText: translations.prefLanguage),
+                  items: kSupportedLanguages
+                      .map(
+                        (e) => DropdownMenuItem(child: Text(e.languageCode), value: e.languageCode),
+                      )
+                      .toList(),
+                  onChanged: (lang) {
+                    profileManager.lang.value = lang!;
+                  },
+                  value: profileManager.lang.value,
+                  isExpanded: true,
+                ),
                 TextField(
                   decoration: InputDecoration(labelText: translations.emailField),
                   controller: profileManager.email,
@@ -235,6 +254,7 @@ class _ProfileWidget extends HookWidget {
                           onError: (err, stack) => showErrorDialog(context, err, stack),
                         );
                         if (isSuccessful) {
+                          context.navigator.pop();
                           final snackBar = SnackBar(content: Text(translations.profileSaved));
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         }

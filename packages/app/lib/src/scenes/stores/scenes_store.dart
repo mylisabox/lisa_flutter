@@ -15,7 +15,7 @@ abstract class _ScenesStore with Store {
   final SceneApi _sceneApi;
 
   @observable
-  ObservableList<Scene> scenes = ObservableList();
+  ObservableList<Scene>? scenes;
 
   @observable
   ErrorResultException? error;
@@ -34,7 +34,7 @@ abstract class _ScenesStore with Store {
 
   @action
   Future<void> deleteScenes(int index) async {
-    await _sceneApi.deleteScene(scene: scenes[index].name).catchError(handleCaughtError);
-    scenes.removeAt(index);
+    await _sceneApi.deleteScene(scene: scenes![index].name).catchError(handleCaughtError);
+    scenes?.removeAt(index);
   }
 }

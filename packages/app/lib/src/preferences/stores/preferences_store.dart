@@ -14,7 +14,7 @@ abstract class _PreferencesStore with Store {
   late String externalBaseUrl;
 
   @observable
-  bool isDarkTheme = false;
+  bool isDarkTheme = true;
 
   _PreferencesStore({SharedPreferences? prefs, BackendApiProvider? apiProvider})
       : _prefs = prefs ?? PreferencesProvider().prefs,
@@ -22,7 +22,7 @@ abstract class _PreferencesStore with Store {
 
   @action
   void init() {
-    isDarkTheme = _prefs.getBool(_keyDarkTheme) ?? false;
+    isDarkTheme = _prefs.getBool(_keyDarkTheme) ?? isDarkTheme;
     externalBaseUrl = _prefs.getString(PreferencesProvider.keyExternalUrl) ?? '';
   }
 

@@ -5,13 +5,13 @@
 import 'package:lisa_server_sdk/api.dart';
 ```
 
-All URIs are relative to *http://localhost:3000*
+All URIs are relative to *http://mylisabox:3000*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**deleteScene**](SceneApi.md#deletescene) | **delete** /api/v1/chatbot/userBot/{scene} | 
-[**getScene**](SceneApi.md#getscene) | **get** /api/v1/chatbot/userBot | 
-[**saveScene**](SceneApi.md#savescene) | **post** /api/v1/chatbot/userBot | 
+[**deleteScene**](SceneApi.md#deletescene) | **DELETE** /api/v1/chatBots/userBot/{scene} | 
+[**getScene**](SceneApi.md#getscene) | **GET** /api/v1/chatBots/userBot | 
+[**saveScene**](SceneApi.md#savescene) | **POST** /api/v1/chatBots/userBot | 
 
 
 # **deleteScene**
@@ -27,12 +27,12 @@ import 'package:lisa_server_sdk/api.dart';
 // uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 //defaultApiClient.getAuthentication<ApiKeyAuth>('Bearer').apiKeyPrefix = 'Bearer';
 
-var api_instance = new SceneApi();
-var scene = scene_example; // String | 
+final api = LisaServerSdk().getSceneApi();
+final String scene = scene_example; // String | 
 
 try { 
-    api_instance.deleteScene(scene);
-} catch (e) {
+    api.deleteScene(scene);
+} catch on DioError (e) {
     print('Exception when calling SceneApi->deleteScene: $e\n');
 }
 ```
@@ -71,12 +71,12 @@ import 'package:lisa_server_sdk/api.dart';
 // uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 //defaultApiClient.getAuthentication<ApiKeyAuth>('Bearer').apiKeyPrefix = 'Bearer';
 
-var api_instance = new SceneApi();
+final api = LisaServerSdk().getSceneApi();
 
 try { 
-    var result = api_instance.getScene();
-    print(result);
-} catch (e) {
+    final response = api.getScene();
+    print(response);
+} catch on DioError (e) {
     print('Exception when calling SceneApi->getScene: $e\n');
 }
 ```
@@ -86,7 +86,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**BuiltList<Scene>**](Scene.md)
+[**BuiltList&lt;Scene&gt;**](Scene.md)
 
 ### Authorization
 
@@ -112,12 +112,12 @@ import 'package:lisa_server_sdk/api.dart';
 // uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 //defaultApiClient.getAuthentication<ApiKeyAuth>('Bearer').apiKeyPrefix = 'Bearer';
 
-var api_instance = new SceneApi();
-var scene = new Scene(); // Scene | 
+final api = LisaServerSdk().getSceneApi();
+final Scene scene = ; // Scene | 
 
 try { 
-    api_instance.saveScene(scene);
-} catch (e) {
+    api.saveScene(scene);
+} catch on DioError (e) {
     print('Exception when calling SceneApi->saveScene: $e\n');
 }
 ```

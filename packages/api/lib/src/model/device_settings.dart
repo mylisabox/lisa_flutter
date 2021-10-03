@@ -3,14 +3,24 @@
 //
 
 import 'package:built_collection/built_collection.dart';
-import 'package:built_value/built_value.dart';
 import 'package:built_value/json_object.dart';
+import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
 part 'device_settings.g.dart';
 
-
-
+/// DeviceSettings
+///
+/// Properties:
+/// * [name] 
+/// * [driver] 
+/// * [image] 
+/// * [pairing] 
+/// * [pluginName] 
+/// * [description] 
+/// * [type] 
+/// * [template] 
+/// * [settings] 
 abstract class DeviceSettings implements Built<DeviceSettings, DeviceSettingsBuilder> {
     @BuiltValueField(wireName: r'name')
     String get name;
@@ -41,7 +51,8 @@ abstract class DeviceSettings implements Built<DeviceSettings, DeviceSettingsBui
 
     DeviceSettings._();
 
-    static void _initializeBuilder(DeviceSettingsBuilder b) => b;
+    @BuiltValueHook(initializeBuilder: true)
+    static void _defaults(DeviceSettingsBuilder b) => b;
 
     factory DeviceSettings([void updates(DeviceSettingsBuilder b)]) = _$DeviceSettings;
 

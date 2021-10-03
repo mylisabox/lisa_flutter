@@ -129,7 +129,7 @@ class _PluginDevice extends StatelessWidget with BaseUrlProvider {
       hoverColor: Theme.of(context).primaryColorLight,
       child: Container(
         width: 150,
-        height: 200,
+        height: 150,
         decoration: BoxDecoration(
           border: Border.all(
             width: 1,
@@ -140,13 +140,26 @@ class _PluginDevice extends StatelessWidget with BaseUrlProvider {
           padding: const EdgeInsets.all(kSmallPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Image.network(
-                prefixHostIfNeeded(settings.image),
-                width: 120,
-                height: 130,
-              ),
+              if (settings.image.endsWith('.svg'))
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(kSmallPadding),
+                    child: SvgPicture.network(
+                      getPluginImageUrl(settings.pluginName, settings.image),
+                      height: 100,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+              if (!settings.image.endsWith('.svg'))
+                Expanded(
+                  child: Image.network(
+                    getPluginImageUrl(settings.pluginName, settings.image),
+                    width: 120,
+                    height: 120,
+                  ),
+                ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: kSmallPadding),
                 child: Text(settings.name, textAlign: TextAlign.center),

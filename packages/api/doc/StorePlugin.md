@@ -10,6 +10,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **String** |  | 
 **name** | **String** |  | 
+**image** | **String** |  | [optional] 
 **description** | **String** |  | 
 **installed** | **bool** |  | 
 

@@ -1,4 +1,3 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -10,97 +9,70 @@ class ProgressButton extends HookWidget {
   final Color color;
   final Widget child;
   final double elevation;
-  final ProgressButtonState? state;
-  final VoidCallback? onTap;
-  final Future Function()? until;
-  final Function(dynamic, dynamic)? onError;
-  final Function(dynamic)? onSuccess;
+  final ProgressButtonState state;
+  final VoidCallback onTap;
 
-  ProgressButton.withState({Key? key, required this.padding, required this.color, required this.child, this.elevation = 0, required this.onTap, required this.state})
-      : until = null,
-        onError = null,
-        onSuccess = null,
-        super(key: key);
+  ProgressButton({
+    required this.padding,
+    required this.color,
+    required this.child,
+    required this.elevation,
+    required this.state,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     final _globalKey = useMemoized(() => GlobalKey());
     final _width = useState(double.infinity);
-    final _isPressed = useState(false);
-    final _state = useState(state ?? ProgressButtonState.idle);
+    final _state = useState(state);
     final _controller = useAnimationController(duration: Duration(milliseconds: 500));
     final isFinish = useState<bool>(false);
     final _anim = useAnimation(Tween(begin: 0.0, end: 1.0).animate(_controller));
     final initialWidth = useState<double?>(null);
     final height = useState<double?>(null);
-    final result = useState<dynamic>(null);
 
     final _onStart = (bool fromTap) async {
       if (_state.value == ProgressButtonState.idle || initialWidth.value == null) {
         initialWidth.value = _globalKey.currentContext!.size!.width;
         height.value = _globalKey.currentContext!.size!.height;
       }
-
-      _isPressed.value = true;
-
-      if (until == null) {
-        if (fromTap) {
-          onTap?.call();
-        }
-      } else {
-        if (_state.value == ProgressButtonState.idle) {
-          _controller.forward();
-          _state.value = ProgressButtonState.progress;
-        }
-        try {
-          result.value = await until?.call();
-          _state.value = ProgressButtonState.done;
-          isFinish.value = true;
-          if (_controller.isCompleted) {
-            onSuccess?.call(result);
-          }
-        } catch (err, stacktrace) {
-          onError?.call(err, stacktrace);
-          _controller.reverse();
-          reset(_state, _width, _isPressed, initialWidth);
-        }
-      }
     };
 
     useEffect(() {
-      if (state != null && _state.value != state) {
+      if (_state.value != state) {
         WidgetsBinding.instance!.addPostFrameCallback((_) {
           _onStart(false);
           if (state == ProgressButtonState.idle) {
             _controller.reverse();
-            reset(_state, _width, _isPressed, initialWidth);
+            reset(_state, _width, initialWidth);
           } else if (state == ProgressButtonState.progress) {
             _controller.forward();
           } else {
             isFinish.value = true;
           }
-          _state.value = state!;
+          _state.value = state;
         });
       }
       return null;
     }, [state]);
 
-    return Container(
+    final _isPressed = state != ProgressButtonState.idle;
+
+    return SizedBox(
       key: _globalKey,
       width: initialWidth.value == null ? double.infinity : initialWidth.value! - ((initialWidth.value! - height.value!) * _anim),
-      height: _isPressed.value ? 55 : null,
+      height: _isPressed ? 55 : null,
       // ignore: deprecated_member_use
       child: RaisedButton(
-        shape: _isPressed.value ? RoundedRectangleBorder(borderRadius: BorderRadius.circular(35)) : null,
-        padding: _isPressed.value ? EdgeInsets.zero : padding,
+        shape: _isPressed ? RoundedRectangleBorder(borderRadius: BorderRadius.circular(35)) : null,
+        padding: _isPressed ? EdgeInsets.zero : padding,
         color: color,
-        disabledColor: _state.value == ProgressButtonState.done ? Theme.of(context).accentColor : color,
+        disabledColor: _state.value == ProgressButtonState.done ? Theme.of(context).primaryColor : color,
         child: buildButtonChild(_state),
-        onPressed: _isPressed.value
+        onPressed: _isPressed
             ? null
-            : () async {
-                _onStart(true);
-              },
+            : onTap,
       ),
     );
   }
@@ -121,10 +93,8 @@ class ProgressButton extends HookWidget {
   void reset(
     ValueNotifier<ProgressButtonState> state,
     ValueNotifier<double> width,
-    ValueNotifier<bool> isPressed,
     ValueNotifier<double?> initialWidth,
   ) {
-    isPressed.value = false;
     width.value = double.infinity;
     state.value = ProgressButtonState.idle;
     initialWidth.value = null;

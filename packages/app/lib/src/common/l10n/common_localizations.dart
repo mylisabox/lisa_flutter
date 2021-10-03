@@ -109,7 +109,7 @@ class CommonLocalizations {
 
   String get menuWelcome => Intl.message('Welcome to L.I.S.A.', name: 'menuWelcome', desc: 'The title of the menu drawer');
 
-  String get menuNightMode => Intl.message('Night mode', name: 'menuNightMode');
+  String get menuDarkMode => Intl.message('Use dark mode', name: 'menuDarkMode');
 
   String get menuRooms => Intl.message('Rooms', name: 'menuRooms');
 
@@ -179,6 +179,8 @@ class CommonLocalizations {
 
   String get selectRoom => Intl.message('Select room', name: 'selectRoom');
 
+  String get addDeviceSelectRoom => Intl.message('Please select a room where you want to add devices:', name: 'addDeviceSelectRoom');
+
   String get errorNoHostTitle => Intl.message('No L.I.S.A. server has been found.', name: 'errorNoHostTitle');
 
   String get errorNoHost => Intl.message('Please check/set an external URL or make sure you\'re on same network as the server.', name: 'errorNoHost');
@@ -220,6 +222,16 @@ class CommonLocalizations {
   String get uninstallPlugin => Intl.message('Uninstall', name: 'uninstallPlugin');
 
   String get pluginShopDesc => Intl.message('Install or uninstall L.I.S.A. plugins', name: 'pluginShopDesc');
+
+  String get seeLicenses => Intl.message('See app licenses', name: 'seeLicenses');
+
+  String get manageProfile => Intl.message('Manage your profile', name: 'manageProfile');
+
+  String get manageSettings => Intl.message('Settings of L.I.S.A.', name: 'manageProfile');
+
+  String get lightIntensity => Intl.message('Intensity', name: 'lightIntensity');
+
+  String groupDevices(int number) => Intl.message('$number devices', args: [number], name: 'groupDevices');
 
   String get boxConnected =>
       Intl.message('Your box is now connected and should blink in blue, meaning you can use L.I.S.A. but can\'t do voice commands until you setup it.',

@@ -3,7 +3,6 @@
 //
 
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:built_value/serializer.dart';
 import 'package:dio/dio.dart';
@@ -18,9 +17,19 @@ class UserApi {
 
   const UserApi(this._dio, this._serializers);
 
+  /// getProfile
   ///
   ///
+  /// Parameters:
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
+  /// Returns a [Future] containing a [Response] with a [User] as data
+  /// Throws [DioError] if API call or serialization fails
   Future<Response<User>> getProfile({
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -29,7 +38,7 @@ class UserApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/api/v1/user';
+    final _path = r'/api/v1/users/me';
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -46,19 +55,12 @@ class UserApi {
         ],
         ...?extra,
       },
-      contentType: [
-        'application/json',
-      ].first,
       validateStatus: validateStatus,
     );
-
-    final _queryParameters = <String, dynamic>{
-    };
 
     final _response = await _dio.request<Object>(
       _path,
       options: _options,
-      queryParameters: _queryParameters,
       cancelToken: cancelToken,
       onSendProgress: onSendProgress,
       onReceiveProgress: onReceiveProgress,
@@ -73,13 +75,13 @@ class UserApi {
         specifiedType: _responseType,
       ) as User;
 
-    } catch (error) {
+    } catch (error, stackTrace) {
       throw DioError(
         requestOptions: _response.requestOptions,
         response: _response,
         type: DioErrorType.other,
         error: error,
-      );
+      )..stackTrace = stackTrace;
     }
 
     return Response<User>(
@@ -94,18 +96,34 @@ class UserApi {
     );
   }
 
+  /// saveProfile
   ///
   ///
+  /// Parameters:
+  /// * [email]
+  /// * [firstName]
+  /// * [lang]
+  /// * [lastName]
+  /// * [mobile]
+  /// * [password]
+  /// * [avatar]
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
+  /// Returns a [Future] containing a [Response] with a [User] as data
+  /// Throws [DioError] if API call or serialization fails
   Future<Response<User>> saveProfile({
-    required int id,
-    required String email,
-    required String lang,
-    String? firstname,
-    String? lastname,
+    String? email,
+    String? firstName,
+    String? lang,
+    String? lastName,
     String? mobile,
     String? password,
-    Uint8List? avatar,
+    MultipartFile? avatar,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -113,9 +131,9 @@ class UserApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/api/v1/user';
+    final _path = r'/api/v1/users/me';
     final _options = Options(
-      method: r'POST',
+      method: r'PATCH',
       headers: <String, dynamic>{
         ...?headers,
       },
@@ -130,47 +148,38 @@ class UserApi {
         ],
         ...?extra,
       },
-      contentType: [
-        'multipart/form-data',
-      ].first,
+      contentType: 'multipart/form-data',
       validateStatus: validateStatus,
     );
-
-    final _queryParameters = <String, dynamic>{
-    };
 
     dynamic _bodyData;
 
     try {
       _bodyData = FormData.fromMap(<String, dynamic>{
-        r'id': encodeFormParameter(_serializers, id, const FullType(int)),
-        r'email': encodeFormParameter(_serializers, email, const FullType(String)),
-        r'firstname': encodeFormParameter(_serializers, firstname, const FullType(String)),
-        r'lang': encodeFormParameter(_serializers, lang, const FullType(String)),
-        r'lastname': encodeFormParameter(_serializers, lastname, const FullType(String)),
-        r'mobile': encodeFormParameter(_serializers, mobile, const FullType(String)),
-        r'password': encodeFormParameter(_serializers, password, const FullType(String)),
-        if (avatar != null)
-        r'avatar': MultipartFile.fromBytes(avatar, filename: r'avatar'),
+        if (email != null) r'email': encodeFormParameter(_serializers, email, const FullType(String)),
+        if (firstName != null) r'firstName': encodeFormParameter(_serializers, firstName, const FullType(String)),
+        if (lang != null) r'lang': encodeFormParameter(_serializers, lang, const FullType(String)),
+        if (lastName != null) r'lastName': encodeFormParameter(_serializers, lastName, const FullType(String)),
+        if (mobile != null) r'mobile': encodeFormParameter(_serializers, mobile, const FullType(String)),
+        if (password != null) r'password': encodeFormParameter(_serializers, password, const FullType(String)),
+        if (avatar != null) r'avatar': avatar,
       });
 
-    } catch(error) {
+    } catch(error, stackTrace) {
       throw DioError(
          requestOptions: _options.compose(
           _dio.options,
           _path,
-          queryParameters: _queryParameters,
         ),
         type: DioErrorType.other,
         error: error,
-      );
+      )..stackTrace = stackTrace;
     }
 
     final _response = await _dio.request<Object>(
       _path,
       data: _bodyData,
       options: _options,
-      queryParameters: _queryParameters,
       cancelToken: cancelToken,
       onSendProgress: onSendProgress,
       onReceiveProgress: onReceiveProgress,
@@ -185,13 +194,13 @@ class UserApi {
         specifiedType: _responseType,
       ) as User;
 
-    } catch (error) {
+    } catch (error, stackTrace) {
       throw DioError(
         requestOptions: _response.requestOptions,
         response: _response,
         type: DioErrorType.other,
         error: error,
-      );
+      )..stackTrace = stackTrace;
     }
 
     return Response<User>(

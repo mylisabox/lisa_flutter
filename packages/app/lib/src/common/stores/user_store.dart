@@ -1,30 +1,33 @@
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
-import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
 import 'package:lisa_flutter/src/common/utils/base_url_provider.dart';
 import 'package:lisa_flutter/src/preferences/preferences_provider.dart';
 import 'package:lisa_server_sdk/lisa_server_sdk.dart';
 import 'package:mobx/mobx.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 part 'user_store.g.dart';
 
 class UserStore = _UserStore with _$UserStore;
 
+enum ServerStatus { initialized, uninitialized, noHost }
+
 abstract class _UserStore with Store, BaseUrlProvider {
-  final SharedPreferences _preferences;
-  final LisaServerSdk _api;
+  final PreferencesProvider _preferencesProvider;
+  final BackendApiProvider _apiProvider;
 
   _UserStore({
-    LisaServerSdk? api,
-    SharedPreferences? prefs,
-  })  : _api = api ?? BackendApiProvider().api,
-        _preferences = prefs ?? PreferencesProvider().prefs;
+    BackendApiProvider? api,
+    PreferencesProvider? prefs,
+  })  : _apiProvider = api ?? BackendApiProvider(),
+        _preferencesProvider = prefs ?? PreferencesProvider();
 
   @observable
   User? user;
+
+  @observable
+  ServerStatus serverStatus = ServerStatus.initialized;
 
   @observable
   String proxyUrl = '';
@@ -39,32 +42,42 @@ abstract class _UserStore with Store, BaseUrlProvider {
   String? get lang => user?.lang;
 
   @computed
-  String get fullName => user?.firstname == null ? user?.email ?? '' : user!.firstname!;
+  String get fullName => user?.firstName == null ? '' : user!.firstName;
 
-  String? get lastRoute => _preferences.getString(PreferencesProvider.keyLastRoute);
+  String? get lastRoute => _preferencesProvider.prefs.getString(PreferencesProvider.keyLastRoute);
+
+  Future<void> _checkServerStatus() async {
+    try {
+      final response = (await _apiProvider.api.getConfigApi().isInitialized()).data!;
+      serverStatus = response.initialized ? ServerStatus.initialized : ServerStatus.uninitialized;
+    } catch (err) {
+      serverStatus = ServerStatus.noHost;
+      print(err);
+    }
+  }
 
   @action
   Future init() async {
-    final token = _preferences.getString(PreferencesProvider.keyToken);
+    final token = await _preferencesProvider.securePrefs.read(key: PreferencesProvider.keyToken);
     if (user != null) {
       //already initialized
       return;
     }
 
-    if (token != null) {
-      _api.setApiKey(kAuthKey, 'JWT $token');
+    if (token == null) {
+      _checkServerStatus();
+    } else {
+      serverStatus = ServerStatus.initialized;
+      _apiProvider.setToken(token);
       try {
-        user = (await _api.getUserApi().getProfile()).data;
+        user = (await _apiProvider.api.getUserApi().getProfile()).data;
       } on DioError catch (err) {
         proxyUrl = getProxyUrl();
-        if (err.response?.statusCode == 401) {
-          _preferences.remove(PreferencesProvider.keyToken);
+        if (err.response?.statusCode == 404) {
+          await _checkServerStatus();
         }
         rethrow;
       }
-    } else {
-      //do request to setup host
-      await _api.getConfigApi().isInitialized();
     }
     proxyUrl = getProxyUrl();
     currentToken = token;
@@ -73,15 +86,8 @@ abstract class _UserStore with Store, BaseUrlProvider {
   @action
   Future changeLang(String lang) async {
     if (lang != user?.lang) {
-      final result = (await _api.getUserApi().saveProfile(
-                id: user!.id,
-                email: user!.email,
-                firstname: user!.firstname,
+      final result = (await _apiProvider.api.getUserApi().saveProfile(
                 lang: lang,
-                lastname: user!.lastname,
-                mobile: user!.mobile,
-                avatar: null,
-                password: null,
               ))
           .data;
       setUser(result);
@@ -99,18 +105,18 @@ abstract class _UserStore with Store, BaseUrlProvider {
     String? firstName,
     String? lastName,
     String? phone,
+    String? lang,
     String? password,
     Uint8List? avatarData,
   }) async {
-    final result = (await _api.getUserApi().saveProfile(
-              id: user!.id,
+    final result = (await _apiProvider.api.getUserApi().saveProfile(
               email: email,
-              firstname: firstName,
-              lang: user!.lang,
-              lastname: lastName,
+              firstName: firstName,
+              lastName: lastName,
+              lang: lang,
               mobile: phone,
               password: password,
-              avatar: avatarData,
+              avatar: avatarData == null ? null : MultipartFile.fromBytes(avatarData, filename: 'avatar'),
             ))
         .data;
 
@@ -119,12 +125,7 @@ abstract class _UserStore with Store, BaseUrlProvider {
 
   @action
   Future logout() async {
-    await _preferences.remove(PreferencesProvider.keyToken);
+    await _preferencesProvider.securePrefs.deleteAll();
     setUser(null);
-    try {
-      await _api.getLoginApi().logout();
-    } catch (ex) {
-      //shallow errors as token might be expired
-    }
   }
 }

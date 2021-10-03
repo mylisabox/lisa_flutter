@@ -5,9 +5,24 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
 import 'package:lisa_flutter/src/common/presentation/file_fields/file_field.dart';
+import 'package:lisa_flutter/src/common/utils/extensions.dart';
 import 'package:lisa_flutter/src/plugins/presentation/plugins.dart';
 import 'package:lisa_flutter/src/settings/stores/settings_store.dart';
 import 'package:provider/provider.dart';
+
+class SettingsScreen extends HookWidget {
+  static const route = '/settings';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(context.localizations.menuSettings),
+      ),
+      body: SettingsWidget(),
+    );
+  }
+}
 
 class SettingsWidget extends HookWidget {
   static const route = '/settings';
@@ -15,7 +30,7 @@ class SettingsWidget extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final translations = CommonLocalizations.of(context);
-    final settingStore = useMemoized(() => SettingsStore());
+    final settingStore = context.of<SettingsStore>();
 
     return Provider.value(
       value: settingStore,
@@ -28,6 +43,18 @@ class SettingsWidget extends HookWidget {
               children: <Widget>[
                 ListTile(
                   onTap: () async {
+                    final url = await showPrompt(context, translations.externalUrl, hint: translations.externalUrlHint, initialValue: settingStore.externalBaseUrl);
+                    if (url != null) {
+                      settingStore.setExternalUrl(url);
+                    }
+                  },
+                  leading: Icon(Icons.settings_remote),
+                  title: Text(translations.externalUrl),
+                  subtitle: Text(translations.linkExternalUrl),
+                ),
+                Divider(height: 1),
+                ListTile(
+                  onTap: () async {
                     await _showFilePickerDialog(context);
                   },
                   leading: Icon(Icons.mic),
@@ -37,7 +64,7 @@ class SettingsWidget extends HookWidget {
                 Divider(height: 1),
                 ListTile(
                   onTap: () async {
-                    Provider.of<GlobalKey<NavigatorState>>(context, listen: false).currentState?.pushNamed(PluginsStoreWidget.route);
+                    context.navigator.pushNamed(PluginsStoreScreen.route);
                   },
                   leading: Icon(Icons.shop),
                   title: Text(translations.pluginShop),

@@ -7,8 +7,11 @@ import 'package:built_value/serializer.dart';
 
 part 'update_device_info_request.g.dart';
 
-
-
+/// UpdateDeviceInfoRequest
+///
+/// Properties:
+/// * [name] 
+/// * [roomId] 
 abstract class UpdateDeviceInfoRequest implements Built<UpdateDeviceInfoRequest, UpdateDeviceInfoRequestBuilder> {
     @BuiltValueField(wireName: r'name')
     String get name;
@@ -18,7 +21,8 @@ abstract class UpdateDeviceInfoRequest implements Built<UpdateDeviceInfoRequest,
 
     UpdateDeviceInfoRequest._();
 
-    static void _initializeBuilder(UpdateDeviceInfoRequestBuilder b) => b;
+    @BuiltValueHook(initializeBuilder: true)
+    static void _defaults(UpdateDeviceInfoRequestBuilder b) => b;
 
     factory UpdateDeviceInfoRequest([void updates(UpdateDeviceInfoRequestBuilder b)]) = _$UpdateDeviceInfoRequest;
 

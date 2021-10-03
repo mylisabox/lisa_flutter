@@ -12,11 +12,11 @@ class _$User extends User {
   @override
   final String email;
   @override
-  final String? firstname;
+  final String firstName;
   @override
   final String lang;
   @override
-  final String? lastname;
+  final String lastName;
   @override
   final String? mobile;
   @override
@@ -28,15 +28,17 @@ class _$User extends User {
   _$User._(
       {required this.id,
       required this.email,
-      this.firstname,
+      required this.firstName,
       required this.lang,
-      this.lastname,
+      required this.lastName,
       this.mobile,
       this.avatar})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(id, 'User', 'id');
     BuiltValueNullFieldError.checkNotNull(email, 'User', 'email');
+    BuiltValueNullFieldError.checkNotNull(firstName, 'User', 'firstName');
     BuiltValueNullFieldError.checkNotNull(lang, 'User', 'lang');
+    BuiltValueNullFieldError.checkNotNull(lastName, 'User', 'lastName');
   }
 
   @override
@@ -52,9 +54,9 @@ class _$User extends User {
     return other is User &&
         id == other.id &&
         email == other.email &&
-        firstname == other.firstname &&
+        firstName == other.firstName &&
         lang == other.lang &&
-        lastname == other.lastname &&
+        lastName == other.lastName &&
         mobile == other.mobile &&
         avatar == other.avatar;
   }
@@ -66,9 +68,9 @@ class _$User extends User {
             $jc(
                 $jc(
                     $jc($jc($jc(0, id.hashCode), email.hashCode),
-                        firstname.hashCode),
+                        firstName.hashCode),
                     lang.hashCode),
-                lastname.hashCode),
+                lastName.hashCode),
             mobile.hashCode),
         avatar.hashCode));
   }
@@ -78,9 +80,9 @@ class _$User extends User {
     return (newBuiltValueToStringHelper('User')
           ..add('id', id)
           ..add('email', email)
-          ..add('firstname', firstname)
+          ..add('firstName', firstName)
           ..add('lang', lang)
-          ..add('lastname', lastname)
+          ..add('lastName', lastName)
           ..add('mobile', mobile)
           ..add('avatar', avatar))
         .toString();
@@ -98,17 +100,17 @@ class UserBuilder implements Builder<User, UserBuilder> {
   String? get email => _$this._email;
   set email(String? email) => _$this._email = email;
 
-  String? _firstname;
-  String? get firstname => _$this._firstname;
-  set firstname(String? firstname) => _$this._firstname = firstname;
+  String? _firstName;
+  String? get firstName => _$this._firstName;
+  set firstName(String? firstName) => _$this._firstName = firstName;
 
   String? _lang;
   String? get lang => _$this._lang;
   set lang(String? lang) => _$this._lang = lang;
 
-  String? _lastname;
-  String? get lastname => _$this._lastname;
-  set lastname(String? lastname) => _$this._lastname = lastname;
+  String? _lastName;
+  String? get lastName => _$this._lastName;
+  set lastName(String? lastName) => _$this._lastName = lastName;
 
   String? _mobile;
   String? get mobile => _$this._mobile;
@@ -119,7 +121,7 @@ class UserBuilder implements Builder<User, UserBuilder> {
   set avatar(String? avatar) => _$this._avatar = avatar;
 
   UserBuilder() {
-    User._initializeBuilder(this);
+    User._defaults(this);
   }
 
   UserBuilder get _$this {
@@ -127,9 +129,9 @@ class UserBuilder implements Builder<User, UserBuilder> {
     if ($v != null) {
       _id = $v.id;
       _email = $v.email;
-      _firstname = $v.firstname;
+      _firstName = $v.firstName;
       _lang = $v.lang;
-      _lastname = $v.lastname;
+      _lastName = $v.lastName;
       _mobile = $v.mobile;
       _avatar = $v.avatar;
       _$v = null;
@@ -155,9 +157,11 @@ class UserBuilder implements Builder<User, UserBuilder> {
             id: BuiltValueNullFieldError.checkNotNull(id, 'User', 'id'),
             email:
                 BuiltValueNullFieldError.checkNotNull(email, 'User', 'email'),
-            firstname: firstname,
+            firstName: BuiltValueNullFieldError.checkNotNull(
+                firstName, 'User', 'firstName'),
             lang: BuiltValueNullFieldError.checkNotNull(lang, 'User', 'lang'),
-            lastname: lastname,
+            lastName: BuiltValueNullFieldError.checkNotNull(
+                lastName, 'User', 'lastName'),
             mobile: mobile,
             avatar: avatar);
     replace(_$result);
@@ -165,4 +169,4 @@ class UserBuilder implements Builder<User, UserBuilder> {
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,deprecated_member_use_from_same_package,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new

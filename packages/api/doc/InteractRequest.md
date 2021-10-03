@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **sentence** | **String** |  | 
 **lang** | **String** |  | [optional] 
-**context** | [**BuiltMap<String, JsonObject>**](JsonObject.md) |  | [optional] 
+**context** | [**BuiltMap&lt;String, JsonObject&gt;**](JsonObject.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

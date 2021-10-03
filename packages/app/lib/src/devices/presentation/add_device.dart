@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
+import 'package:lisa_flutter/src/common/presentation/loading.dart';
 import 'package:lisa_flutter/src/common/utils/base_url_provider.dart';
+import 'package:lisa_flutter/src/common/utils/extensions.dart';
+import 'package:lisa_flutter/src/devices/presentation/room_selector.dart';
 import 'package:lisa_flutter/src/devices/stores/add_device_store.dart';
-import 'package:lisa_flutter/src/devices/stores/device_store.dart';
 import 'package:lisa_server_sdk/lisa_server_sdk.dart';
 import 'package:provider/provider.dart';
 import 'package:proxy_layout/proxy_layout.dart';
@@ -26,38 +29,43 @@ class AddDeviceScreen extends StatelessWidget {
     final translations = CommonLocalizations.of(context);
     return Provider<AddDeviceStore>(
       create: (_) {
-        return AddDeviceStore(room: room);
+        return AddDeviceStore();
       },
       dispose: (_, store) => store.dispose(),
       child: Builder(
         builder: (context) {
           final store = Provider.of<AddDeviceStore>(context);
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(room == null ? translations.addDevice : translations.addDeviceTo(room!.name)),
-            ),
-            body: Observer(
-              builder: (context) => Column(
-                children: <Widget>[
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(kNormalPadding),
-                      child: AddDeviceWidget(),
+          return WillPopScope(
+            onWillPop: () async {
+              return store.back();
+            },
+            child: Scaffold(
+              appBar: AppBar(
+                title: Text(room == null ? translations.addDevice : translations.addDeviceTo(room!.name)),
+              ),
+              body: Observer(
+                builder: (context) => Column(
+                  children: <Widget>[
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(kNormalPadding),
+                        child: AddDeviceWidget(),
+                      ),
                     ),
-                  ),
-                  if (store.selectedDeviceTemplate != null) Divider(height: 1),
-                  if (store.selectedDeviceTemplate != null)
-                    ButtonBar(
-                      children: <Widget>[
-                        TextButton(
+                    if (store.selectedDeviceTemplate != null) Divider(height: 1),
+                    if (store.selectedDeviceTemplate != null)
+                      ButtonBar(
+                        children: <Widget>[
+                          TextButton(
                             onPressed: () {
                               if (store.back()) {
                                 Navigator.of(context).pop(false);
                               }
                             },
-                            child: Text(translations.cancel)),
-                        Observer(
-                          builder: (_) => TextButton(
+                            child: Text(translations.cancel),
+                          ),
+                          Observer(
+                            builder: (_) => TextButton(
                               style: ButtonStyle(textStyle: MaterialStateProperty.all(TextStyle(color: Theme.of(context).primaryColor))),
                               onPressed: store.canContinue && !store.isLoading
                                   ? () async {
@@ -66,11 +74,13 @@ class AddDeviceScreen extends StatelessWidget {
                                       }
                                     }
                                   : null,
-                              child: Text(translations.continueButton)),
-                        )
-                      ],
-                    ),
-                ],
+                              child: Text(translations.continueButton),
+                            ),
+                          )
+                        ],
+                      ),
+                  ],
+                ),
               ),
             ),
           );
@@ -81,17 +91,33 @@ class AddDeviceScreen extends StatelessWidget {
 }
 
 class AddDeviceWidget extends HookWidget {
+  const AddDeviceWidget({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final store = Provider.of<AddDeviceStore>(context);
 
     return Observer(builder: (context) {
-      if (store.selectedDeviceTemplate == null || store.currentCustomStep.isEmpty) {
-        return AddDeviceSearch();
+      if (store.isLoading) {
+        return const Loading();
       }
 
-      if (store.isLoading) {
-        return Center(child: CircularProgressIndicator());
+      if (store.room == null) {
+        return Column(
+          children: [
+            Text(context.localizations.addDeviceSelectRoom),
+            RoomSelector(
+              onRoomSelected: (room) {
+                store.room = room;
+              },
+              selectedRoom: store.room,
+            ),
+          ],
+        );
+      }
+
+      if (store.selectedDeviceTemplate == null || store.currentCustomStep.isEmpty) {
+        return AddDeviceSearch();
       }
 
       if (store.currentCustomStep['step'].contains('list')) {
@@ -117,7 +143,7 @@ class AddDeviceDialog extends StatelessWidget {
     final translations = CommonLocalizations.of(context);
     return Provider<AddDeviceStore>(
       create: (_) {
-        return AddDeviceStore(room: room);
+        return AddDeviceStore();
       },
       dispose: (_, store) => store.dispose(),
       child: Observer(
@@ -178,7 +204,7 @@ class AddDeviceFloatingButton extends StatelessWidget {
           needRefresh = await Navigator.of(context, rootNavigator: true).pushNamed(AddDeviceScreen.route, arguments: room) ?? false;
         }
         if (needRefresh) {
-          Provider.of<DeviceStore>(context, listen: false).loadDevices();
+          //Provider.of<DeviceStore>(context, listen: false).loadDevices();
         }
       },
       child: Icon(Icons.add, color: Colors.white),

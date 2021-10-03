@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:android_multicast_lock/android_multicast_lock.dart';
 import 'package:flutter/foundation.dart';
@@ -22,22 +23,30 @@ class LocalServerProviderIO extends LocalServerProvider {
     const wantedResponse = 'lisa-server-response';
     const codec = Utf8Codec();
     final dataToSend = codec.encode(searchQuery);
-    final address = InternetAddress('239.9.9.9');
+    final address = InternetAddress('238.9.9.9');
 
     final udpSocket =
         await RawDatagramSocket.bind(InternetAddress.anyIPv4, 5544, reuseAddress: true, reusePort: defaultTargetPlatform != TargetPlatform.android);
     try {
-      var interfaceEn0;
+      var activeInterface;
       List<NetworkInterface> interfaces = await NetworkInterface.list(
         type: InternetAddressType.IPv4,
       );
       for (var interface in interfaces) {
-        if (interface.name == 'en0') {
-          interfaceEn0 = interface;
+        if (interface.addresses.isNotEmpty && (interface.name == 'en0' || interface.name == 'wlan0')) {
+          activeInterface = interface;
         }
       }
       udpSocket.setRawOption(RawSocketOption.fromInt(RawSocketOption.levelIPv4, RawSocketOption.IPv4MulticastInterface, 0));
-      udpSocket.joinMulticast(address, interfaceEn0);
+
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        udpSocket.joinMulticast(address, activeInterface);
+      } else {
+        // fix joining multicast on iOS, see https://github.com/dart-lang/sdk/issues/42250#issuecomment-759026385
+        final value = Uint8List.fromList(address.rawAddress + activeInterface.addresses[0].rawAddress);
+        udpSocket.setRawOption(RawSocketOption(RawSocketOption.levelIPv4, 12, value));
+      }
+      //udpSocket.joinMulticast(address, interfaceEn0);
     } catch (err, stacktrace) {
       _log.severe('Can\'t joinMulticast on $address', err, stacktrace);
       return Future.error(err);

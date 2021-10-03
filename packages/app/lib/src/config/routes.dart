@@ -1,15 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lisa_flutter/main.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/utils/page_route_builders.dart';
 import 'package:lisa_flutter/src/devices/presentation/add_device.dart';
-import 'package:lisa_flutter/src/favorites/presentation/favorites.dart';
+import 'package:lisa_flutter/src/devices/presentation/device_screen.dart';
+import 'package:lisa_flutter/src/home/presentation/home_screen.dart';
 import 'package:lisa_flutter/src/login/presentation/login_screen.dart';
 import 'package:lisa_flutter/src/login/presentation/login_wear_screen.dart';
 import 'package:lisa_flutter/src/login/presentation/setup_screen.dart';
-import 'package:lisa_flutter/src/multimedia/presentation/multimedia.dart';
-import 'package:lisa_flutter/src/orphans/presentation/orphans.dart';
 import 'package:lisa_flutter/src/plugins/presentation/plugins.dart';
 import 'package:lisa_flutter/src/preferences/presentation/preferences.dart';
 import 'package:lisa_flutter/src/profile/presentation/profile.dart';
@@ -29,20 +27,18 @@ class Router {
 
   final Map<String, dynamic> _routes = {
     LoginScreen.route: (_) => LoginScreen(),
+    DeviceScreen.route: (context) => DeviceScreen(device: ModalRoute.of(context)!.settings.arguments as Device),
     SetupScreen.route: (_) => SetupScreen(),
     SplashScreen.route: (_) => SplashScreen(),
     ProfileScreen.route: (_) => ProfileScreen(),
-    AddDeviceScreen.route: (context) => AddDeviceScreen(room: ModalRoute.of(context)!.settings.arguments as Room),
-    ScenesWidget.route: (_) => ScenesWidget(),
+    AddDeviceScreen.route: (context) => AddDeviceScreen(room: ModalRoute.of(context)!.settings.arguments as Room?),
+    ScenesScreen.route: (_) => ScenesScreen(),
     SceneWidget.route: (context) => SceneWidget(scene: ModalRoute.of(context)!.settings.arguments as Scene),
-    FavoritesWidget.route: (_) => FavoritesWidget(),
     PreferencesWidget.route: (_) => PreferencesWidget(),
-    SettingsWidget.route: (_) => SettingsWidget(),
-    PluginsStoreWidget.route: (_) => PluginsStoreWidget(),
+    SettingsScreen.route: (_) => SettingsScreen(),
+    PluginsStoreScreen.route: (_) => PluginsStoreScreen(),
     RoomDashboard.route: (context) => RoomDashboard(room: ModalRoute.of(context)!.settings.arguments as Room),
-    OrphansWidget.route: (_) => OrphansWidget(),
-    MultimediaWidget.route: (_) => MultimediaWidget(),
-    MyHomePage.route: (_) => MyHomePage(),
+    HomeScreen.route: (_) => HomeScreen(),
   };
 
   final Map<String, dynamic> _wearRoutes = {
@@ -50,13 +46,11 @@ class Router {
     SplashScreen.route: (_) => SplashScreen(),
     ProfileScreen.route: (_) => ProfileScreen(),
     AddDeviceScreen.route: (context) => AddDeviceScreen(room: ModalRoute.of(context)!.settings.arguments as Room),
-    ScenesWidget.route: (_) => ScenesWidget(),
+    ScenesScreen.route: (_) => ScenesScreen(),
     SceneWidget.route: (context) => SceneWidget(scene: ModalRoute.of(context)!.settings.arguments as Scene),
-    FavoritesWidget.route: (_) => FavoritesWidget(),
     PreferencesWidget.route: (_) => PreferencesWidget(),
     RoomDashboard.route: (context) => RoomDashboard(room: ModalRoute.of(context)!.settings.arguments as Room),
-    OrphansWidget.route: (_) => OrphansWidget(),
-    MyHomePage.route: (_) => MyHomePage(),
+    HomeScreen.route: (_) => HomeScreen(),
   };
 
   Route? onGenerateRoute(RouteSettings settings) {
@@ -142,32 +136,20 @@ class TitleNavigatorObserver extends NavigatorObserver {
 
   String getTitle(String? route, {Object? arguments}) {
     switch (route) {
-      case FavoritesWidget.route:
-        return localizations.menuFavorite;
       case ProfileScreen.route:
         return localizations.profile;
       case PreferencesWidget.route:
         return localizations.menuPreferences;
       case SettingsWidget.route:
         return localizations.menuSettings;
-      case OrphansWidget.route:
-        return localizations.menuOrphans;
       case RoomDashboard.route:
         return (arguments as Room?)?.name ?? 'L.I.S.A.';
-      case ScenesWidget.route:
+      case ScenesScreen.route:
         return localizations.menuScenes;
-      case PluginsStoreWidget.route:
+      case PluginsStoreScreen.route:
         return localizations.pluginShop;
-      case MultimediaWidget.route:
-        return localizations.menuMultimedia;
-      case MultimediaWidget.routeSickChill:
-        return localizations.menuMultimediaSickChill;
-      case MultimediaWidget.routeTransmission:
-        return localizations.menuMultimediaTransmission;
     }
-    if (route != null && route.startsWith(MultimediaWidget.routeSickChillShow)) {
-      return localizations.menuMultimediaSickChill;
-    }
+
     return 'L.I.S.A.';
   }
 

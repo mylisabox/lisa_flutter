@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
-import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
 import 'package:lisa_flutter/src/common/presentation/speech_button.dart';
 import 'package:lisa_flutter/src/common/utils/platform_detector/platform_detector.dart';
 import 'package:lisa_flutter/src/devices/presentation/add_device.dart';
@@ -21,9 +20,9 @@ class RoomDashboard extends HookWidget {
     final store = useMemoized(() => DeviceStore());
 
     useEffect(() {
-      store.loadDevices(roomId: room?.id).catchError((err, stack) {
+      /*store.loadDevices(roomId: room?.id).catchError((err, stack) {
         showErrorDialog(context, err, stack);
-      });
+      });*/
       return null;
     }, [store]);
 

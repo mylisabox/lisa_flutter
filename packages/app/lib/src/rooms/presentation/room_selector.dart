@@ -4,7 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
-import 'package:lisa_flutter/src/drawer/stores/drawer_store.dart';
+import 'package:lisa_flutter/src/rooms/stores/room_store.dart';
 import 'package:lisa_server_sdk/lisa_server_sdk.dart';
 import 'package:provider/provider.dart';
 
@@ -17,12 +17,12 @@ class RoomSelector extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final drawerStore = Provider.of<DrawerStore>(context);
-    final selectedRoom = useMemoized(() => drawerStore.rooms.firstWhereOrNull((room) => room.id == selected), [selected]);
+    final roomStore = Provider.of<RoomStore>(context);
+    final selectedRoom = useMemoized(() => roomStore.availableRooms.firstWhereOrNull((room) => room.id == selected), [selected]);
 
     useEffect(() {
-      if (drawerStore.rooms.isEmpty) {
-        drawerStore.loadRooms();
+      if (roomStore.rooms.isEmpty) {
+        roomStore.loadRooms();
       }
       return null;
     }, const []);
@@ -30,7 +30,7 @@ class RoomSelector extends HookWidget {
     return Observer(
       builder: (BuildContext context) {
         final translations = CommonLocalizations.of(context);
-        final roomList = drawerStore.rooms;
+        final roomList = roomStore.availableRooms;
         return DropdownButton<Room>(
           onChanged: (room) => onRoomSelected(room!),
           isExpanded: isExpanded,

@@ -17,11 +17,22 @@ class DashboardApi {
 
   const DashboardApi(this._dio, this._serializers);
 
+  /// getDashboard
   ///
   ///
+  /// Parameters:
+  /// * [roomId]
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
+  /// Returns a [Future] containing a [Response] with a [Dashboard] as data
+  /// Throws [DioError] if API call or serialization fails
   Future<Response<Dashboard>> getDashboard({
-    required int? roomId,
+    required int roomId,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -29,7 +40,7 @@ class DashboardApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/api/v1/dashboard/room/{roomId}'.replaceAll('{' r'roomId' '}', roomId?.toString() ?? '');
+    final _path = r'/api/v1/dashboard/room/{roomId}'.replaceAll('{' r'roomId' '}', roomId.toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -46,19 +57,12 @@ class DashboardApi {
         ],
         ...?extra,
       },
-      contentType: [
-        'application/json',
-      ].first,
       validateStatus: validateStatus,
     );
-
-    final _queryParameters = <String, dynamic>{
-    };
 
     final _response = await _dio.request<Object>(
       _path,
       options: _options,
-      queryParameters: _queryParameters,
       cancelToken: cancelToken,
       onSendProgress: onSendProgress,
       onReceiveProgress: onReceiveProgress,
@@ -73,13 +77,13 @@ class DashboardApi {
         specifiedType: _responseType,
       ) as Dashboard;
 
-    } catch (error) {
+    } catch (error, stackTrace) {
       throw DioError(
         requestOptions: _response.requestOptions,
         response: _response,
         type: DioErrorType.other,
         error: error,
-      );
+      )..stackTrace = stackTrace;
     }
 
     return Response<Dashboard>(
@@ -94,9 +98,21 @@ class DashboardApi {
     );
   }
 
+  /// saveDashboard
   ///
   ///
+  /// Parameters:
+  /// * [roomId]
+  /// * [requestBody]
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
+  /// Returns a [Future]
+  /// Throws [DioError] if API call or serialization fails
   Future<Response<void>> saveDashboard({
     required int roomId,
     BuiltList<int>? requestBody,
@@ -124,14 +140,9 @@ class DashboardApi {
         ],
         ...?extra,
       },
-      contentType: [
-        'application/json',
-      ].first,
+      contentType: 'application/json',
       validateStatus: validateStatus,
     );
-
-    final _queryParameters = <String, dynamic>{
-    };
 
     dynamic _bodyData;
 
@@ -139,23 +150,21 @@ class DashboardApi {
       const _type = FullType(BuiltList, [FullType(int)]);
       _bodyData = requestBody == null ? null : _serializers.serialize(requestBody, specifiedType: _type);
 
-    } catch(error) {
+    } catch(error, stackTrace) {
       throw DioError(
          requestOptions: _options.compose(
           _dio.options,
           _path,
-          queryParameters: _queryParameters,
         ),
         type: DioErrorType.other,
         error: error,
-      );
+      )..stackTrace = stackTrace;
     }
 
     final _response = await _dio.request<Object>(
       _path,
       data: _bodyData,
       options: _options,
-      queryParameters: _queryParameters,
       cancelToken: cancelToken,
       onSendProgress: onSendProgress,
       onReceiveProgress: onReceiveProgress,

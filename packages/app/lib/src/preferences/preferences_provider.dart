@@ -1,10 +1,15 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferencesProvider {
   static const keyExternalUrl = 'externalUrl';
   static const keyLastRoute = 'lastRoute';
   static const keyToken = 'token';
+  static const keyLastSeen = 'lastSeen';
+  static const keyRefreshToken = 'refreshToken';
   static PreferencesProvider? _singleton;
+
+  final securePrefs = FlutterSecureStorage();
 
   PreferencesProvider._();
 

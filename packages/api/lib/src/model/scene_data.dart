@@ -8,8 +8,12 @@ import 'package:built_value/serializer.dart';
 
 part 'scene_data.g.dart';
 
-
-
+/// SceneData
+///
+/// Properties:
+/// * [sentences] 
+/// * [responses] 
+/// * [commands] 
 abstract class SceneData implements Built<SceneData, SceneDataBuilder> {
     @BuiltValueField(wireName: r'sentences')
     BuiltList<String> get sentences;
@@ -22,7 +26,8 @@ abstract class SceneData implements Built<SceneData, SceneDataBuilder> {
 
     SceneData._();
 
-    static void _initializeBuilder(SceneDataBuilder b) => b;
+    @BuiltValueHook(initializeBuilder: true)
+    static void _defaults(SceneDataBuilder b) => b;
 
     factory SceneData([void updates(SceneDataBuilder b)]) = _$SceneData;
 

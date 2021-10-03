@@ -5,11 +5,11 @@
 import 'package:lisa_server_sdk/api.dart';
 ```
 
-All URIs are relative to *http://localhost:3000*
+All URIs are relative to *http://mylisabox:3000*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**interact**](ChatbotApi.md#interact) | **post** /api/v1/chatbot/interact | 
+[**interact**](ChatbotApi.md#interact) | **POST** /api/v1/chatbot/interact | 
 
 
 # **interact**
@@ -25,13 +25,13 @@ import 'package:lisa_server_sdk/api.dart';
 // uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 //defaultApiClient.getAuthentication<ApiKeyAuth>('Bearer').apiKeyPrefix = 'Bearer';
 
-var api_instance = new ChatbotApi();
-var interactRequest = new InteractRequest(); // InteractRequest | 
+final api = LisaServerSdk().getChatbotApi();
+final InteractRequest interactRequest = ; // InteractRequest | 
 
 try { 
-    var result = api_instance.interact(interactRequest);
-    print(result);
-} catch (e) {
+    final response = api.interact(interactRequest);
+    print(response);
+} catch on DioError (e) {
     print('Exception when calling ChatbotApi->interact: $e\n');
 }
 ```

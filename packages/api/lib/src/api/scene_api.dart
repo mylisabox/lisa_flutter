@@ -17,9 +17,20 @@ class SceneApi {
 
   const SceneApi(this._dio, this._serializers);
 
+  /// deleteScene
   ///
   ///
+  /// Parameters:
+  /// * [scene]
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
+  /// Returns a [Future]
+  /// Throws [DioError] if API call or serialization fails
   Future<Response<void>> deleteScene({
     required String scene,
     CancelToken? cancelToken,
@@ -29,7 +40,7 @@ class SceneApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/api/v1/chatbot/userBot/{scene}'.replaceAll('{' r'scene' '}', scene.toString());
+    final _path = r'/api/v1/chatBots/userBot/{scene}'.replaceAll('{' r'scene' '}', scene.toString());
     final _options = Options(
       method: r'DELETE',
       headers: <String, dynamic>{
@@ -46,19 +57,12 @@ class SceneApi {
         ],
         ...?extra,
       },
-      contentType: [
-        'application/json',
-      ].first,
       validateStatus: validateStatus,
     );
-
-    final _queryParameters = <String, dynamic>{
-    };
 
     final _response = await _dio.request<Object>(
       _path,
       options: _options,
-      queryParameters: _queryParameters,
       cancelToken: cancelToken,
       onSendProgress: onSendProgress,
       onReceiveProgress: onReceiveProgress,
@@ -67,9 +71,19 @@ class SceneApi {
     return _response;
   }
 
+  /// getScene
   ///
   ///
+  /// Parameters:
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
+  /// Returns a [Future] containing a [Response] with a [BuiltList<Scene>] as data
+  /// Throws [DioError] if API call or serialization fails
   Future<Response<BuiltList<Scene>>> getScene({
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -78,7 +92,7 @@ class SceneApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/api/v1/chatbot/userBot';
+    final _path = r'/api/v1/chatBots/userBot';
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -95,19 +109,12 @@ class SceneApi {
         ],
         ...?extra,
       },
-      contentType: [
-        'application/json',
-      ].first,
       validateStatus: validateStatus,
     );
-
-    final _queryParameters = <String, dynamic>{
-    };
 
     final _response = await _dio.request<Object>(
       _path,
       options: _options,
-      queryParameters: _queryParameters,
       cancelToken: cancelToken,
       onSendProgress: onSendProgress,
       onReceiveProgress: onReceiveProgress,
@@ -122,13 +129,13 @@ class SceneApi {
         specifiedType: _responseType,
       ) as BuiltList<Scene>;
 
-    } catch (error) {
+    } catch (error, stackTrace) {
       throw DioError(
         requestOptions: _response.requestOptions,
         response: _response,
         type: DioErrorType.other,
         error: error,
-      );
+      )..stackTrace = stackTrace;
     }
 
     return Response<BuiltList<Scene>>(
@@ -143,9 +150,20 @@ class SceneApi {
     );
   }
 
+  /// saveScene
   ///
   ///
+  /// Parameters:
+  /// * [scene]
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
+  /// Returns a [Future]
+  /// Throws [DioError] if API call or serialization fails
   Future<Response<void>> saveScene({
     required Scene scene,
     CancelToken? cancelToken,
@@ -155,7 +173,7 @@ class SceneApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/api/v1/chatbot/userBot';
+    final _path = r'/api/v1/chatBots/userBot';
     final _options = Options(
       method: r'POST',
       headers: <String, dynamic>{
@@ -172,14 +190,9 @@ class SceneApi {
         ],
         ...?extra,
       },
-      contentType: [
-        'application/json',
-      ].first,
+      contentType: 'application/json',
       validateStatus: validateStatus,
     );
-
-    final _queryParameters = <String, dynamic>{
-    };
 
     dynamic _bodyData;
 
@@ -187,23 +200,21 @@ class SceneApi {
       const _type = FullType(Scene);
       _bodyData = _serializers.serialize(scene, specifiedType: _type);
 
-    } catch(error) {
+    } catch(error, stackTrace) {
       throw DioError(
          requestOptions: _options.compose(
           _dio.options,
           _path,
-          queryParameters: _queryParameters,
         ),
         type: DioErrorType.other,
         error: error,
-      );
+      )..stackTrace = stackTrace;
     }
 
     final _response = await _dio.request<Object>(
       _path,
       data: _bodyData,
       options: _options,
-      queryParameters: _queryParameters,
       cancelToken: cancelToken,
       onSendProgress: onSendProgress,
       onReceiveProgress: onReceiveProgress,

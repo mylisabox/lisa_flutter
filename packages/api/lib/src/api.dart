@@ -4,12 +4,12 @@
 
 import 'package:built_value/serializer.dart';
 import 'package:dio/dio.dart';
+import 'package:lisa_server_sdk/src/api/auth_api.dart';
 import 'package:lisa_server_sdk/src/api/chatbot_api.dart';
 import 'package:lisa_server_sdk/src/api/config_api.dart';
 import 'package:lisa_server_sdk/src/api/dashboard_api.dart';
 import 'package:lisa_server_sdk/src/api/device_api.dart';
 import 'package:lisa_server_sdk/src/api/favorite_api.dart';
-import 'package:lisa_server_sdk/src/api/login_api.dart';
 import 'package:lisa_server_sdk/src/api/plugin_api.dart';
 import 'package:lisa_server_sdk/src/api/room_api.dart';
 import 'package:lisa_server_sdk/src/api/scene_api.dart';
@@ -17,11 +17,12 @@ import 'package:lisa_server_sdk/src/api/setup_api.dart';
 import 'package:lisa_server_sdk/src/api/user_api.dart';
 import 'package:lisa_server_sdk/src/auth/api_key_auth.dart';
 import 'package:lisa_server_sdk/src/auth/basic_auth.dart';
+import 'package:lisa_server_sdk/src/auth/bearer_auth.dart';
 import 'package:lisa_server_sdk/src/auth/oauth.dart';
 import 'package:lisa_server_sdk/src/serializers.dart';
 
 class LisaServerSdk {
-  static const String basePath = r'http://localhost:3000';
+  static const String basePath = r'http://mylisabox:3000';
 
   final Dio dio;
   final Serializers serializers;
@@ -42,6 +43,7 @@ class LisaServerSdk {
       this.dio.interceptors.addAll([
         OAuthInterceptor(),
         BasicAuthInterceptor(),
+        BearerAuthInterceptor(),
         ApiKeyAuthInterceptor(),
       ]);
     } else {
@@ -55,6 +57,12 @@ class LisaServerSdk {
     }
   }
 
+  void setBearerAuth(String name, String token) {
+    if (this.dio.interceptors.any((i) => i is BearerAuthInterceptor)) {
+      (this.dio.interceptors.firstWhere((i) => i is BearerAuthInterceptor) as BearerAuthInterceptor).tokens[name] = token;
+    }
+  }
+
   void setBasicAuth(String name, String username, String password) {
     if (this.dio.interceptors.any((i) => i is BasicAuthInterceptor)) {
       (this.dio.interceptors.firstWhere((i) => i is BasicAuthInterceptor) as BasicAuthInterceptor).authInfo[name] = BasicAuthInfo(username, password);
@@ -65,6 +73,12 @@ class LisaServerSdk {
     if (this.dio.interceptors.any((i) => i is ApiKeyAuthInterceptor)) {
       (this.dio.interceptors.firstWhere((element) => element is ApiKeyAuthInterceptor) as ApiKeyAuthInterceptor).apiKeys[name] = apiKey;
     }
+  }
+
+  /// Get AuthApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  AuthApi getAuthApi() {
+    return AuthApi(dio, serializers);
   }
 
   /// Get ChatbotApi instance, base route and serializer can be overridden by a given but be careful,
@@ -95,12 +109,6 @@ class LisaServerSdk {
   /// by doing that all interceptors will not be executed
   FavoriteApi getFavoriteApi() {
     return FavoriteApi(dio, serializers);
-  }
-
-  /// Get LoginApi instance, base route and serializer can be overridden by a given but be careful,
-  /// by doing that all interceptors will not be executed
-  LoginApi getLoginApi() {
-    return LoginApi(dio, serializers);
   }
 
   /// Get PluginApi instance, base route and serializer can be overridden by a given but be careful,

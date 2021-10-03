@@ -7,8 +7,12 @@ import 'package:built_value/serializer.dart';
 
 part 'add_plugin_request.g.dart';
 
-
-
+/// AddPluginRequest
+///
+/// Properties:
+/// * [id] 
+/// * [version] 
+/// * [from] 
 abstract class AddPluginRequest implements Built<AddPluginRequest, AddPluginRequestBuilder> {
     @BuiltValueField(wireName: r'id')
     String? get id;
@@ -21,7 +25,8 @@ abstract class AddPluginRequest implements Built<AddPluginRequest, AddPluginRequ
 
     AddPluginRequest._();
 
-    static void _initializeBuilder(AddPluginRequestBuilder b) => b;
+    @BuiltValueHook(initializeBuilder: true)
+    static void _defaults(AddPluginRequestBuilder b) => b;
 
     factory AddPluginRequest([void updates(AddPluginRequestBuilder b)]) = _$AddPluginRequest;
 

@@ -10,6 +10,8 @@ PODS:
   - flutter_blue/Protos (0.0.1):
     - FlutterMacOS
     - Protobuf (~> 3.11.4)
+  - flutter_secure_storage_macos (3.3.1):
+    - FlutterMacOS
   - flutter_speech (0.0.1):
     - FlutterMacOS
   - FlutterMacOS (1.0.0)
@@ -33,6 +35,7 @@ DEPENDENCIES:
   - connectivity_macos (from `Flutter/ephemeral/.symlinks/plugins/connectivity_macos/macos`)
   - file_selector_macos (from `Flutter/ephemeral/.symlinks/plugins/file_selector_macos/macos`)
   - flutter_blue (from `Flutter/ephemeral/.symlinks/plugins/flutter_blue/macos`)
+  - flutter_secure_storage_macos (from `Flutter/ephemeral/.symlinks/plugins/flutter_secure_storage_macos/macos`)
   - flutter_speech (from `Flutter/ephemeral/.symlinks/plugins/flutter_speech/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
   - package_info_plus_macos (from `Flutter/ephemeral/.symlinks/plugins/package_info_plus_macos/macos`)
@@ -53,6 +56,8 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/file_selector_macos/macos
   flutter_blue:
     :path: Flutter/ephemeral/.symlinks/plugins/flutter_blue/macos
+  flutter_secure_storage_macos:
+    :path: Flutter/ephemeral/.symlinks/plugins/flutter_secure_storage_macos/macos
   flutter_speech:
     :path: Flutter/ephemeral/.symlinks/plugins/flutter_speech/macos
   FlutterMacOS:
@@ -70,6 +75,7 @@ SPEC CHECKSUMS:
   connectivity_macos: 9f30e9d0e67a0bc08a0c563ee82310b51ca6e818
   file_selector_macos: ff6dc948d4ddd34e8602a1f60b7d0b4cc6051a47
   flutter_blue: 2756506bb10a51e075832da287b48bf5377bdc28
+  flutter_secure_storage_macos: 6ceee8fbc7f484553ad17f79361b556259df89aa
   flutter_speech: 5ef621aa91ebefe17ec7a585b3e2032c230b275f
   FlutterMacOS: 57701585bf7de1b3fc2bb61f6378d73bbdea8424
   package_info_plus_macos: f010621b07802a241d96d01876d6705f15e77c1c

@@ -46,75 +46,82 @@ Please follow the [installation procedure](#installation--usage) and then run th
 import 'package:lisa_server_sdk/lisa_server_sdk.dart';
 
 
-final api = ChatbotApi();
-final interactRequest = InteractRequest(); // InteractRequest | 
+final api = LisaServerSdk().getAuthApi();
+final LoginRequest loginRequest = ; // LoginRequest | 
 
 try {
-    final response = await api.interact(interactRequest);
+    final response = await api.login(loginRequest);
     print(response);
 } catch on DioError (e) {
-    print("Exception when calling ChatbotApi->interact: $e\n");
+    print("Exception when calling AuthApi->login: $e\n");
 }
 
 ```
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://localhost:3000*
+All URIs are relative to *http://mylisabox:3000*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*ChatbotApi* | [**interact**](doc/ChatbotApi.md#interact) | **post** /api/v1/chatbot/interact | 
-*ConfigApi* | [**isInitialized**](doc/ConfigApi.md#isinitialized) | **get** /api/v1/initialized | 
-*DashboardApi* | [**getDashboard**](doc/DashboardApi.md#getdashboard) | **get** /api/v1/dashboard/room/{roomId} | 
-*DashboardApi* | [**saveDashboard**](doc/DashboardApi.md#savedashboard) | **post** /api/v1/dashboard/room/{roomId} | 
-*DeviceApi* | [**addDevice**](doc/DeviceApi.md#adddevice) | **post** /api/v1/device/ | 
-*DeviceApi* | [**deleteDevice**](doc/DeviceApi.md#deletedevice) | **delete** /api/v1/device/{deviceId} | 
-*DeviceApi* | [**getDevices**](doc/DeviceApi.md#getdevices) | **get** /api/v1/device/ | 
-*DeviceApi* | [**saveDeviceInfo**](doc/DeviceApi.md#savedeviceinfo) | **patch** /api/v1/device/{deviceId} | 
-*DeviceApi* | [**updateDevice**](doc/DeviceApi.md#updatedevice) | **post** /api/v1/plugins/{pluginName}/{deviceId} | 
-*DeviceApi* | [**updateGroup**](doc/DeviceApi.md#updategroup) | **post** /api/v1/devices/group/{roomId}/{groupId} | 
-*FavoriteApi* | [**addToFavorite**](doc/FavoriteApi.md#addtofavorite) | **put** /api/v1/favorite/{deviceId} | 
-*FavoriteApi* | [**deleteFromFavorite**](doc/FavoriteApi.md#deletefromfavorite) | **delete** /api/v1/favorite/{deviceId} | 
-*FavoriteApi* | [**getFavorites**](doc/FavoriteApi.md#getfavorites) | **get** /api/v1/favorite | 
-*LoginApi* | [**login**](doc/LoginApi.md#login) | **post** /api/v1/auth/local | 
-*LoginApi* | [**logout**](doc/LoginApi.md#logout) | **get** /api/v1/auth/logout | 
-*LoginApi* | [**register**](doc/LoginApi.md#register) | **post** /api/v1/auth/local/register | 
-*PluginApi* | [**getStorePlugins**](doc/PluginApi.md#getstoreplugins) | **get** /api/v1/plugin/store | 
-*PluginApi* | [**installPlugin**](doc/PluginApi.md#installplugin) | **post** /api/v1/plugin/install | 
-*PluginApi* | [**pairing**](doc/PluginApi.md#pairing) | **post** /api/v1/plugin/{pluginName}/drivers/{driver}/pairing | 
-*PluginApi* | [**searchPlugins**](doc/PluginApi.md#searchplugins) | **get** /api/v1/plugin/search | 
-*PluginApi* | [**uninstallPlugin**](doc/PluginApi.md#uninstallplugin) | **delete** /api/v1/plugin/{pluginName}/uninstall | 
-*RoomApi* | [**addRoom**](doc/RoomApi.md#addroom) | **post** /api/v1/room | 
-*RoomApi* | [**deleteRoom**](doc/RoomApi.md#deleteroom) | **delete** /api/v1/room/{roomId} | 
-*RoomApi* | [**getRooms**](doc/RoomApi.md#getrooms) | **get** /api/v1/room | 
-*RoomApi* | [**saveRoom**](doc/RoomApi.md#saveroom) | **put** /api/v1/room/{roomId} | 
-*SceneApi* | [**deleteScene**](doc/SceneApi.md#deletescene) | **delete** /api/v1/chatbot/userBot/{scene} | 
-*SceneApi* | [**getScene**](doc/SceneApi.md#getscene) | **get** /api/v1/chatbot/userBot | 
-*SceneApi* | [**saveScene**](doc/SceneApi.md#savescene) | **post** /api/v1/chatbot/userBot | 
-*SetupApi* | [**setupVoiceCommands**](doc/SetupApi.md#setupvoicecommands) | **post** /api/v1/setup/voice_commands | 
-*UserApi* | [**getProfile**](doc/UserApi.md#getprofile) | **get** /api/v1/user | 
-*UserApi* | [**saveProfile**](doc/UserApi.md#saveprofile) | **post** /api/v1/user | 
+[*AuthApi*](doc/AuthApi.md) | [**login**](doc/AuthApi.md#login) | **POST** /api/v1/auth/login | 
+[*AuthApi*](doc/AuthApi.md) | [**refreshToken**](doc/AuthApi.md#refreshtoken) | **POST** /api/v1/auth/token | 
+[*AuthApi*](doc/AuthApi.md) | [**register**](doc/AuthApi.md#register) | **POST** /api/v1/auth/register | 
+[*ChatbotApi*](doc/ChatbotApi.md) | [**interact**](doc/ChatbotApi.md#interact) | **POST** /api/v1/chatbot/interact | 
+[*ConfigApi*](doc/ConfigApi.md) | [**isInitialized**](doc/ConfigApi.md#isinitialized) | **GET** /api/v1/initialized | 
+[*DashboardApi*](doc/DashboardApi.md) | [**getDashboard**](doc/DashboardApi.md#getdashboard) | **GET** /api/v1/dashboard/room/{roomId} | 
+[*DashboardApi*](doc/DashboardApi.md) | [**saveDashboard**](doc/DashboardApi.md#savedashboard) | **POST** /api/v1/dashboard/room/{roomId} | 
+[*DeviceApi*](doc/DeviceApi.md) | [**addDevice**](doc/DeviceApi.md#adddevice) | **POST** /api/v1/devices/ | 
+[*DeviceApi*](doc/DeviceApi.md) | [**deleteDevice**](doc/DeviceApi.md#deletedevice) | **DELETE** /api/v1/devices/{deviceId} | 
+[*DeviceApi*](doc/DeviceApi.md) | [**getDeviceData**](doc/DeviceApi.md#getdevicedata) | **GET** /api/v1/devices/{deviceId}/data | 
+[*DeviceApi*](doc/DeviceApi.md) | [**getDevices**](doc/DeviceApi.md#getdevices) | **GET** /api/v1/devices/ | 
+[*DeviceApi*](doc/DeviceApi.md) | [**saveDeviceInfo**](doc/DeviceApi.md#savedeviceinfo) | **PATCH** /api/v1/devices/{deviceId} | 
+[*DeviceApi*](doc/DeviceApi.md) | [**triggerDevice**](doc/DeviceApi.md#triggerdevice) | **GET** /api/v1/devices/{deviceId}/trigger | 
+[*DeviceApi*](doc/DeviceApi.md) | [**triggerGroup**](doc/DeviceApi.md#triggergroup) | **POST** /api/v1/devices/groups/{deviceType} | 
+[*DeviceApi*](doc/DeviceApi.md) | [**updateDevice**](doc/DeviceApi.md#updatedevice) | **POST** /api/v1/devices/{deviceId} | 
+[*DeviceApi*](doc/DeviceApi.md) | [**updateGroup**](doc/DeviceApi.md#updategroup) | **POST** /api/v1/devices/groups/{type} | 
+[*FavoriteApi*](doc/FavoriteApi.md) | [**addToFavorite**](doc/FavoriteApi.md#addtofavorite) | **PUT** /api/v1/favorite/{deviceId} | 
+[*FavoriteApi*](doc/FavoriteApi.md) | [**deleteFromFavorite**](doc/FavoriteApi.md#deletefromfavorite) | **DELETE** /api/v1/favorite/{deviceId} | 
+[*FavoriteApi*](doc/FavoriteApi.md) | [**getFavorites**](doc/FavoriteApi.md#getfavorites) | **GET** /api/v1/favorite | 
+[*PluginApi*](doc/PluginApi.md) | [**getStorePlugins**](doc/PluginApi.md#getstoreplugins) | **GET** /api/v1/plugins/store | 
+[*PluginApi*](doc/PluginApi.md) | [**installPlugin**](doc/PluginApi.md#installplugin) | **POST** /api/v1/plugins/install | 
+[*PluginApi*](doc/PluginApi.md) | [**pairing**](doc/PluginApi.md#pairing) | **POST** /api/v1/plugins/{pluginName}/drivers/{driver}/pairing | 
+[*PluginApi*](doc/PluginApi.md) | [**searchPlugins**](doc/PluginApi.md#searchplugins) | **GET** /api/v1/plugins/search | 
+[*PluginApi*](doc/PluginApi.md) | [**uninstallPlugin**](doc/PluginApi.md#uninstallplugin) | **DELETE** /api/v1/plugins/{pluginName}/uninstall | 
+[*RoomApi*](doc/RoomApi.md) | [**addRoom**](doc/RoomApi.md#addroom) | **POST** /api/v1/rooms | 
+[*RoomApi*](doc/RoomApi.md) | [**deleteRoom**](doc/RoomApi.md#deleteroom) | **DELETE** /api/v1/room/{roomId} | 
+[*RoomApi*](doc/RoomApi.md) | [**getRooms**](doc/RoomApi.md#getrooms) | **GET** /api/v1/rooms | 
+[*RoomApi*](doc/RoomApi.md) | [**saveRoom**](doc/RoomApi.md#saveroom) | **PUT** /api/v1/room/{roomId} | 
+[*SceneApi*](doc/SceneApi.md) | [**deleteScene**](doc/SceneApi.md#deletescene) | **DELETE** /api/v1/chatBots/userBot/{scene} | 
+[*SceneApi*](doc/SceneApi.md) | [**getScene**](doc/SceneApi.md#getscene) | **GET** /api/v1/chatBots/userBot | 
+[*SceneApi*](doc/SceneApi.md) | [**saveScene**](doc/SceneApi.md#savescene) | **POST** /api/v1/chatBots/userBot | 
+[*SetupApi*](doc/SetupApi.md) | [**setupVoiceCommand**](doc/SetupApi.md#setupvoicecommand) | **POST** /api/v1/setup/voiceCommand | 
+[*UserApi*](doc/UserApi.md) | [**getProfile**](doc/UserApi.md#getprofile) | **GET** /api/v1/users/me | 
+[*UserApi*](doc/UserApi.md) | [**saveProfile**](doc/UserApi.md#saveprofile) | **PATCH** /api/v1/users/me | 
 
 
 ## Documentation For Models
 
  - [AddPluginRequest](doc/AddPluginRequest.md)
+ - [CreateDevice](doc/CreateDevice.md)
  - [Dashboard](doc/Dashboard.md)
  - [Device](doc/Device.md)
  - [DeviceSettings](doc/DeviceSettings.md)
+ - [DeviceTypeEnum](doc/DeviceTypeEnum.md)
  - [InteractRequest](doc/InteractRequest.md)
  - [InteractResponse](doc/InteractResponse.md)
  - [IsInitialized](doc/IsInitialized.md)
  - [LoginRequest](doc/LoginRequest.md)
  - [LoginResponse](doc/LoginResponse.md)
  - [Plugin](doc/Plugin.md)
+ - [RefreshTokenRequest](doc/RefreshTokenRequest.md)
  - [Room](doc/Room.md)
  - [Scene](doc/Scene.md)
  - [SceneData](doc/SceneData.md)
  - [StorePlugin](doc/StorePlugin.md)
  - [UpdateDeviceInfoRequest](doc/UpdateDeviceInfoRequest.md)
  - [User](doc/User.md)
+ - [UserUpdate](doc/UserUpdate.md)
 
 
 ## Documentation For Authorization
