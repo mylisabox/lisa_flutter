@@ -24,7 +24,7 @@ class AppLifeCycleObserver with WidgetsBindingObserver {
 
   void _checkFingerprint() async {
     final lastTime = _prefs.getInt(PreferencesProvider.keyLastSeen)!;
-    if (DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(lastTime)) > Duration(hours: kHoursBeforeFingerprint)) {
+    if (DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(lastTime)) > const Duration(hours: kHoursBeforeFingerprint)) {
       var localAuth = LocalAuthentication();
       bool didAuthenticate = await localAuth.authenticate(localizedReason: 'Long time no see, please verify yourself');
       if (didAuthenticate) {

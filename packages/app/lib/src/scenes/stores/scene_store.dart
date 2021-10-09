@@ -108,8 +108,7 @@ abstract class _SceneStore with Store {
                     ..responses = ListBuilder(responses)
                     ..sentences = ListBuilder(sentences)))
                 .build(),
-          )
-          .catchError(handleCaughtError);
+          );
     } on ErrorResultException catch (ex) {
       error = ex;
     }

@@ -22,7 +22,7 @@ class AddDeviceScreen extends StatelessWidget {
   static const route = '/addDevice';
   final Room? room;
 
-  AddDeviceScreen({Key? key, this.room}) : super(key: key);
+  const AddDeviceScreen({Key? key, this.room}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -46,13 +46,13 @@ class AddDeviceScreen extends StatelessWidget {
               body: Observer(
                 builder: (context) => Column(
                   children: <Widget>[
-                    Expanded(
+                    const Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.all(kNormalPadding),
+                        padding: EdgeInsets.all(kNormalPadding),
                         child: AddDeviceWidget(),
                       ),
                     ),
-                    if (store.selectedDeviceTemplate != null) Divider(height: 1),
+                    if (store.selectedDeviceTemplate != null) const Divider(height: 1),
                     if (store.selectedDeviceTemplate != null)
                       ButtonBar(
                         children: <Widget>[
@@ -117,18 +117,18 @@ class AddDeviceWidget extends HookWidget {
       }
 
       if (store.selectedDeviceTemplate == null || store.currentCustomStep.isEmpty) {
-        return AddDeviceSearch();
+        return const AddDeviceSearch();
       }
 
       if (store.currentCustomStep['step'].contains('list')) {
-        return AddDeviceListStep();
+        return const AddDeviceListStep();
       } else if (store.currentCustomStep['step'].contains('settings')) {
-        return AddDeviceSettingsStep();
+        return const AddDeviceSettingsStep();
       } else if (store.currentCustomStep['step'].contains('image')) {
-        return AddDeviceImageStep();
+        return const AddDeviceImageStep();
       }
 
-      return Placeholder();
+      return const Placeholder();
     });
   }
 }
@@ -152,7 +152,7 @@ class AddDeviceDialog extends StatelessWidget {
           return getAppDialog(
             context,
             (_) => Text(room == null ? translations.addDevice : translations.addDeviceTo(room!.name)),
-            (_) => Container(
+            (_) => const SizedBox(
               width: 600,
               height: 500,
               child: AddDeviceWidget(),
@@ -207,7 +207,7 @@ class AddDeviceFloatingButton extends StatelessWidget {
           //Provider.of<DeviceStore>(context, listen: false).loadDevices();
         }
       },
-      child: Icon(Icons.add, color: Colors.white),
+      child: const Icon(Icons.add, color: Colors.white),
     );
   }
 }

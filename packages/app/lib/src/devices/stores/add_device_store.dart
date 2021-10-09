@@ -1,11 +1,10 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/json_object.dart';
 import 'package:lisa_flutter/src/common/errors.dart';
-import 'package:lisa_flutter/src/common/utils/extensions.dart';
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
 import 'package:lisa_flutter/src/common/utils/base_url_provider.dart';
 import 'package:lisa_flutter/src/common/utils/disposable.dart';
-import 'package:lisa_flutter/src/devices/presentation/dashboard.dart';
+import 'package:lisa_flutter/src/common/utils/extensions.dart';
 import 'package:lisa_server_sdk/lisa_server_sdk.dart';
 import 'package:mobx/mobx.dart';
 
@@ -99,11 +98,11 @@ abstract class _AddDeviceStore with Store, Disposable, BaseUrlProvider {
   Future<void> selectPluginDeviceTemplate(Plugin selectedPlugin, DeviceSettings selectedDevice) async {
     this.selectedPlugin = selectedPlugin;
     selectedDeviceTemplate = selectedDevice;
-    this.isLoading = true;
+    isLoading = true;
 
     if (selectedDeviceTemplate!.pairing == 'settings') {
       currentCustomStep = ObservableMap.of({'step': 'settings'});
-      _manageSettingsStep(selectedDeviceTemplate!.settings!.map((k, v) => MapEntry<String, Object>(k, toPrimitive(v))).toMap());
+      _manageSettingsStep(selectedDeviceTemplate!.settings!.map((k, v) => MapEntry<String, Object>(k, v.toPrimitive())).toMap());
     } else if (selectedDeviceTemplate!.pairing == 'list') {
       currentCustomStep = ObservableMap.of({'step': 'list'});
       await _getDevicesList();
@@ -113,7 +112,7 @@ abstract class _AddDeviceStore with Store, Disposable, BaseUrlProvider {
     } else if (selectedDeviceTemplate!.pairing == 'custom') {
       await _goToNextCustomStep();
     }
-    this.isLoading = false;
+    isLoading = false;
   }
 
   @action
@@ -162,7 +161,7 @@ abstract class _AddDeviceStore with Store, Disposable, BaseUrlProvider {
             driver: selectedDeviceTemplate!.driver,
             requestBody: BuiltMap<String, JsonObject>(currentCustomData.map((key, value) => MapEntry(key, JsonObject(value))))))
         .data!;
-    currentCustomStep = ObservableMap.of(data.map((k, v) => MapEntry<String, Object>(k, toPrimitive(v))).toMap());
+    currentCustomStep = ObservableMap.of(data.map((k, v) => MapEntry<String, Object>(k, v.toPrimitive())).toMap());
     return _manageCurrentStep();
   }
 
@@ -214,7 +213,7 @@ abstract class _AddDeviceStore with Store, Disposable, BaseUrlProvider {
     if (data['step'].contains('list')) {
       _manageListStep(data);
     } else if (data['step'].contains('settings')) {
-      _manageSettingsStep(data['settings'].map((k, v) => MapEntry(k, toPrimitive(v))).toMap());
+      _manageSettingsStep(data['settings'].map((k, v) => MapEntry(k, v.toPrimitive())).toMap());
     } else if (data['step'].contains('image')) {
       _manageImageStep(data['image']);
     } else if (data['step'].contains('done')) {
@@ -245,6 +244,9 @@ abstract class _AddDeviceStore with Store, Disposable, BaseUrlProvider {
         createDevice: (CreateDeviceBuilder()
               ..name = formData['name']
               ..roomId = room?.id
+              ..defaultAction = formData['defaultAction'] ?? selectedDeviceTemplate!.defaultAction
+              ..imageOn = formData['imageOn'] ?? selectedDeviceTemplate!.imageOn
+              ..imageOff = formData['imageOff'] ?? selectedDeviceTemplate!.imageOff
               ..template = formData['template'] ?? MapBuilder(selectedDeviceTemplate!.template.toMap())
               ..type = formData['type'] ?? DeviceTypeEnum.valueOf(selectedDeviceTemplate!.type!)
               ..driver = formData['driver'] ?? selectedDeviceTemplate!.driver

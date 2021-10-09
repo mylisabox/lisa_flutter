@@ -4,12 +4,15 @@ import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
 import 'package:lisa_flutter/src/common/stores/user_store.dart';
 import 'package:lisa_flutter/src/common/utils/extensions.dart';
+import 'package:lisa_flutter/src/config/routes.dart';
 import 'package:lisa_flutter/src/login/presentation/login_screen.dart';
 import 'package:lisa_flutter/src/profile/presentation/profile.dart';
 import 'package:lisa_flutter/src/settings/presentation/settings.dart';
 import 'package:lisa_flutter/src/settings/stores/settings_store.dart';
 
 class UserDialog extends StatelessWidget {
+  const UserDialog({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final userStore = context.of<UserStore>();
@@ -24,33 +27,37 @@ class UserDialog extends StatelessWidget {
         child: Align(
           alignment: Alignment.topCenter,
           child: Stack(
+            alignment: Alignment.topCenter,
             children: [
-              Container(
-                margin: const EdgeInsets.only(top: 30),
-                decoration: ShapeDecoration(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(kSmallPadding),
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 320),
+                child: Container(
+                  margin: const EdgeInsets.only(top: 30),
+                  decoration: ShapeDecoration(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(kSmallPadding),
+                    ),
+                    color: context.theme.dialogBackgroundColor,
                   ),
-                  color: context.theme.dialogBackgroundColor,
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Row(
-                        children: [
-                          IconButton(
-                            splashRadius: 25,
-                            onPressed: () {
-                              context.navigator.pop();
-                            },
-                            icon: Icon(Icons.close, color: context.brightnessColor),
-                          ),
-                        ],
-                      ),
-                      _UserDialogContent(),
-                    ],
+                  child: Material(
+                    color: Colors.transparent,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          children: [
+                            IconButton(
+                              splashRadius: 25,
+                              onPressed: () {
+                                context.navigator.pop();
+                              },
+                              icon: Icon(Icons.close, color: context.brightnessColor),
+                            ),
+                          ],
+                        ),
+                        _UserDialogContent(),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -91,7 +98,7 @@ class _UserDialogContent extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: kNormalPadding),
           child: OutlinedButton(
             onPressed: () {
-              context.navigator.pushNamed(ProfileScreen.route);
+              context.navigator.pushNamed(ProfileScreen.route, arguments: RouteArguments(type: RouteTransitionType.fromBottom));
             },
             child: Text(
               context.localizations.manageProfile,
@@ -104,7 +111,7 @@ class _UserDialogContent extends StatelessWidget {
           leading: Icon(Icons.settings_outlined, color: context.brightnessColor),
           title: Text(context.localizations.manageSettings),
           onTap: () {
-            context.navigator.pushNamed(SettingsScreen.route);
+            context.navigator.pushNamed(SettingsScreen.route, arguments: RouteArguments(type: RouteTransitionType.fromBottom));
           },
         ),
         Divider(height: 1, color: context.dividerColor),
@@ -145,7 +152,7 @@ class _UserDialogContent extends StatelessWidget {
         Divider(height: 1, color: context.dividerColor),
         TextButton(
           onPressed: () {
-            context.navigator.push(MaterialPageRoute(builder: (_) => LicensePage(), settings: RouteSettings(name: '/licenses')));
+            context.navigator.push(MaterialPageRoute(builder: (_) => const LicensePage(), settings: const RouteSettings(name: '/licenses')));
           },
           child: Text(
             context.localizations.seeLicenses,

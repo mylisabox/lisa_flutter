@@ -93,9 +93,7 @@ class HostInterceptor extends Interceptor {
     final urlParts = options.uri;
     final externalUrlParts = Uri.parse(externalUrl);
     if (urlParts.scheme == externalUrlParts.scheme && urlParts.host == externalUrlParts.host && urlParts.port == externalUrlParts.port) {
-      if (_host == null) {
-        _host = externalUrlParts.origin;
-      }
+      _host ??= externalUrlParts.origin;
       return;
     }
 
@@ -118,8 +116,8 @@ class LogoutInterceptor extends Interceptor {
     if (redirectToLogin) {
       navigatorKey.currentState?.pushAndRemoveUntil(
           FromBottomPageRoute(
-            builder: (_) => LoginScreen(),
-            settings: RouteSettings(name: LoginScreen.route),
+            builder: (_) => const LoginScreen(),
+            settings: const RouteSettings(name: LoginScreen.route),
           ),
               (route) => true);
     }
@@ -141,7 +139,7 @@ class LogoutInterceptor extends Interceptor {
         BackendApiProvider().setToken(token);
         err.requestOptions.headers["Authorization"] = 'Token $token';
         //create request with new access token
-        final opts = new Options(method: err.requestOptions.method, headers: err.requestOptions.headers);
+        final opts = Options(method: err.requestOptions.method, headers: err.requestOptions.headers);
         final response = await BackendApiProvider().api.dio.request(
               err.requestOptions.path,
               options: opts,
@@ -150,7 +148,7 @@ class LogoutInterceptor extends Interceptor {
             );
 
         return handler.resolve(response);
-      } catch (err, stack) {
+      } catch (err) {
         _logout(true);
       }
     } else if (err.response?.statusCode == 401) {

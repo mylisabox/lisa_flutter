@@ -14,6 +14,7 @@ LocalServerProvider createProvider() => LocalServerProviderIO();
 class LocalServerProviderIO extends LocalServerProvider {
   final _log = Logger('LocalServerProvider');
 
+  @override
   Future<String> search() async {
     MulticastLock multicastLock = MulticastLock();
     await multicastLock.acquire();
@@ -28,7 +29,7 @@ class LocalServerProviderIO extends LocalServerProvider {
     final udpSocket =
         await RawDatagramSocket.bind(InternetAddress.anyIPv4, 5544, reuseAddress: true, reusePort: defaultTargetPlatform != TargetPlatform.android);
     try {
-      var activeInterface;
+      late NetworkInterface activeInterface;
       List<NetworkInterface> interfaces = await NetworkInterface.list(
         type: InternetAddressType.IPv4,
       );
@@ -56,7 +57,7 @@ class LocalServerProviderIO extends LocalServerProvider {
         final dg = udpSocket.receive();
         if (dg == null) return;
 
-        String message = new String.fromCharCodes(dg.data);
+        String message = String.fromCharCodes(dg.data);
         _log.info('receive multicast message $message');
         if (message.startsWith(wantedResponse)) {
           final data = message.replaceFirst(wantedResponse, '').trim();
@@ -75,7 +76,7 @@ class LocalServerProviderIO extends LocalServerProvider {
     udpSocket.send(dataToSend, address, 5544);
 
     //Return null if nothing is found before the timeout
-    return completer.future.timeout(Duration(milliseconds: 5000)).catchError((error) {
+    return completer.future.timeout(const Duration(milliseconds: 5000)).catchError((error) {
       _log.severe('Can\'t find server on multicast $error', error);
     }, test: (err) => err is TimeoutException).whenComplete(
       () {

@@ -11,6 +11,9 @@ Name | Type | Description | Notes
 **name** | **String** |  | 
 **driver** | **String** |  | 
 **image** | **String** |  | 
+**imageOn** | **String** |  | [optional] 
+**imageOff** | **String** |  | [optional] 
+**defaultAction** | **String** |  | [optional] 
 **pairing** | **String** |  | 
 **pluginName** | **String** |  | 
 **description** | **String** |  | [optional] 

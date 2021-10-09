@@ -84,7 +84,7 @@ MaterialColor createMaterialColor(Color color) {
   for (int i = 1; i < 10; i++) {
     strengths.add(0.1 * i);
   }
-  strengths.forEach((strength) {
+  for (var strength in strengths) {
     final double ds = 0.5 - strength;
     swatch[(strength * 1000).round()] = Color.fromRGBO(
       r + ((ds < 0 ? r : (255 - r)) * ds).round(),
@@ -92,7 +92,7 @@ MaterialColor createMaterialColor(Color color) {
       b + ((ds < 0 ? b : (255 - b)) * ds).round(),
       1,
     );
-  });
+  }
   return MaterialColor(color.value, swatch);
 }
 
@@ -102,7 +102,7 @@ class MyApp extends HookWidget {
   final UserStore userStore;
   final Router router;
 
-  MyApp({required this.navigatorKey, required this.userStore, required this.router});
+  const MyApp({required this.navigatorKey, required this.userStore, required this.router, Key? key}): super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -113,8 +113,8 @@ class MyApp extends HookWidget {
       userStore.logout();
       navigatorKey.currentState?.pushAndRemoveUntil(
           FromBottomPageRoute(
-            builder: (_) => LoginScreen(),
-            settings: RouteSettings(name: LoginScreen.route),
+            builder: (_) => const LoginScreen(),
+            settings: const RouteSettings(name: LoginScreen.route),
           ),
           (route) => true);
     });
@@ -133,7 +133,7 @@ class MyApp extends HookWidget {
       ],
       child: Observer(
         builder: (context) {
-          var locale;
+          Locale? locale;
 
           if (userStore.lang != null) {
             locale = kSupportedLanguages.firstWhereOrNull((locale) => locale.languageCode == userStore.lang);
@@ -161,8 +161,8 @@ class MyApp extends HookWidget {
                 brightness: prefStore.isDarkTheme ? Brightness.dark : Brightness.light,
                 primaryColor: _primaryColor,
               ),
-              floatingActionButtonTheme: FloatingActionButtonThemeData(foregroundColor: Colors.white),
-              buttonTheme: ButtonThemeData(
+              floatingActionButtonTheme: const FloatingActionButtonThemeData(foregroundColor: Colors.white),
+              buttonTheme: const ButtonThemeData(
                 buttonColor: _primaryColor,
                 textTheme: ButtonTextTheme.normal,
               ),
@@ -173,12 +173,12 @@ class MyApp extends HookWidget {
               primaryColor: _primaryColor,
               primaryColorLight: _primaryColor.withOpacity(0.2),
               primaryColorDark: _primaryColor,
-              textSelectionTheme: TextSelectionThemeData(
+              textSelectionTheme: const TextSelectionThemeData(
                 cursorColor: _primaryColor,
                 selectionColor: _primaryColor,
                 selectionHandleColor: _primaryColor,
               ),
-              iconTheme: IconThemeData(color: _primaryColor),
+              iconTheme: const IconThemeData(color: _primaryColor),
               indicatorColor: _primaryColor,
             ),
             initialRoute: SplashScreen.route,

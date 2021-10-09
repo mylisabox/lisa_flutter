@@ -11,9 +11,11 @@ import 'package:local_auth/local_auth.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
+final _logger = Logger('SplashScreen');
 class SplashScreen extends HookWidget {
   static const route = 'splashscreen';
-  final _logger = Logger('SplashScreen');
+
+  const SplashScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,20 +30,20 @@ class SplashScreen extends HookWidget {
         endAnimation: 'finished',
         onSuccess: (data) async {
           if (userStore.user == null) {
-            Navigator.of(context).pushReplacementNamed(LoginScreen.route, arguments: FadePageRouteArguments());
+            Navigator.of(context).pushReplacementNamed(LoginScreen.route, arguments: RouteArguments());
           } else {
             final lastTime = PreferencesProvider().prefs.getInt(PreferencesProvider.keyLastSeen)!;
-            if (DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(lastTime)) > Duration(hours: kHoursBeforeFingerprint)) {
+            if (DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(lastTime)) > const Duration(hours: kHoursBeforeFingerprint)) {
               var localAuth = LocalAuthentication();
               bool didAuthenticate = await localAuth.authenticate(localizedReason: 'Long time no see, please verify yourself');
               if (didAuthenticate) {
                 await PreferencesProvider().prefs.setInt(PreferencesProvider.keyLastSeen, DateTime.now().millisecondsSinceEpoch);
               } else {
                 await userStore.logout();
-                Navigator.of(context).pushReplacementNamed(LoginScreen.route, arguments: FadePageRouteArguments());
+                Navigator.of(context).pushReplacementNamed(LoginScreen.route, arguments: RouteArguments());
               }
             }
-            Navigator.of(context).pushReplacementNamed(HomeScreen.route, arguments: FadePageRouteArguments());
+            Navigator.of(context).pushReplacementNamed(HomeScreen.route, arguments: RouteArguments());
           }
         },
         until: () async {
@@ -49,7 +51,7 @@ class SplashScreen extends HookWidget {
         },
         onError: (error, stacktrace) {
           _logger.severe('Can\t init the app because  of $error', error, stacktrace);
-          Navigator.of(context).pushReplacementNamed(LoginScreen.route, arguments: FadePageRouteArguments());
+          Navigator.of(context).pushReplacementNamed(LoginScreen.route, arguments: RouteArguments());
         },
       ),
     );

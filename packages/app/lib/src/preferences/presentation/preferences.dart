@@ -11,6 +11,8 @@ import 'package:provider/provider.dart';
 class PreferencesWidget extends HookWidget {
   static const route = '/preferences';
 
+  const PreferencesWidget({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final translations = CommonLocalizations.of(context);
@@ -44,7 +46,7 @@ class PreferencesWidget extends HookWidget {
                     );
                   }
                 },
-                leading: Icon(Icons.language),
+                leading: const Icon(Icons.language),
                 title: Text(translations.prefLanguage),
                 subtitle: Text(translations.prefLanguageDesc),
                 trailing: Text(
@@ -53,7 +55,7 @@ class PreferencesWidget extends HookWidget {
                 ),
               ),
             ),
-            Divider(height: 1),
+            const Divider(height: 1),
             ListTile(
               onTap: () async {
                 final bloc = Provider.of<PreferencesStore>(context, listen: false);
@@ -62,11 +64,11 @@ class PreferencesWidget extends HookWidget {
                   bloc.setExternalUrl(url);
                 }
               },
-              leading: Icon(Icons.settings_remote),
+              leading: const Icon(Icons.settings_remote),
               title: Text(translations.externalUrl),
               subtitle: Text(translations.linkExternalUrl),
             ),
-            Divider(height: 1),
+            const Divider(height: 1),
           ],
         ),
       ),

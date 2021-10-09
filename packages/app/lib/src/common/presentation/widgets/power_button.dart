@@ -14,8 +14,8 @@ class PowerButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onTap,
       style: ElevatedButton.styleFrom(
-        shape: CircleBorder(),
-        padding: EdgeInsets.all(25),
+        shape: const CircleBorder(),
+        padding: const EdgeInsets.all(25),
         primary: Colors.grey.shade800,
         onSurface: kDisabledColor,
       ),

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/json_object.dart';
-import 'package:lisa_flutter/src/common/errors.dart';
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
 import 'package:lisa_flutter/src/common/utils/extensions.dart';
 import 'package:lisa_server_sdk/lisa_server_sdk.dart';
@@ -18,6 +17,12 @@ abstract class _DeviceStore with Store {
   final DeviceApi _deviceApi;
 
   @observable
+  ObservableFuture<List<Device>>? loadDeviceListRequest;
+
+  @observable
+  List<Device> deviceList = [];
+
+  @observable
   ObservableFuture<Device>? loadDeviceRequest;
 
   @observable
@@ -30,6 +35,16 @@ abstract class _DeviceStore with Store {
   @action
   Future<void> loadDevice(Device deviceToLoad) async {
     loadDeviceRequest = ObservableFuture<Device>(_loadDeviceData(deviceToLoad));
+  }
+
+  @action
+  Future<void> loadDevices(List<Device> devicesToLoad) async {
+    loadDeviceListRequest = ObservableFuture(_loadDevicesData(devicesToLoad));
+  }
+
+  Future<List<Device>> _loadDevicesData(List<Device> devicesToLoad) async {
+    final response = await _deviceApi.getDevicesData(deviceIds: BuiltList.of(devicesToLoad.map((e) => e.id)));
+    return deviceList = response.data!.toList();
   }
 
   Future<Device> _loadDeviceData(Device deviceToLoad) async {
@@ -55,8 +70,7 @@ abstract class _DeviceStore with Store {
             updateDeviceInfoRequest: (UpdateDeviceInfoRequestBuilder()
                   ..name = name
                   ..roomId = roomId)
-                .build())
-        .catchError(handleCaughtError);
+                .build());
     await loadDevice(device);
   }
 

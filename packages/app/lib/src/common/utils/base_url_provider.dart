@@ -12,7 +12,7 @@ mixin BaseUrlProvider {
   String get baseWebsocketUrl => _getHost().replaceFirst('http://', 'ws://').replaceFirst('https://', 'wss://');
   String getPluginImageUrl(String pluginId, String path) => '$baseApiUrl/plugins/images/$pluginId/$path';
 
-  String prefixHostIfNeeded(String path) => (path.startsWith('http') ? '' : baseApiUrl) + '$path';
+  String prefixHostIfNeeded(String path) => (path.startsWith('http') ? '' : baseApiUrl) + path;
 
   String getProxyUrl() => baseApiUrl + '/proxy?';
 }

@@ -5,6 +5,7 @@ import 'package:lisa_flutter/src/common/network/api_provider.dart';
 import 'package:lisa_flutter/src/common/utils/base_url_provider.dart';
 import 'package:lisa_flutter/src/preferences/preferences_provider.dart';
 import 'package:lisa_server_sdk/lisa_server_sdk.dart';
+import 'package:logging/logging.dart';
 import 'package:mobx/mobx.dart';
 
 part 'user_store.g.dart';
@@ -16,6 +17,7 @@ enum ServerStatus { initialized, uninitialized, noHost }
 abstract class _UserStore with Store, BaseUrlProvider {
   final PreferencesProvider _preferencesProvider;
   final BackendApiProvider _apiProvider;
+  final _logger = Logger('UserStore');
 
   _UserStore({
     BackendApiProvider? api,
@@ -50,9 +52,9 @@ abstract class _UserStore with Store, BaseUrlProvider {
     try {
       final response = (await _apiProvider.api.getConfigApi().isInitialized()).data!;
       serverStatus = response.initialized ? ServerStatus.initialized : ServerStatus.uninitialized;
-    } catch (err) {
+    } catch (err, stack) {
       serverStatus = ServerStatus.noHost;
-      print(err);
+      _logger.warning('No host found $err', err, stack);
     }
   }
 

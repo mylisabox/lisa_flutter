@@ -40,7 +40,7 @@ class ChatbotApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/api/v1/chatbot/interact';
+    final _path = r'/api/v1/chatBots/interact';
     final _options = Options(
       method: r'POST',
       headers: <String, dynamic>{

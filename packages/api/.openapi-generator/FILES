@@ -7,12 +7,10 @@ doc/ChatbotApi.md
 doc/ConfigApi.md
 doc/CreateDevice.md
 doc/Dashboard.md
-doc/DashboardApi.md
 doc/Device.md
 doc/DeviceApi.md
 doc/DeviceSettings.md
 doc/DeviceTypeEnum.md
-doc/FavoriteApi.md
 doc/InteractRequest.md
 doc/InteractResponse.md
 doc/IsInitialized.md
@@ -37,9 +35,7 @@ lib/src/api.dart
 lib/src/api/auth_api.dart
 lib/src/api/chatbot_api.dart
 lib/src/api/config_api.dart
-lib/src/api/dashboard_api.dart
 lib/src/api/device_api.dart
-lib/src/api/favorite_api.dart
 lib/src/api/plugin_api.dart
 lib/src/api/room_api.dart
 lib/src/api/scene_api.dart
@@ -80,13 +76,11 @@ test/auth_api_test.dart
 test/chatbot_api_test.dart
 test/config_api_test.dart
 test/create_device_test.dart
-test/dashboard_api_test.dart
 test/dashboard_test.dart
 test/device_api_test.dart
 test/device_settings_test.dart
 test/device_test.dart
 test/device_type_enum_test.dart
-test/favorite_api_test.dart
 test/interact_request_test.dart
 test/interact_response_test.dart
 test/is_initialized_test.dart

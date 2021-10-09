@@ -29,7 +29,7 @@ class SceneWidget extends HookWidget {
 
     return Scaffold(
       appBar: AppBar(
-        leading: CloseButton(),
+        leading: const CloseButton(),
         title: Text(scene?.displayName ?? translations.addScene),
       ),
       resizeToAvoidBottomInset: false,
@@ -103,7 +103,7 @@ class SceneWidget extends HookWidget {
               ),
             ),
           ),
-          Divider(height: 1),
+          const Divider(height: 1),
           ButtonBar(
             children: <Widget>[
               TextButton(
@@ -176,9 +176,8 @@ class _Section extends ExpansionPanel {
   final List<String> Function() contentBuilder;
   final VoidCallback onAddClicked;
   final Function(int index) onDeleteClicked;
-  final bool isExpanded;
 
-  _Section({required this.title, required this.contentBuilder, required this.onAddClicked, required this.isExpanded, required this.onDeleteClicked})
+  _Section({required this.title, required this.contentBuilder, required this.onAddClicked, required bool isExpanded, required this.onDeleteClicked})
       : super(
           isExpanded: isExpanded,
           headerBuilder: (BuildContext context, bool isExpanded) {
@@ -193,7 +192,7 @@ class _Section extends ExpansionPanel {
                       style: Theme.of(context).textTheme.headline6,
                     ),
                   ),
-                  IconButton(icon: Icon(Icons.add, color: Colors.white), onPressed: onAddClicked),
+                  IconButton(icon: const Icon(Icons.add, color: Colors.white), onPressed: onAddClicked),
                 ],
               ),
             );
@@ -202,10 +201,10 @@ class _Section extends ExpansionPanel {
             builder: (context) {
               final transaction = CommonLocalizations.of(context);
               final data = contentBuilder();
-              if (data.length == 0) {
+              if (data.isEmpty) {
                 return Column(
                   children: <Widget>[
-                    Divider(height: 1),
+                    const Divider(height: 1),
                     Padding(
                       padding: const EdgeInsets.all(kMediumPadding),
                       child: Center(child: Text(transaction.emptyList)),
@@ -214,13 +213,13 @@ class _Section extends ExpansionPanel {
                 );
               }
               return Column(children: [
-                Divider(height: 1),
+                const Divider(height: 1),
                 for (var i = 0; i < data.length; i++)
                   Padding(
                     padding: const EdgeInsets.all(kMediumPadding),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[Text(data[i]), IconButton(icon: Icon(Icons.delete), onPressed: () => onDeleteClicked(i))],
+                      children: <Widget>[Text(data[i]), IconButton(icon: const Icon(Icons.delete), onPressed: () => onDeleteClicked(i))],
                     ),
                   ),
               ]);

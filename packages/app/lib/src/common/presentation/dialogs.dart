@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/errors.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
+import 'package:lisa_flutter/src/common/presentation/loading.dart';
 import 'package:lisa_flutter/src/common/utils/extensions.dart';
 import 'package:lisa_flutter/src/common/utils/modal_page_route.dart';
 
@@ -271,7 +272,7 @@ Future<bool> showLoadingDialog(
                         return null;
                       }, const []);
 
-                      return CircularProgressIndicator();
+                      return const Loading();
                     },
                   ),
                 ),
@@ -287,7 +288,7 @@ Future showErrorDialog(context, error, stack, {WidgetBuilder? title, WidgetBuild
     (content == null
         ? (context) => Text(
               handleError(error, stack).cause.twoLiner(context),
-              style: TextStyle(color: Colors.red),
+              style: const TextStyle(color: Colors.red),
             )
         : content(context) as WidgetBuilder),
     actions: [

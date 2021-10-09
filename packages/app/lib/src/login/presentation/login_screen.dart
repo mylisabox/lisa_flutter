@@ -17,10 +17,12 @@ import 'package:lisa_flutter/src/settings/stores/settings_store.dart';
 import 'package:provider/provider.dart';
 import 'package:proxy_layout/proxy_layout.dart';
 
-final _opacity = .7;
+const _opacity = .7;
 
 class LoginScreen extends HookWidget {
   static const route = 'login';
+
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +104,7 @@ mixin _LoginFields {
     return Material(
       color: Colors.white.withOpacity(_opacity),
       clipBehavior: Clip.antiAlias,
-      shape: BeveledRectangleBorder(
+      shape: const BeveledRectangleBorder(
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(
             200,
@@ -166,17 +168,15 @@ mixin _LoginFields {
             builder: (context) => TextField(
               autofocus: true,
               controller: controller,
-              autofillHints: [AutofillHints.email],
+              autofillHints: const [AutofillHints.email],
               onChanged: (value) => store.setEmail(value),
               keyboardType: TextInputType.emailAddress,
               textInputAction: TextInputAction.next,
-              style: TextStyle(fontSize: 20),
+              style: const TextStyle(fontSize: 20),
               decoration: InputDecoration(
                 labelText: translations.emailField,
                 errorText: store.errorState.email?.getMessage(context),
-                prefixIcon: Icon(
-                  Icons.email,
-                ),
+                prefixIcon: const Icon(Icons.email),
               ),
             ),
           );
@@ -198,17 +198,15 @@ mixin _LoginFields {
             builder: (context) => TextField(
               autofocus: true,
               controller: controller,
-              autofillHints: [AutofillHints.givenName, AutofillHints.middleName],
+              autofillHints: const [AutofillHints.givenName, AutofillHints.middleName],
               onChanged: (value) => store.setFirstName(value),
               keyboardType: TextInputType.name,
               textInputAction: TextInputAction.next,
-              style: TextStyle(fontSize: 20),
+              style: const TextStyle(fontSize: 20),
               decoration: InputDecoration(
                 labelText: translations.firstNameField,
                 errorText: store.errorState.firstName?.getMessage(context),
-                prefixIcon: Icon(
-                  Icons.person,
-                ),
+                prefixIcon: const Icon(Icons.person),
               ),
             ),
           );
@@ -230,17 +228,15 @@ mixin _LoginFields {
             builder: (context) => TextField(
               autofocus: true,
               controller: controller,
-              autofillHints: [AutofillHints.familyName],
+              autofillHints: const [AutofillHints.familyName],
               onChanged: (value) => store.setLastName(value),
               keyboardType: TextInputType.name,
               textInputAction: TextInputAction.next,
-              style: TextStyle(fontSize: 20),
+              style: const TextStyle(fontSize: 20),
               decoration: InputDecoration(
                 labelText: translations.lastNameField,
                 errorText: store.errorState.lastName?.getMessage(context),
-                prefixIcon: Icon(
-                  Icons.person,
-                ),
+                prefixIcon: const Icon(Icons.person),
               ),
             ),
           );
@@ -257,20 +253,18 @@ mixin _LoginFields {
       color: Colors.white.withOpacity(_opacity),
       child: Observer(
         builder: (context) => TextField(
-          autofillHints: [AutofillHints.password],
+          autofillHints: const [AutofillHints.password],
           textInputAction: TextInputAction.send,
           onSubmitted: (_) {
             FocusScope.of(context).requestFocus(FocusNode());
             login(context);
           },
-          style: TextStyle(fontSize: 20),
+          style: const TextStyle(fontSize: 20),
           onChanged: (value) => store.setPassword(value),
           decoration: InputDecoration(
             labelText: translations.passwordField,
             errorText: store.errorState.password?.getMessage(context),
-            prefixIcon: Icon(
-              Icons.lock_outline,
-            ),
+            prefixIcon: const Icon(Icons.lock_outline),
           ),
           obscureText: true,
         ),
@@ -286,7 +280,7 @@ mixin _LoginFields {
       child: Observer(
         builder: (context) {
           return ProgressButton(
-            padding: EdgeInsets.all(kNormalPadding),
+            padding: const EdgeInsets.all(kNormalPadding),
             onTap: () => login(context),
             state: store.loginState,
             color: Colors.white.withOpacity(_opacity),
@@ -294,7 +288,7 @@ mixin _LoginFields {
             child: Observer(
               builder: (_) => Text(
                 userStore.serverStatus == ServerStatus.initialized ? translations.loginButton.toUpperCase() : translations.signupButton.toUpperCase(),
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
           );
@@ -308,7 +302,7 @@ mixin _LoginFields {
     try {
       await store.login();
       Navigator.of(context).pushReplacementNamed(HomeScreen.route);
-    } on StateError catch (ex, stack) {
+    } on StateError catch (_) {
       // ignore state errors has it's form errors
     } catch (ex, stack) {
       showErrorDialog(context, ex, stack);
@@ -321,7 +315,7 @@ class _NoHost extends StatelessWidget with _LoginFields {
   Widget build(BuildContext context) {
     final localization = CommonLocalizations.of(context);
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 320),
+      constraints: const BoxConstraints(maxWidth: 320),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -412,7 +406,7 @@ class _LoginLandscape extends HookWidget with _LoginFields {
             Expanded(
               child: Center(
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 350),
+                  constraints: const BoxConstraints(maxWidth: 350),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -424,14 +418,14 @@ class _LoginLandscape extends HookWidget with _LoginFields {
                 ),
               ),
             ),
-            VerticalDivider(
+            const VerticalDivider(
               color: Colors.transparent,
               width: kNormalPadding,
             ),
             Expanded(
               child: Center(
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 350),
+                  constraints: const BoxConstraints(maxWidth: 350),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -440,24 +434,24 @@ class _LoginLandscape extends HookWidget with _LoginFields {
                       Observer(
                         builder: (context) {
                           if (userStore.serverStatus == ServerStatus.initialized) {
-                            return SizedBox(height: 0);
+                            return const SizedBox(height: 0);
                           }
                           return Column(
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               _getFirstNameField(context),
-                              Divider(color: Colors.transparent, height: 2),
+                              const Divider(color: Colors.transparent, height: 2),
                               _getLastNameField(context),
-                              Divider(color: Colors.transparent, height: 2),
+                              const Divider(color: Colors.transparent, height: 2),
                             ],
                           );
                         },
                       ),
                       _getEmailField(context),
-                      Divider(color: Colors.transparent, height: 2),
+                      const Divider(color: Colors.transparent, height: 2),
                       _getPasswordField(context),
-                      Divider(color: Colors.transparent),
+                      const Divider(color: Colors.transparent),
                       _getSubmitButton(context),
                     ],
                   ),
@@ -477,35 +471,35 @@ class _LoginPortrait extends HookWidget with _LoginFields {
     final userStore = Provider.of<UserStore>(context);
     return SingleChildScrollView(
       child: Container(
-        constraints: BoxConstraints(maxWidth: 320),
+        constraints: const BoxConstraints(maxWidth: 320),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             _getLogo(),
-            Divider(color: Colors.transparent, height: 2),
+            const Divider(color: Colors.transparent, height: 2),
             Observer(
               builder: (context) {
                 if (userStore.serverStatus == ServerStatus.initialized) {
-                  return SizedBox(height: 0);
+                  return const SizedBox(height: 0);
                 }
                 return Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     _getFirstNameField(context),
-                    Divider(color: Colors.transparent, height: 2),
+                    const Divider(color: Colors.transparent, height: 2),
                     _getLastNameField(context),
-                    Divider(color: Colors.transparent, height: 2),
+                    const Divider(color: Colors.transparent, height: 2),
                   ],
                 );
               },
             ),
             _getEmailField(context),
-            Divider(color: Colors.transparent, height: 2),
+            const Divider(color: Colors.transparent, height: 2),
             _getPasswordField(context),
             _getExternalUrlButtons(context),
-            Divider(color: Colors.transparent),
+            const Divider(color: Colors.transparent),
             _getSubmitButton(context),
           ],
         ),

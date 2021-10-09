@@ -15,6 +15,9 @@ Name | Type | Description | Notes
 **type** | [**DeviceTypeEnum**](DeviceTypeEnum.md) |  | 
 **template** | [**BuiltMap&lt;String, JsonObject&gt;**](JsonObject.md) |  | [optional] 
 **data** | [**BuiltMap&lt;String, JsonObject&gt;**](JsonObject.md) |  | [optional] 
+**defaultAction** | **String** |  | [optional] 
+**imageOn** | **String** |  | [optional] 
+**imageOff** | **String** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

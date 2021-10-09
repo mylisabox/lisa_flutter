@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
+import 'package:lisa_flutter/src/common/presentation/loading.dart';
 import 'package:lisa_flutter/src/common/presentation/refresh_no_scroll_content.dart';
 import 'package:lisa_flutter/src/common/utils/extensions.dart';
 import 'package:lisa_flutter/src/common/utils/page_route_builders.dart';
@@ -13,23 +14,27 @@ import 'package:lisa_server_sdk/lisa_server_sdk.dart';
 class ScenesScreen extends StatelessWidget {
   static const route = '/scenes';
 
+  const ScenesScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(context.localizations.menuScenes),
       ),
-      body: ScenesWidget(),
+      body: const ScenesWidget(),
     );
   }
 }
 
 class ScenesWidget extends HookWidget {
+  const ScenesWidget({Key? key}) : super(key: key);
+
   void editScene(BuildContext context, Scene? scene, GlobalKey<RefreshIndicatorState> refreshKey) async {
     final needRefresh = await Navigator.of(context, rootNavigator: true).push(
           FromBottomPageRoute(
             builder: (context) => SceneWidget(scene: scene),
-            settings: RouteSettings(name: SceneWidget.route),
+            settings: const RouteSettings(name: SceneWidget.route),
           ),
         ) ??
         false;
@@ -72,10 +77,10 @@ class ScenesWidget extends HookWidget {
             }
 
             if (store.scenes == null) {
-              return Center(child: CircularProgressIndicator());
+              return const Loading();
             }
 
-            if (store.scenes!.length == 0) {
+            if (store.scenes!.isEmpty) {
               return RefreshIndicatorContent(
                 child: Center(child: Text(translations.emptyList)),
               );
@@ -100,13 +105,13 @@ class ScenesWidget extends HookWidget {
                             Row(
                               children: <Widget>[
                                 IconButton(
-                                  icon: Icon(Icons.edit),
+                                  icon: const Icon(Icons.edit),
                                   onPressed: () async {
                                     editScene(context, store.scenes![i], refreshKey);
                                   },
                                 ),
                                 IconButton(
-                                  icon: Icon(Icons.delete),
+                                  icon: const Icon(Icons.delete),
                                   onPressed: () async {
                                     await showLoadingDialog(context, (_) => Text(translations.deleting), () => store.deleteScenes(i), onError: (ex, stack) {
                                       showErrorDialog(context, ex, stack);
@@ -150,7 +155,7 @@ class ScenesWidget extends HookWidget {
         onPressed: () async {
           editScene(context, null, refreshKey);
         },
-        child: Icon(Icons.add, color: Colors.white),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }

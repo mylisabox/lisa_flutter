@@ -12,32 +12,33 @@ class ProgressButton extends HookWidget {
   final ProgressButtonState state;
   final VoidCallback onTap;
 
-  ProgressButton({
+  const ProgressButton({
     required this.padding,
     required this.color,
     required this.child,
     required this.elevation,
     required this.state,
     required this.onTap,
-  });
+    Key? key,
+  }): super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final _globalKey = useMemoized(() => GlobalKey());
     final _width = useState(double.infinity);
     final _state = useState(state);
-    final _controller = useAnimationController(duration: Duration(milliseconds: 500));
+    final _controller = useAnimationController(duration: const Duration(milliseconds: 500));
     final isFinish = useState<bool>(false);
     final _anim = useAnimation(Tween(begin: 0.0, end: 1.0).animate(_controller));
     final initialWidth = useState<double?>(null);
     final height = useState<double?>(null);
 
-    final _onStart = (bool fromTap) async {
+    void _onStart(bool fromTap) async {
       if (_state.value == ProgressButtonState.idle || initialWidth.value == null) {
         initialWidth.value = _globalKey.currentContext!.size!.width;
         height.value = _globalKey.currentContext!.size!.height;
       }
-    };
+    }
 
     useEffect(() {
       if (_state.value != state) {
@@ -81,12 +82,12 @@ class ProgressButton extends HookWidget {
     if (state.value == ProgressButtonState.idle) {
       return child;
     } else if (state.value == ProgressButtonState.progress) {
-      return CircularProgressIndicator(
+      return const CircularProgressIndicator(
         value: null,
         valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
       );
     } else {
-      return Icon(Icons.check, color: Colors.white);
+      return const Icon(Icons.check, color: Colors.white);
     }
   }
 

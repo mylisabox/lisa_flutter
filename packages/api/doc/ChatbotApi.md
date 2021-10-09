@@ -9,7 +9,7 @@ All URIs are relative to *http://mylisabox:3000*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**interact**](ChatbotApi.md#interact) | **POST** /api/v1/chatbot/interact | 
+[**interact**](ChatbotApi.md#interact) | **POST** /api/v1/chatBots/interact | 
 
 
 # **interact**

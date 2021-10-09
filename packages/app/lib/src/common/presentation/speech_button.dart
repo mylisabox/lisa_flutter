@@ -10,13 +10,11 @@ import 'package:provider/provider.dart';
 class SpeechButton extends HookWidget {
   final void Function(String text)? onResults;
   final bool isFloating;
-  final String? roomId;
 
   const SpeechButton({
     Key? key,
     this.isFloating = true,
     this.onResults,
-    this.roomId,
   }) : super(key: key);
 
   @override
@@ -40,7 +38,7 @@ class SpeechButton extends HookWidget {
               label: 'Ok',
             )));
         if (onResults == null) {
-          final response = await Provider.of<SpeechStore>(context, listen: false).sendSentence(text, Localizations.localeOf(context).languageCode, roomId);
+          final response = await Provider.of<SpeechStore>(context, listen: false).sendSentence(text, Localizations.localeOf(context).languageCode);
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(response),
               action: SnackBarAction(

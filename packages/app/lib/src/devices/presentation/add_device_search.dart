@@ -1,6 +1,8 @@
 part of 'add_device.dart';
 
 class AddDeviceSearch extends HookWidget {
+  const AddDeviceSearch({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final store = Provider.of<AddDeviceStore>(context);
@@ -43,13 +45,10 @@ class AddDeviceSearch extends HookWidget {
                   }
 
                   if (plugins == null) {
-                    return Padding(
-                      padding: const EdgeInsets.all(kNormalPadding),
-                      child: Center(child: CircularProgressIndicator()),
-                    );
+                    return const Loading();
                   }
 
-                  if (plugins.length == 0) {
+                  if (plugins.isEmpty) {
                     return Padding(
                       padding: const EdgeInsets.all(kNormalPadding),
                       child: Center(child: Text(translations.emptyList)),
@@ -80,7 +79,7 @@ class AddDeviceSearch extends HookWidget {
                               body: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: <Widget>[
-                                  Divider(height: 1),
+                                  const Divider(height: 1),
                                   Padding(
                                     padding: const EdgeInsets.all(kNormalPadding),
                                     child: Wrap(
@@ -125,7 +124,7 @@ class _PluginDevice extends StatelessWidget with BaseUrlProvider {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: this.onTap,
+      onTap: onTap,
       hoverColor: Theme.of(context).primaryColorLight,
       child: Container(
         width: 150,

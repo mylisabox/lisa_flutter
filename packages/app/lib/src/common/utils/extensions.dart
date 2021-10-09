@@ -89,6 +89,21 @@ extension DeviceExtension on Device {
       case DeviceTypeEnum.speaker:
         if (grouped) return 'assets/images/widgets/group_speakers_${on ? 'on' : 'off'}.svg';
         return 'assets/images/widgets/speaker_${on ? 'on' : 'off'}.svg';
+      case DeviceTypeEnum.media:
+        // TODO: Handle this case.
+        break;
+      case DeviceTypeEnum.other:
+        // TODO: Handle this case.
+        break;
+      case DeviceTypeEnum.sensor:
+        // TODO: Handle this case.
+        break;
+      case DeviceTypeEnum.thermostat:
+        // TODO: Handle this case.
+        break;
+      case DeviceTypeEnum.webcam:
+        // TODO: Handle this case.
+        break;
     }
     return null;
   }
@@ -96,7 +111,7 @@ extension DeviceExtension on Device {
 
 extension JsonObjectExtension on JsonObject {
   dynamic toPrimitive() {
-    var val;
+    dynamic val;
     if (this is StringJsonObject) {
       val = asString;
     } else if (this is NumJsonObject) {

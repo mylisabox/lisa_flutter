@@ -7,6 +7,8 @@ import 'package:lisa_flutter/src/login/stores/login_store.dart';
 import 'package:provider/provider.dart';
 
 class LoginWearScreen extends HookWidget {
+  const LoginWearScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final userStore = Provider.of<UserStore>(context);
@@ -24,7 +26,7 @@ class LoginWearScreen extends HookWidget {
       child: AmbientMode(
           builder: (context, mode) => Scaffold(
                 backgroundColor: mode == Mode.active ? Colors.grey : Colors.black,
-                body: Center(
+                body: const Center(
                     child: Text(
                   'Wear is working',
                   style: TextStyle(color: Colors.red),

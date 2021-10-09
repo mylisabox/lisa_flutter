@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
+import 'package:lisa_server_sdk/lisa_server_sdk.dart';
 
 import 'messages/messages_all.dart';
 
@@ -90,6 +91,12 @@ class CommonLocalizations {
 
   String get deleteAction => Intl.message('Delete', name: 'deleteAction', desc: 'Delete label on button, swipe action');
 
+  String get deviceTurnOn => Intl.message('Turn on', name: 'deviceTurnOn', desc: 'Default device action for on');
+  String get deviceTurnOff => Intl.message('Turn off', name: 'deviceTurnOff', desc: 'Default device action for off');
+
+  String get deviceOpen => Intl.message('Open', name: 'deviceOpen', desc: 'Default device action for on');
+  String get deviceClose => Intl.message('Close', name: 'deviceClose', desc: 'Default device action for off');
+
   String get editAction => Intl.message('Edit', name: 'editAction', desc: 'Edit label on button, swipe action');
 
   String get favoriteAction => Intl.message('Favorite', name: 'favoriteAction', desc: 'Favorite label on button, swipe action');
@@ -112,6 +119,7 @@ class CommonLocalizations {
   String get menuDarkMode => Intl.message('Use dark mode', name: 'menuDarkMode');
 
   String get menuRooms => Intl.message('Rooms', name: 'menuRooms');
+  String get menuRoomsDescription => Intl.message('Change room\'s name and order', name: 'menuRoomsDescription');
 
   String get menuAddRoom => Intl.message('Add new room', name: 'menuAddRoom');
 
@@ -120,6 +128,8 @@ class CommonLocalizations {
   String get menuPreferences => Intl.message('Preferences', name: 'menuPreferences');
 
   String get menuSettings => Intl.message('Settings', name: 'menuSettings');
+
+  String get menuHomeSettings => Intl.message('Home settings', name: 'menuHomeSettings');
 
   String get menuScenes => Intl.message('Scenes', name: 'menuScenes');
 
@@ -227,9 +237,14 @@ class CommonLocalizations {
 
   String get manageProfile => Intl.message('Manage your profile', name: 'manageProfile');
 
-  String get manageSettings => Intl.message('Settings of L.I.S.A.', name: 'manageProfile');
+  String get manageSettings => Intl.message('L.I.S.A. settings', name: 'manageProfile');
 
   String get lightIntensity => Intl.message('Intensity', name: 'lightIntensity');
+
+  String get lights => Intl.message('Lights', name: 'lights');
+  String get webcams => Intl.message('Webcams', name: 'webcams');
+  String get shutters => Intl.message('Shutters', name: 'shutters');
+  String get speakers => Intl.message('Speakers', name: 'speakers');
 
   String groupDevices(int number) => Intl.message('$number devices', args: [number], name: 'groupDevices');
 
@@ -238,6 +253,28 @@ class CommonLocalizations {
           name: 'boxConnected');
 
   String networkPasswordTitle(String ssid) => Intl.message('Password for $ssid', name: 'networkPasswordTitle', args: [ssid]);
+
+  String typeLabel(DeviceTypeEnum type) {
+    switch(type) {
+      case DeviceTypeEnum.light:
+        return lights;
+      case DeviceTypeEnum.media:
+        break;
+      case DeviceTypeEnum.other:
+        break;
+      case DeviceTypeEnum.sensor:
+        break;
+      case DeviceTypeEnum.shutter:
+        return shutters;
+      case DeviceTypeEnum.speaker:
+        return speakers;
+      case DeviceTypeEnum.thermostat:
+        break;
+      case DeviceTypeEnum.webcam:
+        return webcams;
+    }
+    return '';
+  }
 }
 
 class CommonLocalizationsDelegate extends LocalizationsDelegate<CommonLocalizations> {

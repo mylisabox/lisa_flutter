@@ -1,6 +1,8 @@
 part of 'add_device.dart';
 
 class AddDeviceImageStep extends HookWidget with BaseUrlProvider {
+  const AddDeviceImageStep({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final store = Provider.of<AddDeviceStore>(context);
@@ -11,6 +13,8 @@ class AddDeviceImageStep extends HookWidget with BaseUrlProvider {
 }
 
 class AddDeviceSettingsStep extends HookWidget {
+  const AddDeviceSettingsStep({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final formValidatorKey = useMemoized(() => GlobalKey<RemoteFormValidatorProviderState>());
@@ -52,6 +56,8 @@ class AddDeviceSettingsStep extends HookWidget {
 }
 
 class AddDeviceListStep extends StatelessWidget {
+  const AddDeviceListStep({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final store = Provider.of<AddDeviceStore>(context);
@@ -64,7 +70,7 @@ class AddDeviceListStep extends StatelessWidget {
         final singleChoice = store.currentCustomStep['singleChoice'] ?? false;
         final selectedItems = store.currentCustomData[step]; // List of items or selected item if singleChoice
 
-        if (items.length == 0) {
+        if (items.isEmpty) {
           return Center(child: Text(translations.emptyList));
         }
 
@@ -78,7 +84,7 @@ class AddDeviceListStep extends StatelessWidget {
                 },
                 title: Text(translations.selectAll),
               ),
-            if (!singleChoice) Divider(height: 1),
+            if (!singleChoice) const Divider(height: 1),
             Expanded(
               child: ListView.separated(
                 padding: EdgeInsets.zero,
@@ -103,7 +109,7 @@ class AddDeviceListStep extends StatelessWidget {
                   );
                 },
                 separatorBuilder: (_, index) {
-                  return Divider(height: 1);
+                  return const Divider(height: 1);
                 },
                 itemCount: items.length,
               ),

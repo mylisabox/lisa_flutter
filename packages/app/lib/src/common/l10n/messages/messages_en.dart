@@ -15,13 +15,15 @@ final messages = new MessageLookup();
 final _keepAnalysisHappy = Intl.defaultLocale;
 
 // ignore: non_constant_identifier_names
-typedef MessageIfAbsent(String message_str, List args);
+typedef MessageIfAbsent = Function(String message_str, List args);
 
 class MessageLookup extends MessageLookupByLibrary {
+  @override
   get localeName => 'en';
 
   static m0(version, buildNumber) => "Version ${version}, build ${buildNumber}";
 
+  @override
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "appTitle" : MessageLookupByLibrary.simpleMessage("L.I.S.A."),
@@ -47,7 +49,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "helpIntro" : MessageLookupByLibrary.simpleMessage("If you have questions regarding the application or if you want to know more about KiWi, do not hesitate to get in touch with us."),
     "helpVersion" : m0,
     "internalHint" : MessageLookupByLibrary.simpleMessage("An error as occured"),
-    "internalMessage" : MessageLookupByLibrary.simpleMessage("There is nothing you can do, we\'ll try to fix this asap"),
+    "internalMessage" : MessageLookupByLibrary.simpleMessage("There is nothing you can do, we'll try to fix this asap"),
     "linkExternalUrl" : MessageLookupByLibrary.simpleMessage("Set external URL for remote access"),
     "loginButton" : MessageLookupByLibrary.simpleMessage("Login"),
     "logoutConfirm" : MessageLookupByLibrary.simpleMessage("Do you really want to log out?"),

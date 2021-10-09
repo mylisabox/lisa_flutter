@@ -1,4 +1,3 @@
-import 'package:lisa_flutter/src/common/errors.dart';
 import 'package:lisa_flutter/src/common/network/api_provider.dart';
 import 'package:lisa_flutter/src/common/utils/base_url_provider.dart';
 import 'package:lisa_server_sdk/lisa_server_sdk.dart';
@@ -23,14 +22,14 @@ abstract class _PluginsStore with Store, BaseUrlProvider {
 
   @action
   Future<void> loadPlugins() {
-    plugins = ObservableFuture(_api.getStorePlugins().catchError(handleCaughtError).then((value) => value.data!.toList()));
+    plugins = ObservableFuture(_api.getStorePlugins().then((value) => value.data!.toList()));
     return plugins;
   }
 
   @action
   Future<void> install(StorePlugin plugin) async {
     pluginsAction.add(plugin);
-    await _api.installPlugin(addPluginRequest: (AddPluginRequestBuilder()..id = plugin.id).build()).catchError(handleCaughtError);
+    await _api.installPlugin(addPluginRequest: (AddPluginRequestBuilder()..id = plugin.id).build());
     await loadPlugins();
     pluginsAction.remove(plugin);
   }
@@ -38,7 +37,7 @@ abstract class _PluginsStore with Store, BaseUrlProvider {
   @action
   Future<void> uninstall(StorePlugin plugin) async {
     pluginsAction.add(plugin);
-    await _api.uninstallPlugin(pluginName: plugin.id).catchError(handleCaughtError);
+    await _api.uninstallPlugin(pluginName: plugin.id);
     await loadPlugins();
     pluginsAction.remove(plugin);
   }

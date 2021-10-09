@@ -6,6 +6,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
+import 'package:lisa_flutter/src/common/presentation/loading.dart';
 import 'package:lisa_flutter/src/common/utils/hooks.dart';
 import 'package:lisa_flutter/src/login/stores/setup_store.dart';
 import 'package:mobx/mobx.dart';
@@ -14,6 +15,8 @@ import 'package:provider/provider.dart';
 
 class SetupScreen extends HookWidget {
   static const route = 'setup';
+
+  const SetupScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,13 +38,13 @@ class SetupScreen extends HookWidget {
                 builder: (context) {
                   useReaction<NetworkMode>((_) => store.currentMode, (mode) {
                     if (controller.page == 0 && mode != NetworkMode.connectingBT) {
-                      controller.nextPage(duration: Duration(milliseconds: 500), curve: Curves.easeOutExpo);
+                      controller.nextPage(duration: const Duration(milliseconds: 500), curve: Curves.easeOutExpo);
                     } else if (controller.page == 1 && mode != NetworkMode.waitingNetworkInfo) {
-                      controller.nextPage(duration: Duration(milliseconds: 500), curve: Curves.easeOutExpo);
+                      controller.nextPage(duration: const Duration(milliseconds: 500), curve: Curves.easeOutExpo);
                     }
                   });
                   return PageView(
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     controller: controller,
                     children: [
                       Observer(builder: (context) {
@@ -80,7 +83,7 @@ class SetupScreen extends HookWidget {
                             error: store.savingNetwork.error.toString(),
                             onRetry: () {
                               store.currentMode = NetworkMode.waitingNetworkInfo;
-                              controller.animateToPage(1, duration: Duration(milliseconds: 400), curve: Curves.easeOutExpo);
+                              controller.animateToPage(1, duration: const Duration(milliseconds: 400), curve: Curves.easeOutExpo);
                             },
                           );
                         }
@@ -190,7 +193,7 @@ class _LoadingIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      shape: CircleBorder(),
+      shape: const CircleBorder(),
       color: backgroundColor,
       child: Stack(
         alignment: Alignment.center,
@@ -294,7 +297,7 @@ class _Step2NetworkList extends StatelessWidget {
           );
         },
         separatorBuilder: (context, index) {
-          return Divider();
+          return const Divider();
         },
         itemCount: store.searchingNetworks.value!.length,
       );
@@ -330,7 +333,7 @@ class _StepLoading extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Text(message, textAlign: TextAlign.center),
         ),
-        Center(child: CircularProgressIndicator()),
+        const Loading(),
       ],
     );
   }

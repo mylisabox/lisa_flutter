@@ -10,9 +10,10 @@ All URIs are relative to *http://mylisabox:3000*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**addRoom**](RoomApi.md#addroom) | **POST** /api/v1/rooms | 
-[**deleteRoom**](RoomApi.md#deleteroom) | **DELETE** /api/v1/room/{roomId} | 
+[**deleteRoom**](RoomApi.md#deleteroom) | **DELETE** /api/v1/rooms/{roomId} | 
 [**getRooms**](RoomApi.md#getrooms) | **GET** /api/v1/rooms | 
-[**saveRoom**](RoomApi.md#saveroom) | **PUT** /api/v1/room/{roomId} | 
+[**reorderRooms**](RoomApi.md#reorderrooms) | **POST** /api/v1/rooms/reorder | 
+[**saveRoom**](RoomApi.md#saveroom) | **PUT** /api/v1/rooms/{roomId} | 
 
 
 # **addRoom**
@@ -142,6 +143,50 @@ This endpoint does not need any parameter.
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **reorderRooms**
+> reorderRooms(requestBody)
+
+
+
+### Example 
+```dart
+import 'package:lisa_server_sdk/api.dart';
+// TODO Configure API key authorization: Bearer
+//defaultApiClient.getAuthentication<ApiKeyAuth>('Bearer').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('Bearer').apiKeyPrefix = 'Bearer';
+
+final api = LisaServerSdk().getRoomApi();
+final BuiltList<int> requestBody = ; // BuiltList<int> | 
+
+try { 
+    api.reorderRooms(requestBody);
+} catch on DioError (e) {
+    print('Exception when calling RoomApi->reorderRooms: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **requestBody** | [**BuiltList&lt;int&gt;**](int.md)|  | 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[Bearer](../README.md#Bearer)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: Not defined
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

@@ -20,6 +20,9 @@ part 'create_device.g.dart';
 /// * [type]
 /// * [template]
 /// * [data]
+/// * [defaultAction]
+/// * [imageOn]
+/// * [imageOff]
 abstract class CreateDevice implements Built<CreateDevice, CreateDeviceBuilder> {
     @BuiltValueField(wireName: r'roomId')
     int? get roomId;
@@ -42,6 +45,15 @@ abstract class CreateDevice implements Built<CreateDevice, CreateDeviceBuilder> 
 
     @BuiltValueField(wireName: r'data')
     BuiltMap<String, JsonObject>? get data;
+
+    @BuiltValueField(wireName: r'defaultAction')
+    String? get defaultAction;
+
+    @BuiltValueField(wireName: r'imageOn')
+    String? get imageOn;
+
+    @BuiltValueField(wireName: r'imageOff')
+    String? get imageOff;
 
     CreateDevice._();
 
@@ -101,6 +113,24 @@ class _$CreateDeviceSerializer implements StructuredSerializer<CreateDevice> {
                 ..add(serializers.serialize(object.data,
                     specifiedType: const FullType(BuiltMap, [FullType(String), FullType(JsonObject)])));
         }
+        if (object.defaultAction != null) {
+            result
+                ..add(r'defaultAction')
+                ..add(serializers.serialize(object.defaultAction,
+                    specifiedType: const FullType(String)));
+        }
+        if (object.imageOn != null) {
+            result
+                ..add(r'imageOn')
+                ..add(serializers.serialize(object.imageOn,
+                    specifiedType: const FullType(String)));
+        }
+        if (object.imageOff != null) {
+            result
+                ..add(r'imageOff')
+                ..add(serializers.serialize(object.imageOff,
+                    specifiedType: const FullType(String)));
+        }
         return result;
     }
 
@@ -142,6 +172,18 @@ class _$CreateDeviceSerializer implements StructuredSerializer<CreateDevice> {
                 case r'data':
                     result.data.replace(serializers.deserialize(value,
                         specifiedType: const FullType(BuiltMap, [FullType(String), FullType(JsonObject)])) as BuiltMap<String, JsonObject>);
+                    break;
+                case r'defaultAction':
+                    result.defaultAction = serializers.deserialize(value,
+                        specifiedType: const FullType(String)) as String;
+                    break;
+                case r'imageOn':
+                    result.imageOn = serializers.deserialize(value,
+                        specifiedType: const FullType(String)) as String;
+                    break;
+                case r'imageOff':
+                    result.imageOff = serializers.deserialize(value,
+                        specifiedType: const FullType(String)) as String;
                     break;
             }
         }

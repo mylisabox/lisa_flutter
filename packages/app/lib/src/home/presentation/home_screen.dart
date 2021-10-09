@@ -20,10 +20,13 @@ import 'package:lisa_flutter/src/common/stores/user_store.dart';
 import 'package:lisa_flutter/src/common/utils/base_url_provider.dart';
 import 'package:lisa_flutter/src/common/utils/extensions.dart';
 import 'package:lisa_flutter/src/common/utils/modal_page_route.dart';
+import 'package:lisa_flutter/src/common/utils/page_route_builders.dart';
 import 'package:lisa_flutter/src/devices/presentation/add_device.dart';
+import 'package:lisa_flutter/src/devices/presentation/device_list_screen.dart';
 import 'package:lisa_flutter/src/devices/presentation/device_screen.dart';
 import 'package:lisa_flutter/src/rooms/stores/room_store.dart';
 import 'package:lisa_flutter/src/scenes/presentation/scenes.dart';
+import 'package:lisa_flutter/src/settings/presentation/settings.dart';
 import 'package:lisa_flutter/src/settings/stores/settings_store.dart';
 import 'package:lisa_server_sdk/lisa_server_sdk.dart';
 import 'package:mobx/mobx.dart';
@@ -34,7 +37,7 @@ enum HomeScreenTab { home, media }
 class HomeScreen extends HookWidget {
   static const route = 'home';
 
-  HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -58,8 +61,8 @@ class HomeScreen extends HookWidget {
                 },
               ),
             SliverAnimatedSwitcher(
-              duration: Duration(milliseconds: 400),
-              child: mode.value == HomeScreenTab.home ? _RoomTab() : _MediaTab(),
+              duration: const Duration(milliseconds: 400),
+              child: mode.value == HomeScreenTab.home ? const _RoomTab() : const _MediaTab(),
             ),
           ],
         ),
@@ -67,7 +70,7 @@ class HomeScreen extends HookWidget {
       extendBody: true,
       bottomNavigationBar: _LisaBottomBar(mode: mode),
       floatingActionButtonLocation: const _CenterDockedFabLocation(),
-      floatingActionButton: SpeechButton(),
+      floatingActionButton: const SpeechButton(),
     );
   }
 }
@@ -86,7 +89,7 @@ class _LisaBottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomAppBar(
       notchMargin: 6,
-      shape: CircularNotchedRectangle(),
+      shape: const CircularNotchedRectangle(),
       child: SizedBox(
         height: _bottomBarHeight, //56 size of floating button
         child: Row(
@@ -94,7 +97,7 @@ class _LisaBottomBar extends StatelessWidget {
           children: [
             Expanded(
               child: InkWell(
-                borderRadius: BorderRadius.only(topRight: Radius.circular(15)),
+                borderRadius: const BorderRadius.only(topRight: Radius.circular(15)),
                 onTap: () {
                   mode.value = HomeScreenTab.home;
                 },
@@ -105,13 +108,13 @@ class _LisaBottomBar extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(width: kToolbarHeight),
+            const SizedBox(width: kToolbarHeight),
             Expanded(
               child: InkWell(
                 onTap: () {
                   mode.value = HomeScreenTab.media;
                 },
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(15)),
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(15)),
                 child: Icon(
                   Icons.perm_media_outlined,
                   size: mode.value == HomeScreenTab.media ? 28 : 22,
@@ -166,9 +169,9 @@ class _LisaAppBar extends StatelessWidget {
         ],
       ),
       floating: true,
-      actions: [
+      actions: const [
         Padding(
-          padding: const EdgeInsets.only(right: kSmallPadding),
+          padding: EdgeInsets.only(right: kSmallPadding),
           child: _Avatar(),
         ),
       ],
@@ -192,7 +195,7 @@ class _MediaTab extends StatelessWidget {
               label: 'Kodi',
               image: 'assets/images/kodi.svg',
               onTap: () {
-                showAppDialog(context, (_) => Text('title'), (_) => Text('content'), actions: [
+                showAppDialog(context, (_) => const Text('title'), (_) => const Text('content'), actions: [
                   DialogAction(callback: (context) {}, text: 'Ok'),
                 ]);
               },
@@ -206,13 +209,13 @@ class _MediaTab extends StatelessWidget {
                 final color = HSLColor.fromColor(Theme.of(context).primaryColor).withLightness(0.3);
                 Navigator.of(context, rootNavigator: isMobile).push(MaterialPageRoute(
                     builder: (context) => IconTheme(
-                          data: IconThemeData(color: Colors.white),
+                          data: const IconThemeData(color: Colors.white),
                           child: TransmissionScreen(
                             headless: !isMobile,
                             iconActiveColor: color.toColor(),
                           ),
                         ),
-                    settings: RouteSettings(name: routeTransmission)));
+                    settings: const RouteSettings(name: routeTransmission)));
               },
             ),
             _MediaItem(
@@ -222,13 +225,17 @@ class _MediaTab extends StatelessWidget {
                 const routeSickChill = '/multimedia/sickchill';
 
                 final isMobile = DeviceProxy.isMobile(context);
-                Navigator.of(context, rootNavigator: isMobile)
-                    .push(MaterialPageRoute(builder: (context) => SickChillScreen(headless: !isMobile), settings: RouteSettings(name: routeSickChill)));
+                Navigator.of(context, rootNavigator: isMobile).push(
+                  MaterialPageRoute(
+                    builder: (context) => SickChillScreen(headless: !isMobile),
+                    settings: const RouteSettings(name: routeSickChill),
+                  ),
+                );
               },
             ),
           ],
         ),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: kNormalPadding, mainAxisSpacing: kNormalPadding),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: kNormalPadding, mainAxisSpacing: kNormalPadding),
       ),
     );
   }
@@ -271,9 +278,10 @@ class _MediaItem extends StatelessWidget {
 class _QuickAction extends StatelessWidget {
   final Widget icon;
   final String label;
+  final Color? color;
   final VoidCallback onTap;
 
-  const _QuickAction({Key? key, required this.onTap, required this.icon, required this.label}) : super(key: key);
+  const _QuickAction({Key? key, this.color, required this.onTap, required this.icon, required this.label}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -292,8 +300,9 @@ class _QuickAction extends StatelessWidget {
                   padding: const EdgeInsets.all(kNormalPadding),
                   child: icon,
                   decoration: BoxDecoration(
+                    color: (color ?? context.brightnessColor).withOpacity(.1),
                     borderRadius: BorderRadius.circular(100),
-                    border: Border.all(width: 1, color: Colors.white),
+                    border: Border.all(width: 1, color: color ?? context.brightnessColor),
                   ),
                 ),
               ),
@@ -315,51 +324,68 @@ class _QuickActions extends StatelessWidget {
     return Column(
       children: [
         Observer(
-            builder: (context) => Wrap(
-                  alignment: WrapAlignment.center,
-                  children: [
-                    if (store.hasLights)
-                      _QuickAction(
-                        onTap: () {
-                          context.navigator.pushNamed(ScenesScreen.route);
-                        },
-                        icon: SvgPicture.asset('assets/images/widgets/bulb_on.svg', width: 20),
-                        label: 'Lights',
+          builder: (context) => Wrap(
+            alignment: WrapAlignment.center,
+            children: [
+              if (store.hasLights)
+                _QuickAction(
+                  onTap: () {
+                    context.navigator.push(
+                      FromBottomPageRoute(
+                        builder: (context) => const DeviceListScreen(type: DeviceTypeEnum.light),
+                        settings: const RouteSettings(name: DeviceListScreen.route),
                       ),
-                    if (store.hasShutters)
-                      _QuickAction(
-                        onTap: () {
-                          context.navigator.pushNamed(ScenesScreen.route);
-                        },
-                        icon: SvgPicture.asset('assets/images/widgets/shutter_off.svg', width: 20),
-                        label: 'Shutters',
+                    );
+                  },
+                  icon: SvgPicture.asset('assets/images/widgets/bulb_off.svg', color: Colors.yellow, width: 20),
+                  label: context.localizations.lights,
+                  color: Colors.yellow,
+                ),
+              if (store.hasShutters)
+                _QuickAction(
+                  onTap: () {
+                    context.navigator.push(
+                      FromBottomPageRoute(
+                        builder: (context) => const DeviceListScreen(type: DeviceTypeEnum.shutter),
+                        settings: const RouteSettings(name: DeviceListScreen.route),
                       ),
-                    if (store.hasWebcams)
-                      _QuickAction(
-                        onTap: () {
-                          context.navigator.pushNamed(ScenesScreen.route);
-                        },
-                        icon: SvgPicture.asset('assets/images/widgets/webcam.svg', width: 20),
-                        label: 'Webcams',
+                    );
+                  },
+                  color: Colors.red,
+                  icon: SvgPicture.asset('assets/images/widgets/shutter_off.svg', color: Colors.red, width: 20),
+                  label: context.localizations.shutters,
+                ),
+              if (store.hasWebcams)
+                _QuickAction(
+                  onTap: () {
+                    context.navigator.push(
+                      FromBottomPageRoute(
+                        builder: (context) => const DeviceListScreen(type: DeviceTypeEnum.webcam),
+                        settings: const RouteSettings(name: DeviceListScreen.route),
                       ),
-                  ],
-                )),
-        Wrap(
-          alignment: WrapAlignment.center,
-          children: [
-            _QuickAction(
-              onTap: () {
-                context.navigator.pushNamed(ScenesScreen.route);
-              },
-              icon: Icon(Icons.filter_frames, size: 20),
-              label: context.localizations.menuScenes,
-            ),
-            _QuickAction(
-              onTap: () {},
-              icon: Icon(Icons.settings_outlined, size: 20),
-              label: context.localizations.menuSettings,
-            ),
-          ],
+                    );
+                  },
+                  color: Colors.red,
+                  icon: SvgPicture.asset('assets/images/widgets/webcam.svg', color: Colors.red, width: 20),
+                  label: context.localizations.webcams,
+                ),
+              _QuickAction(
+                onTap: () {
+                  context.navigator.pushNamed(ScenesScreen.route);
+                },
+                color: Colors.purple,
+                icon: const Icon(Icons.room_preferences_outlined, color: Colors.purple, size: 20),
+                label: context.localizations.menuScenes,
+              ),
+              _QuickAction(
+                onTap: () {
+                  context.navigator.pushNamed(HomeSettingsScreen.route);
+                },
+                icon: Icon(Icons.settings_outlined, color: context.brightnessColor, size: 20),
+                label: context.localizations.menuSettings,
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -433,15 +459,15 @@ class _RoomItem extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: kNormalPadding),
             child: Row(
               children: [
-                Expanded(child: const Divider(height: 1)),
+                const Expanded(child: Divider(height: 1)),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: kNormalPadding),
                   child: Text(room.name, style: context.textTheme.subtitle1),
                 ),
-                Expanded(child: const Divider(height: 1)),
+                const Expanded(child: Divider(height: 1)),
                 if (editMode)
                   ReorderableDragStartListener(
-                    child: Icon(Icons.reorder_outlined),
+                    child: const Icon(Icons.reorder_outlined),
                     index: index,
                   ),
               ],
@@ -470,22 +496,34 @@ class _DeviceItem extends StatelessWidget with BaseUrlProvider {
   @override
   Widget build(BuildContext context) {
     final img = device.powered ? device.imageOn : device.imageOff;
+    Widget imgWidget = SvgPicture.asset(
+      'assets/images/lisa.svg',
+      key: ValueKey(img),
+      fit: BoxFit.contain,
+    );
 
-    final imgWidget = img!.startsWith('assets/')
-        ? SvgPicture.asset(
-            img,
-            key: ValueKey(img),
-            fit: BoxFit.contain,
-          )
-        : SvgPicture.network(
-            getPluginImageUrl(device.pluginName, img),
-            key: ValueKey(img),
-            fit: BoxFit.contain,
-          );
-
+    if (img != null) {
+      imgWidget = img.startsWith('assets/')
+          ? SvgPicture.asset(
+              img,
+              key: ValueKey(img),
+              fit: BoxFit.contain,
+            )
+          : SvgPicture.network(
+              getPluginImageUrl(device.pluginName, img),
+              key: ValueKey(img),
+              fit: BoxFit.contain,
+            );
+    }
     return InkWell(
       onTap: () {
         context.navigator.pushNamed(DeviceScreen.route, arguments: device);
+      },
+      onLongPress: () async {
+        final success = await showConfirm(context, context.localizations.deleteAction, context.localizations.deleteConfirm);
+        if (success) {
+          context.of<RoomStore>(listen: false).deleteDevice(device);
+        }
       },
       child: Column(
         children: [
@@ -498,7 +536,7 @@ class _DeviceItem extends StatelessWidget with BaseUrlProvider {
                 fit: StackFit.expand,
                 children: [
                   AnimatedSwitcher(
-                    duration: Duration(milliseconds: 400),
+                    duration: const Duration(milliseconds: 400),
                     child: imgWidget,
                   ),
                   if ((device.groupCount ?? 0) > 0)
@@ -520,7 +558,9 @@ class _DeviceItem extends StatelessWidget with BaseUrlProvider {
             onPressed: device.defaultAction == null
                 ? null
                 : () {
-                    context.of<RoomStore>(listen: false).triggerDevice(device);
+                    context.of<RoomStore>(listen: false).triggerDevice(device).catchError((error, stack) {
+                      showErrorDialog(context, error, stack);
+                    });
                   },
           ),
         ],
@@ -561,8 +601,8 @@ class _Avatar extends StatelessWidget {
                   onTap: () {
                     context.navigator.push(
                       ModalPageRoute(
-                        builder: (context) => UserDialog(),
-                        settings: RouteSettings(name: '/userDialog'),
+                        builder: (context) => const UserDialog(),
+                        settings: const RouteSettings(name: '/userDialog'),
                       ),
                     );
                   },

@@ -13,6 +13,7 @@ Method | HTTP request | Description
 [**deleteDevice**](DeviceApi.md#deletedevice) | **DELETE** /api/v1/devices/{deviceId} | 
 [**getDeviceData**](DeviceApi.md#getdevicedata) | **GET** /api/v1/devices/{deviceId}/data | 
 [**getDevices**](DeviceApi.md#getdevices) | **GET** /api/v1/devices/ | 
+[**getDevicesData**](DeviceApi.md#getdevicesdata) | **GET** /api/v1/devices/data | 
 [**saveDeviceInfo**](DeviceApi.md#savedeviceinfo) | **PATCH** /api/v1/devices/{deviceId} | 
 [**triggerDevice**](DeviceApi.md#triggerdevice) | **GET** /api/v1/devices/{deviceId}/trigger | 
 [**triggerGroup**](DeviceApi.md#triggergroup) | **POST** /api/v1/devices/groups/{deviceType} | 
@@ -182,6 +183,51 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **roomId** | **String**|  | [optional] 
+
+### Return type
+
+[**BuiltList&lt;Device&gt;**](Device.md)
+
+### Authorization
+
+[Bearer](../README.md#Bearer)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **getDevicesData**
+> BuiltList<Device> getDevicesData(deviceIds)
+
+
+
+### Example 
+```dart
+import 'package:lisa_server_sdk/api.dart';
+// TODO Configure API key authorization: Bearer
+//defaultApiClient.getAuthentication<ApiKeyAuth>('Bearer').apiKey = 'YOUR_API_KEY';
+// uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//defaultApiClient.getAuthentication<ApiKeyAuth>('Bearer').apiKeyPrefix = 'Bearer';
+
+final api = LisaServerSdk().getDeviceApi();
+final BuiltList<int> deviceIds = ; // BuiltList<int> | 
+
+try { 
+    final response = api.getDevicesData(deviceIds);
+    print(response);
+} catch on DioError (e) {
+    print('Exception when calling DeviceApi->getDevicesData: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **deviceIds** | [**BuiltList&lt;int&gt;**](int.md)|  | 
 
 ### Return type
 

@@ -21,6 +21,12 @@ class _$CreateDevice extends CreateDevice {
   final BuiltMap<String, JsonObject>? template;
   @override
   final BuiltMap<String, JsonObject>? data;
+  @override
+  final String? defaultAction;
+  @override
+  final String? imageOn;
+  @override
+  final String? imageOff;
 
   factory _$CreateDevice([void Function(CreateDeviceBuilder)? updates]) =>
       (new CreateDeviceBuilder()..update(updates)).build();
@@ -32,7 +38,10 @@ class _$CreateDevice extends CreateDevice {
       required this.pluginName,
       required this.type,
       this.template,
-      this.data})
+      this.data,
+      this.defaultAction,
+      this.imageOn,
+      this.imageOff})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(name, 'CreateDevice', 'name');
     BuiltValueNullFieldError.checkNotNull(
@@ -57,7 +66,10 @@ class _$CreateDevice extends CreateDevice {
         pluginName == other.pluginName &&
         type == other.type &&
         template == other.template &&
-        data == other.data;
+        data == other.data &&
+        defaultAction == other.defaultAction &&
+        imageOn == other.imageOn &&
+        imageOff == other.imageOff;
   }
 
   @override
@@ -66,12 +78,18 @@ class _$CreateDevice extends CreateDevice {
         $jc(
             $jc(
                 $jc(
-                    $jc($jc($jc(0, roomId.hashCode), name.hashCode),
-                        driver.hashCode),
-                    pluginName.hashCode),
-                type.hashCode),
-            template.hashCode),
-        data.hashCode));
+                    $jc(
+                        $jc(
+                            $jc(
+                                $jc($jc($jc(0, roomId.hashCode), name.hashCode),
+                                    driver.hashCode),
+                                pluginName.hashCode),
+                            type.hashCode),
+                        template.hashCode),
+                    data.hashCode),
+                defaultAction.hashCode),
+            imageOn.hashCode),
+        imageOff.hashCode));
   }
 
   @override
@@ -83,7 +101,10 @@ class _$CreateDevice extends CreateDevice {
           ..add('pluginName', pluginName)
           ..add('type', type)
           ..add('template', template)
-          ..add('data', data))
+          ..add('data', data)
+          ..add('defaultAction', defaultAction)
+          ..add('imageOn', imageOn)
+          ..add('imageOff', imageOff))
         .toString();
   }
 }
@@ -123,6 +144,19 @@ class CreateDeviceBuilder
       _$this._data ??= new MapBuilder<String, JsonObject>();
   set data(MapBuilder<String, JsonObject>? data) => _$this._data = data;
 
+  String? _defaultAction;
+  String? get defaultAction => _$this._defaultAction;
+  set defaultAction(String? defaultAction) =>
+      _$this._defaultAction = defaultAction;
+
+  String? _imageOn;
+  String? get imageOn => _$this._imageOn;
+  set imageOn(String? imageOn) => _$this._imageOn = imageOn;
+
+  String? _imageOff;
+  String? get imageOff => _$this._imageOff;
+  set imageOff(String? imageOff) => _$this._imageOff = imageOff;
+
   CreateDeviceBuilder() {
     CreateDevice._defaults(this);
   }
@@ -137,6 +171,9 @@ class CreateDeviceBuilder
       _type = $v.type;
       _template = $v.template?.toBuilder();
       _data = $v.data?.toBuilder();
+      _defaultAction = $v.defaultAction;
+      _imageOn = $v.imageOn;
+      _imageOff = $v.imageOff;
       _$v = null;
     }
     return this;
@@ -168,7 +205,10 @@ class CreateDeviceBuilder
               type: BuiltValueNullFieldError.checkNotNull(
                   type, 'CreateDevice', 'type'),
               template: _template?.build(),
-              data: _data?.build());
+              data: _data?.build(),
+              defaultAction: defaultAction,
+              imageOn: imageOn,
+              imageOff: imageOff);
     } catch (_) {
       late String _$failedField;
       try {

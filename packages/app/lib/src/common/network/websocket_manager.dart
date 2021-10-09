@@ -24,7 +24,7 @@ class WebsocketMessage {
       case 'device_added':
       case 'device_updated':
         try {
-          data = standardSerializers.deserialize(data, specifiedType: FullType(Device));
+          data = standardSerializers.deserialize(data, specifiedType: const FullType(Device));
         } catch(ex, stack){
           _logger.severe('Can\'t deserialize websocket data $ex' , ex, stack);
           rethrow;
@@ -63,8 +63,8 @@ class WebsocketManager with BaseUrlProvider, Disposable {
         final data = WebsocketMessage.fromJSON(json);
         _controller.add(data);
       }
-    }, onError: (err) {
-      print(err);
+    }, onError: (err, stack) {
+      _logger.warning('WebSocketChannel error $err', err, stack);
     }, onDone: () {
       _logger.warning('websocket closed, reconnecting');
       setup(token);

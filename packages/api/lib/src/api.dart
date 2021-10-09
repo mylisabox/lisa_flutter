@@ -7,9 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:lisa_server_sdk/src/api/auth_api.dart';
 import 'package:lisa_server_sdk/src/api/chatbot_api.dart';
 import 'package:lisa_server_sdk/src/api/config_api.dart';
-import 'package:lisa_server_sdk/src/api/dashboard_api.dart';
 import 'package:lisa_server_sdk/src/api/device_api.dart';
-import 'package:lisa_server_sdk/src/api/favorite_api.dart';
 import 'package:lisa_server_sdk/src/api/plugin_api.dart';
 import 'package:lisa_server_sdk/src/api/room_api.dart';
 import 'package:lisa_server_sdk/src/api/scene_api.dart';
@@ -93,22 +91,10 @@ class LisaServerSdk {
     return ConfigApi(dio, serializers);
   }
 
-  /// Get DashboardApi instance, base route and serializer can be overridden by a given but be careful,
-  /// by doing that all interceptors will not be executed
-  DashboardApi getDashboardApi() {
-    return DashboardApi(dio, serializers);
-  }
-
   /// Get DeviceApi instance, base route and serializer can be overridden by a given but be careful,
   /// by doing that all interceptors will not be executed
   DeviceApi getDeviceApi() {
     return DeviceApi(dio, serializers);
-  }
-
-  /// Get FavoriteApi instance, base route and serializer can be overridden by a given but be careful,
-  /// by doing that all interceptors will not be executed
-  FavoriteApi getFavoriteApi() {
-    return FavoriteApi(dio, serializers);
   }
 
   /// Get PluginApi instance, base route and serializer can be overridden by a given but be careful,

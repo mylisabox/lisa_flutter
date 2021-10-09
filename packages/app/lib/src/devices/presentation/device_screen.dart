@@ -32,15 +32,20 @@ class DeviceScreen extends HookWidget {
     final store = useMemoized(() => DeviceStore());
     return Scaffold(
       appBar: AppBar(
-        title: Text(device.name),
+        title: Observer(
+          builder: (context) {
+            return Text(store.device?.name ?? device.name);
+          }
+        ),
         actions: [
           if (!(device.grouped ?? false))
             IconButton(
                 onPressed: () {
                   showDialog(
-                      context: context,
-                      builder: (context) {
-                        return HookBuilder(builder: (context) {
+                    context: context,
+                    builder: (context) {
+                      return HookBuilder(
+                        builder: (context) {
                           final roomStore = context.of<RoomStore>();
                           final nameController = useTextEditingController(text: device.name);
                           final roomState = useState<Room?>(roomStore.availableRooms.firstWhereOrNull((element) => element.id == device.roomId));
@@ -79,19 +84,21 @@ class DeviceScreen extends HookWidget {
                               ),
                             ],
                           );
-                        });
-                      });
+                        },
+                      );
+                    },
+                  );
                 },
                 icon: const Icon(Icons.edit)),
         ],
       ),
-      body: Provider(create: (BuildContext context) => store..loadDevice(device), child: const DeviceDetails()),
+      body: Provider(create: (BuildContext context) => store..loadDevice(device), child: const _DeviceDetails()),
     );
   }
 }
 
-class DeviceDetails extends StatelessWidget with BaseUrlProvider {
-  const DeviceDetails({Key? key}) : super(key: key);
+class _DeviceDetails extends StatelessWidget with BaseUrlProvider {
+  const _DeviceDetails({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

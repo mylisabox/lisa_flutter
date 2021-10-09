@@ -27,24 +27,49 @@ abstract class _RoomStore with Store, Disposable {
   List<Room> get availableRooms => roomsStatus.value?.where((element) => element.id != -1).toList(growable: false) ?? [];
 
   @computed
-  bool get hasLights => roomsStatus.value?.firstWhereOrNull((room) => room.devices.firstWhereOrNull((device) => device.type == DeviceTypeEnum.light) != null) != null;
+  bool get hasLights =>
+      roomsStatus.value?.firstWhereOrNull((room) => room.devices.firstWhereOrNull((device) => device.type == DeviceTypeEnum.light) != null) != null;
 
   @computed
-  bool get hasShutters => roomsStatus.value?.firstWhereOrNull((room) => room.devices.firstWhereOrNull((device) => device.type == DeviceTypeEnum.shutter) != null) != null;
+  bool get hasShutters =>
+      roomsStatus.value?.firstWhereOrNull((room) => room.devices.firstWhereOrNull((device) => device.type == DeviceTypeEnum.shutter) != null) != null;
 
   @computed
-  bool get hasWebcams => roomsStatus.value?.firstWhereOrNull((room) => room.devices.firstWhereOrNull((device) => device.type == DeviceTypeEnum.webcam) != null) != null;
+  bool get hasWebcams =>
+      roomsStatus.value?.firstWhereOrNull((room) => room.devices.firstWhereOrNull((device) => device.type == DeviceTypeEnum.webcam) != null) != null;
 
   _RoomStore({
     RoomApi? roomApi,
     DeviceApi? deviceApi,
   })  : _roomApi = roomApi ?? BackendApiProvider().api.getRoomApi(),
         _deviceApi = deviceApi ?? BackendApiProvider().api.getDeviceApi() {
-    subscriptions.add(BackendApiProvider().websocketManager.onMessage.listen((event) {
-      if (event.type.contains('device')) {
-        _updateDevice(event.data as Device);
-      }
-    }));
+    subscriptions.add(
+      BackendApiProvider().websocketManager.onMessage.listen(
+        (event) {
+          if (event.type.contains('device')) {
+            _updateDevice(event.data as Device);
+          }
+        },
+      ),
+    );
+  }
+
+  @action
+  Future<void> deleteDevice(Device device) async {
+    await _deviceApi.deleteDevice(deviceId: device.id);
+    await reloadRooms();
+  }
+
+  @action
+  Future<void> deleteRoom(Room room) async {
+    await _roomApi.deleteRoom(roomId: room.id!);
+    await reloadRooms();
+  }
+
+  @action
+  Future<void> renameRoom(Room room, String newName) async {
+    await _roomApi.saveRoom(roomId: room.id!, room: room.rebuild((p0) => p0.name = newName));
+    await reloadRooms();
   }
 
   @action
@@ -52,6 +77,28 @@ abstract class _RoomStore with Store, Disposable {
     final newRoom = await _roomApi.addRoom(room: room);
     await reloadRooms();
     return newRoom.data!;
+  }
+
+  Future<void> triggerRoom(Room? room, DeviceTypeEnum type, bool state) async {
+    await _deviceApi.triggerGroup(
+        deviceType: type.name,
+        roomId: room?.id,
+        requestBody: BuiltMap.of({
+          'key': JsonObject('powered'),
+          'value': JsonObject(state),
+        }));
+    return;
+  }
+
+  Future<void> reorder(int i1, int i2) async {
+    final rooms = List.from(availableRooms);
+    var add = 0;
+    if (i1 < i2) {
+      add = 1;
+    }
+    rooms.insert(i2-add, rooms.removeAt(i1));
+    await _roomApi.reorderRooms(requestBody: BuiltList.of(rooms.map((e) => e.id)));
+    await reloadRooms();
   }
 
   Future<void> triggerDevice(Device device) async {
@@ -178,9 +225,7 @@ abstract class _RoomStore with Store, Disposable {
 
   void _updateDevice(Device data) {
     var room = roomsStatus.value!.firstWhereOrNull((element) => element.id == data.roomId);
-    if (room == null) {
-      room = roomsStatus.value!.firstWhere((element) => element.id == -1);
-    }
+    room ??= roomsStatus.value!.firstWhere((element) => element.id == -1);
     final roomIndex = roomsStatus.value!.indexOf(room);
     final devices = List<Device>.from(room.devices);
     final deviceIndex = devices.indexWhere((element) => element.id == data.id);

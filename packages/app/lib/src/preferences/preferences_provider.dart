@@ -9,7 +9,7 @@ class PreferencesProvider {
   static const keyRefreshToken = 'refreshToken';
   static PreferencesProvider? _singleton;
 
-  final securePrefs = FlutterSecureStorage();
+  final securePrefs = const FlutterSecureStorage();
 
   PreferencesProvider._();
 

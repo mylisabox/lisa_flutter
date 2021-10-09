@@ -58,10 +58,6 @@ part 'serializers.g.dart';
 ])
 Serializers serializers = (_$serializers.toBuilder()
       ..addBuilderFactory(
-        const FullType(BuiltList, [FullType(int)]),
-        () => ListBuilder<int>(),
-      )
-      ..addBuilderFactory(
         const FullType(BuiltList, [FullType(Device)]),
         () => ListBuilder<Device>(),
       )
@@ -70,8 +66,8 @@ Serializers serializers = (_$serializers.toBuilder()
         () => MapBuilder<String, JsonObject>(),
       )
       ..addBuilderFactory(
-        const FullType(BuiltList, [FullType(Device)]),
-        () => ListBuilder<Device>(),
+        const FullType(BuiltList, [FullType(int)]),
+        () => ListBuilder<int>(),
       )
       ..addBuilderFactory(
         const FullType(BuiltMap, [FullType(String), FullType(JsonObject)]),
@@ -84,6 +80,10 @@ Serializers serializers = (_$serializers.toBuilder()
       ..addBuilderFactory(
         const FullType(BuiltList, [FullType(StorePlugin)]),
         () => ListBuilder<StorePlugin>(),
+      )
+      ..addBuilderFactory(
+        const FullType(BuiltList, [FullType(int)]),
+        () => ListBuilder<int>(),
       )
       ..addBuilderFactory(
         const FullType(BuiltList, [FullType(Room)]),

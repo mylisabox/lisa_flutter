@@ -78,6 +78,8 @@ class _ProfileFormController {
 }
 
 class ProfileDialog extends HookWidget {
+  const ProfileDialog({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final translations = CommonLocalizations.of(context);
@@ -122,6 +124,8 @@ class ProfileDialog extends HookWidget {
 class ProfileScreen extends HookWidget {
   static const route = '/profile';
 
+  const ProfileScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final profileManager = useProfileManager(context);
@@ -129,6 +133,7 @@ class ProfileScreen extends HookWidget {
 
     return Scaffold(
       appBar: AppBar(
+        leading: const CloseButton(),
         title: Text(translations.profile),
       ),
       body: Provider.value(
@@ -150,7 +155,7 @@ class _ProfileWidget extends HookWidget {
       color: Colors.transparent,
       child: SingleChildScrollView(
         child: Container(
-          padding: modeDialog ? EdgeInsets.zero : EdgeInsets.all(kNormalPadding),
+          padding: modeDialog ? EdgeInsets.zero : const EdgeInsets.all(kNormalPadding),
           color: modeDialog ? Colors.transparent : Theme.of(context).scaffoldBackgroundColor,
           child: AutofillGroup(
             child: Column(
@@ -172,7 +177,7 @@ class _ProfileWidget extends HookWidget {
                             decoration: InputDecoration(labelText: translations.firstNameField),
                             textInputAction: TextInputAction.next,
                             controller: profileManager.firstName,
-                            autofillHints: [AutofillHints.givenName],
+                            autofillHints: const [AutofillHints.givenName],
                             onSubmitted: (_) {
                               FocusScope.of(context).focusInDirection(TraversalDirection.down);
                             },
@@ -181,7 +186,7 @@ class _ProfileWidget extends HookWidget {
                             decoration: InputDecoration(labelText: translations.lastNameField),
                             controller: profileManager.lastName,
                             textInputAction: TextInputAction.next,
-                            autofillHints: [AutofillHints.name],
+                            autofillHints: const [AutofillHints.name],
                             onSubmitted: (_) {
                               FocusScope.of(context).focusInDirection(TraversalDirection.down);
                             },
@@ -209,7 +214,7 @@ class _ProfileWidget extends HookWidget {
                   controller: profileManager.email,
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.emailAddress,
-                  autofillHints: [AutofillHints.email],
+                  autofillHints: const [AutofillHints.email],
                   onSubmitted: (_) {
                     FocusScope.of(context).focusInDirection(TraversalDirection.down);
                   },
@@ -219,7 +224,7 @@ class _ProfileWidget extends HookWidget {
                   controller: profileManager.phone,
                   keyboardType: TextInputType.phone,
                   textInputAction: TextInputAction.next,
-                  autofillHints: [AutofillHints.telephoneNumber],
+                  autofillHints: const [AutofillHints.telephoneNumber],
                   onSubmitted: (_) {
                     FocusScope.of(context).focusInDirection(TraversalDirection.down);
                   },
@@ -227,7 +232,7 @@ class _ProfileWidget extends HookWidget {
                 TextField(
                   decoration: InputDecoration(labelText: translations.passwordField),
                   controller: profileManager.password,
-                  autofillHints: [AutofillHints.newPassword],
+                  autofillHints: const [AutofillHints.newPassword],
                   textInputAction: TextInputAction.next,
                   obscureText: true,
                   onSubmitted: (_) {
@@ -261,7 +266,7 @@ class _ProfileWidget extends HookWidget {
                       },
                       style: ButtonStyle(
                         foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                        padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 10, horizontal: 30)),
+                        padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 10, horizontal: 30)),
                       ),
                       child: Text(translations.continueButton.toUpperCase()),
                     ),

@@ -11,7 +11,7 @@ import 'package:lisa_flutter/src/login/presentation/setup_screen.dart';
 import 'package:lisa_flutter/src/plugins/presentation/plugins.dart';
 import 'package:lisa_flutter/src/preferences/presentation/preferences.dart';
 import 'package:lisa_flutter/src/profile/presentation/profile.dart';
-import 'package:lisa_flutter/src/rooms/presentation/room_dashboard.dart';
+import 'package:lisa_flutter/src/rooms/presentation/rooms_settings.dart';
 import 'package:lisa_flutter/src/scenes/presentation/scene.dart';
 import 'package:lisa_flutter/src/scenes/presentation/scenes.dart';
 import 'package:lisa_flutter/src/settings/presentation/settings.dart';
@@ -26,31 +26,31 @@ class Router {
   Map<String, dynamic> get routes => isWear ? _wearRoutes : _routes;
 
   final Map<String, dynamic> _routes = {
-    LoginScreen.route: (_) => LoginScreen(),
+    LoginScreen.route: (_) => const LoginScreen(),
     DeviceScreen.route: (context) => DeviceScreen(device: ModalRoute.of(context)!.settings.arguments as Device),
-    SetupScreen.route: (_) => SetupScreen(),
-    SplashScreen.route: (_) => SplashScreen(),
-    ProfileScreen.route: (_) => ProfileScreen(),
+    HomeSettingsScreen.route: (_) => const HomeSettingsScreen(),
+    RoomsSettingsScreen.route: (_) => const RoomsSettingsScreen(),
+    SetupScreen.route: (_) => const SetupScreen(),
+    SplashScreen.route: (_) => const SplashScreen(),
+    ProfileScreen.route: (_) => const ProfileScreen(),
     AddDeviceScreen.route: (context) => AddDeviceScreen(room: ModalRoute.of(context)!.settings.arguments as Room?),
-    ScenesScreen.route: (_) => ScenesScreen(),
+    ScenesScreen.route: (_) => const ScenesScreen(),
     SceneWidget.route: (context) => SceneWidget(scene: ModalRoute.of(context)!.settings.arguments as Scene),
-    PreferencesWidget.route: (_) => PreferencesWidget(),
-    SettingsScreen.route: (_) => SettingsScreen(),
-    PluginsStoreScreen.route: (_) => PluginsStoreScreen(),
-    RoomDashboard.route: (context) => RoomDashboard(room: ModalRoute.of(context)!.settings.arguments as Room),
-    HomeScreen.route: (_) => HomeScreen(),
+    PreferencesWidget.route: (_) => const PreferencesWidget(),
+    SettingsScreen.route: (_) => const SettingsScreen(),
+    PluginsStoreScreen.route: (_) => const PluginsStoreScreen(),
+    HomeScreen.route: (_) => const HomeScreen(),
   };
 
   final Map<String, dynamic> _wearRoutes = {
-    LoginScreen.route: (_) => LoginWearScreen(),
-    SplashScreen.route: (_) => SplashScreen(),
-    ProfileScreen.route: (_) => ProfileScreen(),
+    LoginScreen.route: (_) => const LoginWearScreen(),
+    SplashScreen.route: (_) => const SplashScreen(),
+    ProfileScreen.route: (_) => const ProfileScreen(),
     AddDeviceScreen.route: (context) => AddDeviceScreen(room: ModalRoute.of(context)!.settings.arguments as Room),
-    ScenesScreen.route: (_) => ScenesScreen(),
+    ScenesScreen.route: (_) => const ScenesScreen(),
     SceneWidget.route: (context) => SceneWidget(scene: ModalRoute.of(context)!.settings.arguments as Scene),
-    PreferencesWidget.route: (_) => PreferencesWidget(),
-    RoomDashboard.route: (context) => RoomDashboard(room: ModalRoute.of(context)!.settings.arguments as Room),
-    HomeScreen.route: (_) => HomeScreen(),
+    PreferencesWidget.route: (_) => const PreferencesWidget(),
+    HomeScreen.route: (_) => const HomeScreen(),
   };
 
   Route? onGenerateRoute(RouteSettings settings) {
@@ -62,16 +62,10 @@ class Router {
   }
 
   PageRoute _getPageRoute(RouteSettings settings) {
-    //FIXME doesn't work as arguments stay null for some reason... to be checked in flutter sources
-    if (settings.name != null && settings.name!.contains(RoomDashboard.route + '/')) {
-      return MaterialPageRoute(
-        builder: routes[RoomDashboard.route],
-        settings: settings.copyWith(arguments: (RoomBuilder()..id= int.parse(settings.name!.split('/').last)..name= '').build()),
-      );
-    }
-
-    if (settings.arguments is FadePageRouteArguments) {
-      return FadePageRoute(builder: routes[settings.name], settings: settings.copyWith(arguments: (settings.arguments as FadePageRouteArguments).arguments));
+    if (settings.arguments is RouteArguments && (settings.arguments as RouteArguments?)?.type == RouteTransitionType.fade) {
+      return FadePageRoute(builder: routes[settings.name], settings: settings.copyWith(arguments: (settings.arguments as RouteArguments).arguments));
+    } else if (settings.arguments is RouteArguments && (settings.arguments as RouteArguments?)?.type == RouteTransitionType.fromBottom) {
+      return FromBottomPageRoute(builder: routes[settings.name], settings: settings.copyWith(arguments: (settings.arguments as RouteArguments).arguments));
     } else if (isWear) {
       return CupertinoPageRoute(builder: routes[settings.name], settings: settings);
     }
@@ -80,10 +74,15 @@ class Router {
 
 }
 
-class FadePageRouteArguments {
-  final dynamic arguments;
+enum RouteTransitionType {
+  fromBottom, fade
+}
 
-  FadePageRouteArguments({this.arguments});
+class RouteArguments {
+  final dynamic arguments;
+  final RouteTransitionType type;
+
+  RouteArguments({this.arguments, this.type = RouteTransitionType.fade});
 }
 
 typedef OnTitleChange = void Function(String title, String? route);
@@ -142,8 +141,6 @@ class TitleNavigatorObserver extends NavigatorObserver {
         return localizations.menuPreferences;
       case SettingsWidget.route:
         return localizations.menuSettings;
-      case RoomDashboard.route:
-        return (arguments as Room?)?.name ?? 'L.I.S.A.';
       case ScenesScreen.route:
         return localizations.menuScenes;
       case PluginsStoreScreen.route:
@@ -154,9 +151,6 @@ class TitleNavigatorObserver extends NavigatorObserver {
   }
 
   String? getRoute(Route route) {
-    if (RoomDashboard.route == route.settings.name) {
-      return '${route.settings.name}/${(route.settings.arguments as Room).id}';
-    }
     return route.settings.name;
   }
 }
