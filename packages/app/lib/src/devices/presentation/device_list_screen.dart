@@ -6,7 +6,6 @@ import 'package:lisa_flutter/src/common/network/api_provider.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
 import 'package:lisa_flutter/src/common/presentation/loading.dart';
 import 'package:lisa_flutter/src/common/presentation/refresh_no_scroll_content.dart';
-import 'package:lisa_flutter/src/common/presentation/widgets/light.dart';
 import 'package:lisa_flutter/src/common/utils/base_url_provider.dart';
 import 'package:lisa_flutter/src/common/utils/extensions.dart';
 import 'package:lisa_flutter/src/devices/stores/device_store.dart';
@@ -33,7 +32,8 @@ class DeviceListScreen extends HookWidget {
         leading: const CloseButton(),
         title: Text(context.localizations.typeLabel(type)),
       ),
-      body: Provider(create: (BuildContext context) => store, child: type == DeviceTypeEnum.webcam ? _DeviceListDetails(type: type) : _RoomListDetails(type: type)),
+      body: Provider(
+          create: (BuildContext context) => store, child: type == DeviceTypeEnum.webcam ? _DeviceListDetails(type: type) : _RoomListDetails(type: type)),
     );
   }
 }
@@ -151,7 +151,7 @@ class _RoomEntry extends StatelessWidget {
   }
 }
 
-class _DeviceListDetails extends StatelessWidget with BaseUrlProvider {
+class _DeviceListDetails extends HookWidget with BaseUrlProvider {
   final DeviceTypeEnum type;
 
   const _DeviceListDetails({Key? key, required this.type}) : super(key: key);
@@ -159,83 +159,74 @@ class _DeviceListDetails extends StatelessWidget with BaseUrlProvider {
   @override
   Widget build(BuildContext context) {
     final store = context.of<DeviceStore>();
-    return Observer(builder: (context) {
-      if (store.loadDeviceRequest?.status == FutureStatus.rejected) {
-        return RefreshIndicatorContentError(error: store.loadDeviceRequest!.error);
-      }
+    final roomStore = context.of<RoomStore>();
+    useEffect(() {
+      store.loadDevices(roomStore.webcams);
+    }, const []);
+    return Observer(
+      builder: (context) {
+        if (store.loadDeviceListRequest?.status == FutureStatus.rejected) {
+          return RefreshIndicatorContentError(error: store.loadDeviceListRequest!.error);
+        }
 
-      if (store.device == null) {
-        return const Loading();
-      }
-      final device = store.device!;
-      return Column(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if ((device.grouped ?? false))
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(kNormalPadding),
-                child: TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    context.localizations.groupDevices(device.children!.length),
-                    style: const TextStyle(fontSize: 20),
+        if (store.loadDeviceListRequest?.status == FutureStatus.pending) {
+          return const Loading();
+        }
+        final devices = store.deviceList;
+        return Scrollbar(
+          child: ListView.separated(
+            itemBuilder: (context, index) {
+              final device = devices[index];
+              return Card(
+                margin: const EdgeInsets.all(kNormalPadding),
+                child: SizedBox(
+                  height: 220,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(kNormalPadding),
+                        child: Text(device.name, style: context.textTheme.subtitle1),
+                      ),
+                      const Divider(height: 1),
+                      Expanded(
+                        child: RemoteManagerWidget(
+                          onChanges: (String key, value, {associatedData}) {
+                            store.deviceChange(key, value, deviceToChange: device);
+                          },
+                          parsers: [
+                            RemoteColorPickerFactory(),
+                            RemoteIpCameraFactory(baseUrlProvider: () {
+                              final backend = BackendApiProvider();
+                              final interceptor = backend.api.dio.interceptors.firstWhere((item) => item is HostInterceptor); //get host interceptor
+                              final token = backend.getToken();
+                              return (interceptor as HostInterceptor).host! + '/api/v1/camera/stream?token=$token&url=';
+                            }),
+                            RemoteImageButtonFactory(baseUrlProvider: () => baseUrl)
+                          ],
+                          child: RemoteWidget(
+                            associatedData: device,
+                            definition: device.template!.toMap().map((key, value) {
+                              return MapEntry(key, value.toPrimitive());
+                            }),
+                            data: device.data == null
+                                ? {}
+                                : device.data!.toMap().map((key, value) {
+                                    return MapEntry(key, value.toPrimitive());
+                                  }),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            ),
-          if (device.template != null)
-            Expanded(
-              child: RemoteManagerWidget(
-                onChanges: (String key, value, {associatedData}) {
-                  store.deviceChange(key, value);
-                },
-                parsers: [
-                  RemoteColorPickerFactory(),
-                  RemoteIpCameraFactory(baseUrlProvider: () {
-                    final backend = BackendApiProvider();
-                    final interceptor = backend.api.dio.interceptors.firstWhere((item) => item is HostInterceptor); //get host interceptor
-                    final token = backend.getToken();
-                    return (interceptor as HostInterceptor).host! + '/api/v1/camera/stream?token=$token&url=';
-                  }),
-                  RemoteImageButtonFactory(baseUrlProvider: () => baseUrl)
-                ],
-                child: Padding(
-                  padding: const EdgeInsets.all(kNormalPadding),
-                  child: RemoteWidget(
-                    associatedData: device,
-                    definition: device.template!.toMap().map((key, value) {
-                      return MapEntry(key, value.toPrimitive());
-                    }),
-                    data: device.data == null
-                        ? {}
-                        : device.data!.toMap().map((key, value) {
-                            return MapEntry(key, value.toPrimitive());
-                          }),
-                  ),
-                ),
-              ),
-            ),
-          if (device.type == DeviceTypeEnum.light)
-            Light(
-              key: ValueKey(device.name),
-              powered: device.powered,
-              dimmable: device.data?['dimmable']?.asBool ?? false,
-              brightness: device.data?['intensity']?.asNum.toInt(),
-              color: device.data?['color']?.asString.toColor(),
-              onPoweredChange: (bool powered) {
-                store.deviceChange('powered', powered);
-              },
-              onBrightnessChange: (int brightness) {
-                store.deviceChange('intensity', brightness);
-              },
-              onColorChange: (Color color) {
-                store.deviceChange('color', color.toHex());
-              },
-            ),
-        ],
-      );
-    });
+              );
+            },
+            separatorBuilder: (context, index) => const Divider(height: 1),
+            itemCount: devices.length,
+          ),
+        );
+      },
+    );
   }
 }

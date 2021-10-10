@@ -326,6 +326,8 @@ class _QuickActions extends StatelessWidget {
         Observer(
           builder: (context) => Wrap(
             alignment: WrapAlignment.center,
+            runSpacing: 0,
+            spacing: 0,
             children: [
               if (store.hasLights)
                 _QuickAction(
@@ -373,8 +375,8 @@ class _QuickActions extends StatelessWidget {
                 onTap: () {
                   context.navigator.pushNamed(ScenesScreen.route);
                 },
-                color: Colors.purple,
-                icon: const Icon(Icons.room_preferences_outlined, color: Colors.purple, size: 20),
+                color: Colors.green,
+                icon: const Icon(Icons.room_preferences_outlined, color: Colors.green, size: 20),
                 label: context.localizations.menuScenes,
               ),
               _QuickAction(

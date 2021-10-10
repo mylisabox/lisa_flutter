@@ -80,8 +80,8 @@ abstract class _DeviceStore with Store {
   }
 
   @action
-  Future deviceChange(String key, Object? value) async {
-    final device = this.device!;
+  Future deviceChange(String key, Object? value, {Device? deviceToChange}) async {
+    final device = deviceToChange ?? this.device!;
     if (device.grouped ?? false) {
       await _deviceApi.updateGroup(
           roomId: device.roomId,

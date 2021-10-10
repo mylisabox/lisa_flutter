@@ -27,6 +27,30 @@ abstract class _RoomStore with Store, Disposable {
   List<Room> get availableRooms => roomsStatus.value?.where((element) => element.id != -1).toList(growable: false) ?? [];
 
   @computed
+  List<Device> get lights => rooms
+      .map(
+        (r) => r.devices.where((p0) => p0.type == DeviceTypeEnum.light),
+      )
+      .expand((element) => element)
+      .toList();
+
+  @computed
+  List<Device> get shutters => rooms
+      .map(
+        (r) => r.devices.where((p0) => p0.type == DeviceTypeEnum.shutter),
+  )
+      .expand((element) => element)
+      .toList();
+
+  @computed
+  List<Device> get webcams => rooms
+      .map(
+        (r) => r.devices.where((p0) => p0.type == DeviceTypeEnum.webcam),
+  )
+      .expand((element) => element)
+      .toList();
+
+  @computed
   bool get hasLights =>
       roomsStatus.value?.firstWhereOrNull((room) => room.devices.firstWhereOrNull((device) => device.type == DeviceTypeEnum.light) != null) != null;
 
@@ -96,7 +120,7 @@ abstract class _RoomStore with Store, Disposable {
     if (i1 < i2) {
       add = 1;
     }
-    rooms.insert(i2-add, rooms.removeAt(i1));
+    rooms.insert(i2 - add, rooms.removeAt(i1));
     await _roomApi.reorderRooms(requestBody: BuiltList.of(rooms.map((e) => e.id)));
     await reloadRooms();
   }
