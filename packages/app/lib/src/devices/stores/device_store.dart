@@ -43,7 +43,7 @@ abstract class _DeviceStore with Store {
   }
 
   Future<List<Device>> _loadDevicesData(List<Device> devicesToLoad) async {
-    final response = await _deviceApi.getDevicesData(deviceIds: BuiltList.of(devicesToLoad.map((e) => e.id)));
+    final response = await _deviceApi.getDevicesData(deviceIds: BuiltList.from(devicesToLoad.map((e) => e.id)));
     return deviceList = response.data!.toList();
   }
 

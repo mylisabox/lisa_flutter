@@ -85,6 +85,7 @@ class HostInterceptor extends Interceptor {
     } else {
       _setExternalUrl(options, _host!);
     }
+
     _log.info('lisa host set to $_host');
     handler.next(options);
   }
@@ -97,7 +98,8 @@ class HostInterceptor extends Interceptor {
       return;
     }
 
-    final finalUrl = urlParts.replace(host: externalUrlParts.host, scheme: externalUrlParts.scheme, port: externalUrlParts.port);
+    final finalUrl = urlParts.replace(host: externalUrlParts.host, scheme: externalUrlParts.scheme, port: externalUrlParts.port, query: '');
+
     _host = externalUrlParts.origin;
     options.path = finalUrl.toString();
   }

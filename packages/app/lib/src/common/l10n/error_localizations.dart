@@ -25,8 +25,8 @@ class ErrorLocalizations {
 
   String get wrongEmailMessage => Intl.message('Email is not correct', name: 'wrongEmailMessage');
 
-  String get internalHint => Intl.message('An error as occured', name: 'internalHint');
-  String get internalMessage => Intl.message('There is nothing you can do, we\'ll try to fix this asap', name: 'internalMessage');
+  String get internalHint => Intl.message('There is nothing you can do, we\'ll try to fix this asap', name: 'internalHint');
+  String get internalMessage => Intl.message('An error as occured', name: 'internalMessage');
 
   String get noNetworkHint => Intl.message('Try again later when you have better coverage', name: 'noNetworkHint');
   String get noNetworkMessage => Intl.message('Device seems to be offline', name: 'noNetworkMessage');

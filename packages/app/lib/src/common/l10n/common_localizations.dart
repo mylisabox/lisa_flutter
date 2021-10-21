@@ -243,6 +243,7 @@ class CommonLocalizations {
 
   String get lights => Intl.message('Lights', name: 'lights');
   String get webcams => Intl.message('Webcams', name: 'webcams');
+  String get thermostat => Intl.message('Thermostats', name: 'thermostat');
   String get shutters => Intl.message('Shutters', name: 'shutters');
   String get speakers => Intl.message('Speakers', name: 'speakers');
 

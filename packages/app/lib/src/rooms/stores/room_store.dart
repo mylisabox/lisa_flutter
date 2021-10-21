@@ -38,7 +38,7 @@ abstract class _RoomStore with Store, Disposable {
   List<Device> get shutters => rooms
       .map(
         (r) => r.devices.where((p0) => p0.type == DeviceTypeEnum.shutter),
-  )
+      )
       .expand((element) => element)
       .toList();
 
@@ -46,7 +46,15 @@ abstract class _RoomStore with Store, Disposable {
   List<Device> get webcams => rooms
       .map(
         (r) => r.devices.where((p0) => p0.type == DeviceTypeEnum.webcam),
-  )
+      )
+      .expand((element) => element)
+      .toList();
+
+  @computed
+  List<Device> get thermostats => rooms
+      .map(
+        (r) => r.devices.where((p0) => p0.type == DeviceTypeEnum.thermostat),
+      )
       .expand((element) => element)
       .toList();
 
@@ -57,6 +65,10 @@ abstract class _RoomStore with Store, Disposable {
   @computed
   bool get hasShutters =>
       roomsStatus.value?.firstWhereOrNull((room) => room.devices.firstWhereOrNull((device) => device.type == DeviceTypeEnum.shutter) != null) != null;
+
+  @computed
+  bool get hasThermostat =>
+      roomsStatus.value?.firstWhereOrNull((room) => room.devices.firstWhereOrNull((device) => device.type == DeviceTypeEnum.thermostat) != null) != null;
 
   @computed
   bool get hasWebcams =>

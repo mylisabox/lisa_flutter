@@ -32,7 +32,7 @@ class SplashScreen extends HookWidget {
           if (userStore.user == null) {
             Navigator.of(context).pushReplacementNamed(LoginScreen.route, arguments: RouteArguments());
           } else {
-            final lastTime = PreferencesProvider().prefs.getInt(PreferencesProvider.keyLastSeen)!;
+            final lastTime = PreferencesProvider().prefs.getInt(PreferencesProvider.keyLastSeen) ?? DateTime.now().millisecondsSinceEpoch;
             if (DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(lastTime)) > const Duration(hours: kHoursBeforeFingerprint)) {
               var localAuth = LocalAuthentication();
               bool didAuthenticate = await localAuth.authenticate(localizedReason: 'Long time no see, please verify yourself');

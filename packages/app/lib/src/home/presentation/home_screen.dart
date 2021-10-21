@@ -371,6 +371,20 @@ class _QuickActions extends StatelessWidget {
                   icon: SvgPicture.asset('assets/images/widgets/webcam.svg', color: Colors.red, width: 20),
                   label: context.localizations.webcams,
                 ),
+              if (store.hasThermostat)
+                _QuickAction(
+                  onTap: () {
+                    context.navigator.push(
+                      FromBottomPageRoute(
+                        builder: (context) => const DeviceListScreen(type: DeviceTypeEnum.thermostat),
+                        settings: const RouteSettings(name: DeviceListScreen.route),
+                      ),
+                    );
+                  },
+                  color: Colors.purple,
+                  icon: SvgPicture.asset('assets/images/widgets/thermostat.svg', color: Colors.purple, width: 20),
+                  label: context.localizations.thermostat,
+                ),
               _QuickAction(
                 onTap: () {
                   context.navigator.pushNamed(ScenesScreen.route);

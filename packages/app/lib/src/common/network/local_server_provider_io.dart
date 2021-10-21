@@ -24,7 +24,7 @@ class LocalServerProviderIO extends LocalServerProvider {
     const wantedResponse = 'lisa-server-response';
     const codec = Utf8Codec();
     final dataToSend = codec.encode(searchQuery);
-    final address = InternetAddress('238.9.9.9');
+    final address = InternetAddress('239.9.9.9');
 
     final udpSocket =
         await RawDatagramSocket.bind(InternetAddress.anyIPv4, 5544, reuseAddress: true, reusePort: defaultTargetPlatform != TargetPlatform.android);
