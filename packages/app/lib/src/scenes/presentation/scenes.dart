@@ -48,6 +48,7 @@ class ScenesWidget extends HookWidget {
   Widget build(BuildContext context) {
     final store = useMemoized(() => ScenesStore());
     final refreshKey = useMemoized(() => GlobalKey<RefreshIndicatorState>());
+    final controller = useScrollController();
 
     useEffect(() {
       store.loadScenes();
@@ -87,64 +88,72 @@ class ScenesWidget extends HookWidget {
             }
 
             return Scrollbar(
+              controller: controller,
               child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: DataTable(
-                  showCheckboxColumn: false,
-                  sortAscending: false,
-                  rows: <DataRow>[
-                    for (var i = 0; i < store.scenes!.length; i++)
-                      DataRow(
-                        onSelectChanged: (selected) {
-                          if (selected!) {
-                            editScene(context, store.scenes![i], refreshKey);
-                          }
-                        },
-                        cells: [
-                          DataCell(
-                            Row(
-                              children: <Widget>[
-                                IconButton(
-                                  icon: const Icon(Icons.edit),
-                                  onPressed: () async {
-                                    editScene(context, store.scenes![i], refreshKey);
-                                  },
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.delete),
-                                  onPressed: () async {
-                                    await showLoadingDialog(context, (_) => Text(translations.deleting), () => store.deleteScenes(i), onError: (ex, stack) {
-                                      showErrorDialog(context, ex, stack);
-                                    });
-                                  },
-                                ),
-                              ],
+                controller: controller,
+                scrollDirection: Axis.vertical,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: DataTable(
+                    showCheckboxColumn: false,
+                    sortAscending: false,
+                    rows: <DataRow>[
+                      for (var i = 0; i < store.scenes!.length; i++)
+                        DataRow(
+                          onSelectChanged: (selected) {
+                            if (selected!) {
+                              editScene(context, store.scenes![i], refreshKey);
+                            }
+                          },
+                          cells: [
+                            DataCell(
+                              Row(
+                                children: <Widget>[
+                                  IconButton(
+                                    icon: const Icon(Icons.edit),
+                                    onPressed: () async {
+                                      editScene(context, store.scenes![i], refreshKey);
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.delete),
+                                    onPressed: () async {
+                                      final result = await showConfirm(context, translations.deleteItem(store.scenes![i].displayName), translations.deleteConfirm);
+                                      if (result) {
+                                        await showLoadingDialog(context, (_) => Text(translations.deleting), () => store.deleteScenes(i), onError: (ex, stack) {
+                                          showErrorDialog(context, ex, stack);
+                                        });
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          DataCell(Text(store.scenes![i].displayName)),
-                          DataCell(Text(store.scenes![i].data.sentences.length.toString())),
-                          DataCell(Text(store.scenes![i].data.responses.length.toString())),
-                          DataCell(Text(store.scenes![i].data.commands.length.toString())),
-                        ],
+                            DataCell(Text(store.scenes![i].displayName)),
+                            DataCell(Text(store.scenes![i].data.sentences.length.toString())),
+                            DataCell(Text(store.scenes![i].data.responses.length.toString())),
+                            DataCell(Text(store.scenes![i].data.commands.length.toString())),
+                          ],
+                        ),
+                    ],
+                    columns: <DataColumn>[
+                      DataColumn(
+                        label: Text(translations.actions, style: Theme.of(context).textTheme.headline6),
                       ),
-                  ],
-                  columns: <DataColumn>[
-                    DataColumn(
-                      label: Text(translations.actions, style: Theme.of(context).textTheme.headline6),
-                    ),
-                    DataColumn(
-                      label: Text(translations.nameField, style: Theme.of(context).textTheme.headline6),
-                    ),
-                    DataColumn(
-                      label: Text(translations.sceneCommandsTitle, style: Theme.of(context).textTheme.headline6),
-                    ),
-                    DataColumn(
-                      label: Text(translations.sceneResponsesTitle, style: Theme.of(context).textTheme.headline6),
-                    ),
-                    DataColumn(
-                      label: Text(translations.sceneCommandsTitle, style: Theme.of(context).textTheme.headline6),
-                    ),
-                  ],
+                      DataColumn(
+                        label: Text(translations.nameField, style: Theme.of(context).textTheme.headline6),
+                      ),
+                      DataColumn(
+                        label: Text(translations.sceneCommandsTitle, style: Theme.of(context).textTheme.headline6),
+                      ),
+                      DataColumn(
+                        label: Text(translations.sceneResponsesTitle, style: Theme.of(context).textTheme.headline6),
+                      ),
+                      DataColumn(
+                        label: Text(translations.sceneCommandsTitle, style: Theme.of(context).textTheme.headline6),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );

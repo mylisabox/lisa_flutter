@@ -57,15 +57,16 @@ class RoomsSettingsWidget extends HookWidget {
             key: ValueKey(room.id),
             children: [
               Slidable(
-                actionPane: const SlidableScrollActionPane(),
                 closeOnScroll: true,
-                secondaryActions: <Widget>[
-                  IconSlideAction(
-                    caption: context.localizations.rename,
-                    color: context.primaryColor,
+                endActionPane: ActionPane(
+                  motion: const DrawerMotion(),
+                  children: <Widget>[
+                  SlidableAction(
+                    label: context.localizations.rename,
+                    backgroundColor: context.primaryColor,
                     foregroundColor: Colors.white,
                     icon: Icons.edit,
-                    onTap: () async {
+                    onPressed: (context) async {
                       final name = await showPrompt(context, context.localizations.rename, initialValue: room.name);
 
                       if (name != null && name.isNotEmpty) {
@@ -75,11 +76,11 @@ class RoomsSettingsWidget extends HookWidget {
                       }
                     },
                   ),
-                  IconSlideAction(
-                    caption: context.localizations.delete,
-                    color: Colors.red,
+                  SlidableAction(
+                    label: context.localizations.delete,
+                    backgroundColor: Colors.red,
                     icon: Icons.delete_outline,
-                    onTap: () async {
+                    onPressed: (context) async {
                       final success = await showConfirm(context, context.localizations.deleteItem(room.name), context.localizations.deleteConfirm);
 
                       if (success) {
@@ -89,7 +90,7 @@ class RoomsSettingsWidget extends HookWidget {
                       }
                     },
                   ),
-                ],
+                ],),
                 child: Row(
                   children: [
                     Expanded(

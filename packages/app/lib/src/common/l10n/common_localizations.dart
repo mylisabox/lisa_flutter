@@ -131,6 +131,10 @@ class CommonLocalizations {
 
   String get menuHomeSettings => Intl.message('Home settings', name: 'menuHomeSettings');
 
+  String get menuHome => Intl.message('Home', name: 'menuHome');
+
+  String get menuMedia => Intl.message('Media', name: 'menuMedia');
+
   String get menuScenes => Intl.message('Scenes', name: 'menuScenes');
 
   String get menuMultimedia => Intl.message('Multimedia', name: 'menuMultimedia');

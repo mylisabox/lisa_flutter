@@ -29,7 +29,7 @@ abstract class _UserStore with Store, BaseUrlProvider {
   User? user;
 
   @observable
-  ServerStatus serverStatus = ServerStatus.initialized;
+  ServerStatus serverStatus = ServerStatus.noHost;
 
   @observable
   String proxyUrl = '';
@@ -66,12 +66,17 @@ abstract class _UserStore with Store, BaseUrlProvider {
       return;
     }
 
+    if (serverStatus == ServerStatus.noHost) {
+      await _checkServerStatus();
+    }
+
     if (token == null) {
-      _checkServerStatus();
+
     } else {
       serverStatus = ServerStatus.initialized;
       _apiProvider.setToken(token);
       try {
+        proxyUrl = getProxyUrl();
         user = (await _apiProvider.api.getUserApi().getProfile()).data;
       } on DioError catch (err) {
         proxyUrl = getProxyUrl();
@@ -81,7 +86,6 @@ abstract class _UserStore with Store, BaseUrlProvider {
         rethrow;
       }
     }
-    proxyUrl = getProxyUrl();
     currentToken = token;
   }
 

@@ -30,14 +30,111 @@ import 'package:lisa_flutter/src/settings/presentation/settings.dart';
 import 'package:lisa_flutter/src/settings/stores/settings_store.dart';
 import 'package:lisa_server_sdk/lisa_server_sdk.dart';
 import 'package:mobx/mobx.dart';
-import 'package:proxy_layout/proxy_layout.dart';
 
-enum HomeScreenTab { home, media }
+enum HomeScreenTab { home, media, scenes, settings }
+
+class HomeScreenDesktop extends HookWidget {
+  const HomeScreenDesktop({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final mode = useState(HomeScreenTab.home);
+
+    return Scaffold(
+      appBar: AppBar(
+        leading: Visibility(
+          visible: mode.value == HomeScreenTab.home,
+          child: IconButton(
+            onPressed: () {
+              context.navigator.pushNamed(AddDeviceScreen.route);
+            },
+            icon: Icon(Icons.add, color: context.brightnessColor),
+            splashRadius: 28,
+          ),
+        ),
+        title: _LisaAppBarLogo(),
+        actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: kSmallPadding),
+            child: _Avatar(),
+          ),
+        ],
+      ),
+      body: Row(
+        children: [
+          Expanded(
+            child: Column(
+              children: [
+                ListTile(
+                  onTap: () {
+                    mode.value = HomeScreenTab.home;
+                  },
+                  title: Text(context.localizations.menuHome),
+                  leading: const Icon(Icons.home_outlined),
+                ),
+                ListTile(
+                  onTap: () {
+                    mode.value = HomeScreenTab.media;
+                  },
+                  leading: const Icon(Icons.perm_media_outlined),
+                  title: Text(
+                    context.localizations.menuMedia,
+                  ),
+                ),
+                ListTile(
+                  onTap: () {
+                    mode.value = HomeScreenTab.scenes;
+                  },
+                  leading: const Icon(Icons.room_preferences_outlined),
+                  title: Text(
+                    context.localizations.menuScenes,
+                  ),
+                ),
+                ListTile(
+                  onTap: () {
+                    mode.value = HomeScreenTab.settings;
+                  },
+                  leading: const Icon(Icons.settings_outlined),
+                  title: Text(
+                    context.localizations.menuHomeSettings,
+                  ),
+                ),
+              ],
+            ),
+            flex: 1,
+          ),
+          const VerticalDivider(width: 1),
+          if (mode.value == HomeScreenTab.home)
+            const Expanded(
+              child: HomeScreen(headless: true),
+              flex: 3,
+            ),
+          if (mode.value == HomeScreenTab.media)
+            const Expanded(
+              child: CustomScrollView(slivers: [_MediaTab()]),
+              flex: 3,
+            ),
+          if (mode.value == HomeScreenTab.scenes)
+            const Expanded(
+              child: ScenesWidget(),
+              flex: 3,
+            ),
+          if (mode.value == HomeScreenTab.settings)
+            const Expanded(
+              child: HomeSettingsWidget(),
+              flex: 3,
+            ),
+        ],
+      ),
+    );
+  }
+}
 
 class HomeScreen extends HookWidget {
   static const route = 'home';
+  final bool headless;
 
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({Key? key, this.headless = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +150,7 @@ class HomeScreen extends HookWidget {
       body: Scrollbar(
         child: CustomScrollView(
           slivers: [
-            _LisaAppBar(mode: mode),
+            if (!headless) _LisaAppBar(mode: mode),
             if (mode.value == HomeScreenTab.home)
               CupertinoSliverRefreshControl(
                 onRefresh: () {
@@ -68,8 +165,8 @@ class HomeScreen extends HookWidget {
         ),
       ),
       extendBody: true,
-      bottomNavigationBar: _LisaBottomBar(mode: mode),
-      floatingActionButtonLocation: const _CenterDockedFabLocation(),
+      bottomNavigationBar: headless ? null : _LisaBottomBar(mode: mode),
+      floatingActionButtonLocation: headless ? FloatingActionButtonLocation.endFloat : const _CenterDockedFabLocation(),
       floatingActionButton: const SpeechButton(),
     );
   }
@@ -152,27 +249,34 @@ class _LisaAppBar extends StatelessWidget {
           splashRadius: 28,
         ),
       ),
-      title: Row(
-        children: [
-          Expanded(
-            child: Observer(
-              builder: (context) {
-                final prefStore = context.of<SettingsStore>();
-                return SvgPicture.asset(
-                  prefStore.isDarkTheme ? 'assets/images/lisa_white.svg' : 'assets/images/lisa_black.svg',
-                  height: kToolbarHeight - 12,
-                  alignment: Alignment.bottomCenter,
-                );
-              },
-            ),
-          ),
-        ],
-      ),
+      title: _LisaAppBarLogo(),
       floating: true,
       actions: const [
         Padding(
           padding: EdgeInsets.only(right: kSmallPadding),
           child: _Avatar(),
+        ),
+      ],
+    );
+  }
+}
+
+class _LisaAppBarLogo extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: Observer(
+            builder: (context) {
+              final prefStore = context.of<SettingsStore>();
+              return SvgPicture.asset(
+                prefStore.isDarkTheme ? 'assets/images/lisa_white.svg' : 'assets/images/lisa_black.svg',
+                height: kToolbarHeight - 12,
+                alignment: Alignment.bottomCenter,
+              );
+            },
+          ),
         ),
       ],
     );
@@ -205,13 +309,11 @@ class _MediaTab extends StatelessWidget {
               image: 'assets/images/transmission.png',
               onTap: () {
                 const routeTransmission = '/multimedia/transmission';
-                final isMobile = DeviceProxy.isMobile(context);
                 final color = HSLColor.fromColor(Theme.of(context).primaryColor).withLightness(0.3);
-                Navigator.of(context, rootNavigator: isMobile).push(MaterialPageRoute(
+                Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => IconTheme(
                           data: const IconThemeData(color: Colors.white),
                           child: TransmissionScreen(
-                            headless: !isMobile,
                             iconActiveColor: color.toColor(),
                           ),
                         ),
@@ -224,10 +326,9 @@ class _MediaTab extends StatelessWidget {
               onTap: () {
                 const routeSickChill = '/multimedia/sickchill';
 
-                final isMobile = DeviceProxy.isMobile(context);
-                Navigator.of(context, rootNavigator: isMobile).push(
+                Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => SickChillScreen(headless: !isMobile),
+                    builder: (context) => const SickChillScreen(),
                     settings: const RouteSettings(name: routeSickChill),
                   ),
                 );
@@ -459,10 +560,9 @@ class _RoomTab extends StatelessWidget {
 
 class _RoomItem extends StatelessWidget {
   final Room room;
-  final bool editMode;
   final int index;
 
-  const _RoomItem({Key? key, required this.room, required this.index, this.editMode = false}) : super(key: key);
+  const _RoomItem({Key? key, required this.room, required this.index}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -481,11 +581,6 @@ class _RoomItem extends StatelessWidget {
                   child: Text(room.name, style: context.textTheme.subtitle1),
                 ),
                 const Expanded(child: Divider(height: 1)),
-                if (editMode)
-                  ReorderableDragStartListener(
-                    child: const Icon(Icons.reorder_outlined),
-                    index: index,
-                  ),
               ],
             ),
           ),
@@ -544,24 +639,27 @@ class _DeviceItem extends StatelessWidget with BaseUrlProvider {
       child: Column(
         children: [
           Expanded(
-            child: SizedBox(
-              width: 130,
-              height: 90,
-              child: Stack(
-                alignment: Alignment.center,
-                fit: StackFit.expand,
-                children: [
-                  AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 400),
-                    child: imgWidget,
-                  ),
-                  if ((device.groupCount ?? 0) > 0)
-                    Align(
+            child: Center(
+              child: SizedBox(
+                width: 130,
+                height: 90,
+                child: Stack(
+                  alignment: Alignment.center,
+                  fit: StackFit.expand,
+                  children: [
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 400),
+                      child: imgWidget,
+                    ),
+                    if ((device.groupCount ?? 0) > 0)
+                      Align(
                         alignment: Alignment.topRight,
                         child: Chip(
                           label: Text(device.groupCount!.toString()),
-                        )),
-                ],
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
           ),

@@ -9,6 +9,7 @@ import 'package:lisa_flutter/src/login/presentation/login_screen.dart';
 import 'package:lisa_flutter/src/profile/presentation/profile.dart';
 import 'package:lisa_flutter/src/settings/presentation/settings.dart';
 import 'package:lisa_flutter/src/settings/stores/settings_store.dart';
+import 'package:proxy_layout/proxy_layout.dart';
 
 class UserDialog extends StatelessWidget {
   const UserDialog({Key? key}) : super(key: key);
@@ -25,7 +26,7 @@ class UserDialog extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(top: 50),
         child: Align(
-          alignment: Alignment.topCenter,
+          alignment: Alignment.center,
           child: Stack(
             alignment: Alignment.topCenter,
             children: [
@@ -44,17 +45,7 @@ class UserDialog extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Row(
-                          children: [
-                            IconButton(
-                              splashRadius: 25,
-                              onPressed: () {
-                                context.navigator.pop();
-                              },
-                              icon: Icon(Icons.close, color: context.brightnessColor),
-                            ),
-                          ],
-                        ),
+                        Align(alignment: Alignment.centerRight, child: CloseButton(color: context.brightnessColor)),
                         _UserDialogContent(),
                       ],
                     ),
@@ -98,7 +89,11 @@ class _UserDialogContent extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: kNormalPadding),
           child: OutlinedButton(
             onPressed: () {
-              context.navigator.pushNamed(ProfileScreen.route, arguments: RouteArguments(type: RouteTransitionType.fromBottom));
+              if (DeviceProxy.isTablet(context)) {
+                showRawDialog(context, (context) => const ProfileDialog(), barrierDismissible: false);
+              } else {
+                context.navigator.pushNamed(ProfileScreen.route, arguments: RouteArguments(type: RouteTransitionType.fromBottom));
+              }
             },
             child: Text(
               context.localizations.manageProfile,
@@ -111,7 +106,16 @@ class _UserDialogContent extends StatelessWidget {
           leading: Icon(Icons.settings_outlined, color: context.brightnessColor),
           title: Text(context.localizations.manageSettings),
           onTap: () {
-            context.navigator.pushNamed(SettingsScreen.route, arguments: RouteArguments(type: RouteTransitionType.fromBottom));
+            if (DeviceProxy.isTablet(context)) {
+              showAppDialog(
+                context,
+                (context) => Text(context.localizations.menuSettings),
+                (context) => const SettingsWidget(),
+                barrierDismissible: false,
+              );
+            } else {
+              context.navigator.pushNamed(SettingsScreen.route, arguments: RouteArguments(type: RouteTransitionType.fromBottom));
+            }
           },
         ),
         Divider(height: 1, color: context.dividerColor),

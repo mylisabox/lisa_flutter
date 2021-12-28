@@ -15,50 +15,63 @@ class LisaDialog extends StatelessWidget {
   final Widget title;
   final Widget content;
   final List<DialogAction> actions;
+  final BoxConstraints? constraints;
 
-  const LisaDialog({Key? key, required this.content, required this.title, this.actions = const []}) : super(key: key);
+  const LisaDialog({Key? key, this.constraints, required this.content, required this.title, this.actions = const []}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      insetPadding: const EdgeInsets.all(24.0),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(kNormalPadding),
-      ),
-      child: Padding(
-        padding: EdgeInsets.only(top: kNormalPadding, bottom: actions.isEmpty ? kNormalPadding : 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kNormalPadding),
-              child: DefaultTextStyle(child: title, style: context.textTheme.headline5!),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: kNormalPadding),
-              child: Divider(height: 1, color: context.dividerColor),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kNormalPadding),
-              child: content,
-            ),
-            if (actions.isNotEmpty)
-              ButtonBar(
-                alignment: MainAxisAlignment.end,
-                children: actions
-                    .map(
-                      (action) => TextButton(
-                        child: Text(
-                          action.text,
-                          style: TextStyle(color: _getColorForAction(context, action)),
-                        ),
-                        onPressed: action.callback == null ? null : () => action.callback!(context),
+    return Center(
+      child: ConstrainedBox(
+        constraints: constraints ?? const BoxConstraints(),
+        child: Dialog(
+          insetPadding: const EdgeInsets.all(24.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(kNormalPadding),
+          ),
+          child: Padding(
+            padding: EdgeInsets.only(top: kNormalPadding, bottom: actions.isEmpty ? kNormalPadding : 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: kNormalPadding),
+                        child: DefaultTextStyle(child: title, style: context.textTheme.headline5!),
                       ),
-                    )
-                    .toList(growable: false),
-              ),
-          ],
+                    ),
+                    CloseButton(color: context.brightnessColor),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: kNormalPadding),
+                  child: Divider(height: 1, color: context.dividerColor),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: kNormalPadding),
+                  child: content,
+                ),
+                if (actions.isNotEmpty)
+                  ButtonBar(
+                    alignment: MainAxisAlignment.end,
+                    children: actions
+                        .map(
+                          (action) => TextButton(
+                            child: Text(
+                              action.text,
+                              style: TextStyle(color: _getColorForAction(context, action)),
+                            ),
+                            onPressed: action.callback == null ? null : () => action.callback!(context),
+                          ),
+                        )
+                        .toList(growable: false),
+                  ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -202,11 +215,19 @@ Future<T?> showSelectDialog<T>(BuildContext context, WidgetBuilder title, List<T
   );
 }
 
-Widget getAppDialog(BuildContext context, WidgetBuilder title, WidgetBuilder content, {List<DialogAction> actions = const [], bool forceAndroid = false}) {
+Widget getAppDialog(
+  BuildContext context,
+  WidgetBuilder title,
+  WidgetBuilder content, {
+  List<DialogAction> actions = const [],
+  bool forceAndroid = false,
+  double? maxWidth = 500,
+}) {
   return LisaDialog(
     title: title(context),
     content: content(context),
     actions: actions,
+    constraints: maxWidth == null ? null : BoxConstraints(maxWidth: maxWidth),
   );
 }
 
@@ -227,6 +248,16 @@ Future<T?> showPlatformDialog<T>(BuildContext context, WidgetBuilder builder, {b
         return builder(context);
       },
       barrierDismissible: barrierDismissible);
+}
+
+Future<T?> showRawDialog<T>(BuildContext context, WidgetBuilder builder, {RouteSettings? settings, bool barrierDismissible = true}) {
+  return context.navigator.push(
+    ModalPageRoute(
+      builder: (context) => builder(context),
+      settings: settings,
+      barrierDismissible: barrierDismissible,
+    ),
+  );
 }
 
 Future<T?> showAppDialog<T>(BuildContext context, WidgetBuilder title, WidgetBuilder content,

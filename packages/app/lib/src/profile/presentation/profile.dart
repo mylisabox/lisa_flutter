@@ -138,7 +138,10 @@ class ProfileScreen extends HookWidget {
       ),
       body: Provider.value(
         value: profileManager,
-        child: _ProfileWidget(),
+        child: Padding(
+          padding: const EdgeInsets.all(kNormalPadding),
+          child: _ProfileWidget(),
+        ),
       ),
     );
   }

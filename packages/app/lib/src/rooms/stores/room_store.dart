@@ -260,6 +260,10 @@ abstract class _RoomStore with Store, Disposable {
   }
 
   void _updateDevice(Device data) {
+    if (roomsStatus.value == null) {
+      //data not yet loaded, do nothing
+      return;
+    }
     var room = roomsStatus.value!.firstWhereOrNull((element) => element.id == data.roomId);
     room ??= roomsStatus.value!.firstWhere((element) => element.id == -1);
     final roomIndex = roomsStatus.value!.indexOf(room);

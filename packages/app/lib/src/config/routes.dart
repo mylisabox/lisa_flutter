@@ -17,6 +17,7 @@ import 'package:lisa_flutter/src/scenes/presentation/scenes.dart';
 import 'package:lisa_flutter/src/settings/presentation/settings.dart';
 import 'package:lisa_flutter/src/splash_screen/presentation/splash_screen.dart';
 import 'package:lisa_server_sdk/lisa_server_sdk.dart';
+import 'package:proxy_layout/proxy_layout.dart';
 
 class Router {
   final bool isWear;
@@ -39,7 +40,7 @@ class Router {
     PreferencesWidget.route: (_) => const PreferencesWidget(),
     SettingsScreen.route: (_) => const SettingsScreen(),
     PluginsStoreScreen.route: (_) => const PluginsStoreScreen(),
-    HomeScreen.route: (_) => const HomeScreen(),
+    HomeScreen.route: (_) => DeviceProxy(tabletBuilder: (context) => const HomeScreenDesktop(), mobileBuilder: (context) => const HomeScreen()),
   };
 
   final Map<String, dynamic> _wearRoutes = {
@@ -54,7 +55,7 @@ class Router {
   };
 
   Route? onGenerateRoute(RouteSettings settings) {
-   if (routes[settings.name] == null) {
+    if (routes[settings.name] == null) {
       return null;
     }
 
@@ -71,12 +72,9 @@ class Router {
     }
     return MaterialPageRoute(builder: routes[settings.name], settings: settings);
   }
-
 }
 
-enum RouteTransitionType {
-  fromBottom, fade
-}
+enum RouteTransitionType { fromBottom, fade }
 
 class RouteArguments {
   final dynamic arguments;
@@ -92,6 +90,7 @@ class HistoryNavigatorObserver extends NavigatorObserver {
   final OnCanPopChange onCanPopChange;
   final List<String?> _history = [];
   dynamic arguments;
+
   String? get currentRoute => _history.isEmpty ? null : _history.last;
 
   HistoryNavigatorObserver(this.onCanPopChange);
