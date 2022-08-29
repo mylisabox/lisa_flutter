@@ -25,8 +25,8 @@ class ErrorLocalizations {
 
   String get wrongEmailMessage => Intl.message('Email is not correct', name: 'wrongEmailMessage');
 
-  String get internalHint => Intl.message('An error as occured', name: 'internalHint');
-  String get internalMessage => Intl.message('There is nothing you can do, we\'ll try to fix this asap', name: 'internalMessage');
+  String get internalHint => Intl.message('There is nothing you can do, we\'ll try to fix this asap', name: 'internalHint');
+  String get internalMessage => Intl.message('An error as occured', name: 'internalMessage');
 
   String get noNetworkHint => Intl.message('Try again later when you have better coverage', name: 'noNetworkHint');
   String get noNetworkMessage => Intl.message('Device seems to be offline', name: 'noNetworkMessage');
@@ -38,6 +38,15 @@ class ErrorLocalizations {
 
   String get fieldRequired => Intl.message('This field is required', name: 'fieldRequired', desc: 'When a field is required on a form');
   String get fieldRequiredHint => Intl.message('Please fill this field', name: 'fieldRequiredHint', desc: 'When a field is required on a form');
+
+  String get notLogged => Intl.message('Look like you\'re not logged', name: 'notLogged', desc: 'When a 401 occurred');
+  String get notLoggedHint => Intl.message('Please log in before doing this action', name: 'notLoggedHint', desc: 'When a 401 occurred');
+
+  String get forbidden => Intl.message('Look like this action is forbidden', name: 'forbidden', desc: 'When a 403 occurred');
+  String get forbiddenHint => Intl.message('Please retry when log in with a user with different permissions', name: 'forbiddenHint', desc: 'When a 403 occurred');
+
+  String get wrongCredentials => Intl.message('Login failed', name: 'wrongCredentials', desc: 'When login credentials are wrong');
+  String get wrongCredentialsHint => Intl.message('Please check your email and password and retry', name: 'wrongCredentialsHint', desc: 'When login credentials are wrong');
 }
 
 class ErrorLocalizationsDelegate extends LocalizationsDelegate<ErrorLocalizations> {

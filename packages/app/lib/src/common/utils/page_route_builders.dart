@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class FadePageRoute extends PageRouteBuilder {
   final WidgetBuilder builder;
+  @override
   final RouteSettings settings;
 
   FadePageRoute({required this.builder, required this.settings})
@@ -24,6 +25,7 @@ class FadePageRoute extends PageRouteBuilder {
 
 class FromBottomPageRoute extends PageRouteBuilder {
   final WidgetBuilder builder;
+  @override
   final RouteSettings settings;
 
   FromBottomPageRoute({required this.builder, required this.settings})

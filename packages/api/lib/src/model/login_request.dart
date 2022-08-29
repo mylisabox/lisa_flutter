@@ -7,8 +7,11 @@ import 'package:built_value/serializer.dart';
 
 part 'login_request.g.dart';
 
-
-
+/// LoginRequest
+///
+/// Properties:
+/// * [email] 
+/// * [password] 
 abstract class LoginRequest implements Built<LoginRequest, LoginRequestBuilder> {
     @BuiltValueField(wireName: r'email')
     String get email;
@@ -18,7 +21,8 @@ abstract class LoginRequest implements Built<LoginRequest, LoginRequestBuilder> 
 
     LoginRequest._();
 
-    static void _initializeBuilder(LoginRequestBuilder b) => b;
+    @BuiltValueHook(initializeBuilder: true)
+    static void _defaults(LoginRequestBuilder b) => b;
 
     factory LoginRequest([void updates(LoginRequestBuilder b)]) = _$LoginRequest;
 

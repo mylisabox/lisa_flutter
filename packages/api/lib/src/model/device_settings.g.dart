@@ -14,6 +14,12 @@ class _$DeviceSettings extends DeviceSettings {
   @override
   final String image;
   @override
+  final String? imageOn;
+  @override
+  final String? imageOff;
+  @override
+  final String? defaultAction;
+  @override
   final String pairing;
   @override
   final String pluginName;
@@ -33,6 +39,9 @@ class _$DeviceSettings extends DeviceSettings {
       {required this.name,
       required this.driver,
       required this.image,
+      this.imageOn,
+      this.imageOff,
+      this.defaultAction,
       required this.pairing,
       required this.pluginName,
       this.description,
@@ -65,6 +74,9 @@ class _$DeviceSettings extends DeviceSettings {
         name == other.name &&
         driver == other.driver &&
         image == other.image &&
+        imageOn == other.imageOn &&
+        imageOff == other.imageOff &&
+        defaultAction == other.defaultAction &&
         pairing == other.pairing &&
         pluginName == other.pluginName &&
         description == other.description &&
@@ -81,8 +93,16 @@ class _$DeviceSettings extends DeviceSettings {
                 $jc(
                     $jc(
                         $jc(
-                            $jc($jc($jc(0, name.hashCode), driver.hashCode),
-                                image.hashCode),
+                            $jc(
+                                $jc(
+                                    $jc(
+                                        $jc(
+                                            $jc($jc(0, name.hashCode),
+                                                driver.hashCode),
+                                            image.hashCode),
+                                        imageOn.hashCode),
+                                    imageOff.hashCode),
+                                defaultAction.hashCode),
                             pairing.hashCode),
                         pluginName.hashCode),
                     description.hashCode),
@@ -97,6 +117,9 @@ class _$DeviceSettings extends DeviceSettings {
           ..add('name', name)
           ..add('driver', driver)
           ..add('image', image)
+          ..add('imageOn', imageOn)
+          ..add('imageOff', imageOff)
+          ..add('defaultAction', defaultAction)
           ..add('pairing', pairing)
           ..add('pluginName', pluginName)
           ..add('description', description)
@@ -122,6 +145,19 @@ class DeviceSettingsBuilder
   String? _image;
   String? get image => _$this._image;
   set image(String? image) => _$this._image = image;
+
+  String? _imageOn;
+  String? get imageOn => _$this._imageOn;
+  set imageOn(String? imageOn) => _$this._imageOn = imageOn;
+
+  String? _imageOff;
+  String? get imageOff => _$this._imageOff;
+  set imageOff(String? imageOff) => _$this._imageOff = imageOff;
+
+  String? _defaultAction;
+  String? get defaultAction => _$this._defaultAction;
+  set defaultAction(String? defaultAction) =>
+      _$this._defaultAction = defaultAction;
 
   String? _pairing;
   String? get pairing => _$this._pairing;
@@ -152,7 +188,7 @@ class DeviceSettingsBuilder
       _$this._settings = settings;
 
   DeviceSettingsBuilder() {
-    DeviceSettings._initializeBuilder(this);
+    DeviceSettings._defaults(this);
   }
 
   DeviceSettingsBuilder get _$this {
@@ -161,6 +197,9 @@ class DeviceSettingsBuilder
       _name = $v.name;
       _driver = $v.driver;
       _image = $v.image;
+      _imageOn = $v.imageOn;
+      _imageOff = $v.imageOff;
+      _defaultAction = $v.defaultAction;
       _pairing = $v.pairing;
       _pluginName = $v.pluginName;
       _description = $v.description;
@@ -195,6 +234,9 @@ class DeviceSettingsBuilder
                   driver, 'DeviceSettings', 'driver'),
               image: BuiltValueNullFieldError.checkNotNull(
                   image, 'DeviceSettings', 'image'),
+              imageOn: imageOn,
+              imageOff: imageOff,
+              defaultAction: defaultAction,
               pairing: BuiltValueNullFieldError.checkNotNull(
                   pairing, 'DeviceSettings', 'pairing'),
               pluginName: BuiltValueNullFieldError.checkNotNull(
@@ -221,4 +263,4 @@ class DeviceSettingsBuilder
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,deprecated_member_use_from_same_package,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new

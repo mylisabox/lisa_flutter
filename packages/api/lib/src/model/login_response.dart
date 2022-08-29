@@ -4,22 +4,25 @@
 
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-import 'package:lisa_server_sdk/src/model/user.dart';
 
 part 'login_response.g.dart';
 
-
-
+/// LoginResponse
+///
+/// Properties:
+/// * [token] 
+/// * [refreshToken] 
 abstract class LoginResponse implements Built<LoginResponse, LoginResponseBuilder> {
     @BuiltValueField(wireName: r'token')
     String get token;
 
-    @BuiltValueField(wireName: r'user')
-    User get user;
+    @BuiltValueField(wireName: r'refreshToken')
+    String get refreshToken;
 
     LoginResponse._();
 
-    static void _initializeBuilder(LoginResponseBuilder b) => b;
+    @BuiltValueHook(initializeBuilder: true)
+    static void _defaults(LoginResponseBuilder b) => b;
 
     factory LoginResponse([void updates(LoginResponseBuilder b)]) = _$LoginResponse;
 
@@ -43,9 +46,9 @@ class _$LoginResponseSerializer implements StructuredSerializer<LoginResponse> {
             ..add(serializers.serialize(object.token,
                 specifiedType: const FullType(String)));
         result
-            ..add(r'user')
-            ..add(serializers.serialize(object.user,
-                specifiedType: const FullType(User)));
+            ..add(r'refreshToken')
+            ..add(serializers.serialize(object.refreshToken,
+                specifiedType: const FullType(String)));
         return result;
     }
 
@@ -64,9 +67,9 @@ class _$LoginResponseSerializer implements StructuredSerializer<LoginResponse> {
                     result.token = serializers.deserialize(value,
                         specifiedType: const FullType(String)) as String;
                     break;
-                case r'user':
-                    result.user.replace(serializers.deserialize(value,
-                        specifiedType: const FullType(User)) as User);
+                case r'refreshToken':
+                    result.refreshToken = serializers.deserialize(value,
+                        specifiedType: const FullType(String)) as String;
                     break;
             }
         }

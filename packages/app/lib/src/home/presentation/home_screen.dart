@@ -1,0 +1,777 @@
+import 'dart:math' as math;
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_sickchill/flutter_sickchill.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:flutter_transmission/flutter_transmission.dart';
+import 'package:lisa_flutter/src/common/constants.dart';
+import 'package:lisa_flutter/src/common/errors.dart';
+import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
+import 'package:lisa_flutter/src/common/presentation/loading.dart';
+import 'package:lisa_flutter/src/common/presentation/sliver_animated_switcher.dart';
+import 'package:lisa_flutter/src/common/presentation/speech_button.dart';
+import 'package:lisa_flutter/src/common/presentation/user_dialog.dart';
+import 'package:lisa_flutter/src/common/stores/user_store.dart';
+import 'package:lisa_flutter/src/common/utils/base_url_provider.dart';
+import 'package:lisa_flutter/src/common/utils/extensions.dart';
+import 'package:lisa_flutter/src/common/utils/modal_page_route.dart';
+import 'package:lisa_flutter/src/common/utils/page_route_builders.dart';
+import 'package:lisa_flutter/src/devices/presentation/add_device.dart';
+import 'package:lisa_flutter/src/devices/presentation/device_list_screen.dart';
+import 'package:lisa_flutter/src/devices/presentation/device_screen.dart';
+import 'package:lisa_flutter/src/rooms/stores/room_store.dart';
+import 'package:lisa_flutter/src/scenes/presentation/scenes.dart';
+import 'package:lisa_flutter/src/settings/presentation/settings.dart';
+import 'package:lisa_flutter/src/settings/stores/settings_store.dart';
+import 'package:lisa_server_sdk/lisa_server_sdk.dart';
+import 'package:mobx/mobx.dart';
+
+enum HomeScreenTab { home, media, scenes, settings }
+
+class HomeScreenDesktop extends HookWidget {
+  const HomeScreenDesktop({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final mode = useState(HomeScreenTab.home);
+
+    return Scaffold(
+      appBar: AppBar(
+        leading: Visibility(
+          visible: mode.value == HomeScreenTab.home,
+          child: IconButton(
+            onPressed: () {
+              context.navigator.pushNamed(AddDeviceScreen.route);
+            },
+            icon: Icon(Icons.add, color: context.brightnessColor),
+            splashRadius: 28,
+          ),
+        ),
+        title: _LisaAppBarLogo(),
+        actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: kSmallPadding),
+            child: _Avatar(),
+          ),
+        ],
+      ),
+      body: Row(
+        children: [
+          Expanded(
+            child: Column(
+              children: [
+                ListTile(
+                  onTap: () {
+                    mode.value = HomeScreenTab.home;
+                  },
+                  title: Text(context.localizations.menuHome),
+                  leading: const Icon(Icons.home_outlined),
+                ),
+                ListTile(
+                  onTap: () {
+                    mode.value = HomeScreenTab.media;
+                  },
+                  leading: const Icon(Icons.perm_media_outlined),
+                  title: Text(
+                    context.localizations.menuMedia,
+                  ),
+                ),
+                ListTile(
+                  onTap: () {
+                    mode.value = HomeScreenTab.scenes;
+                  },
+                  leading: const Icon(Icons.room_preferences_outlined),
+                  title: Text(
+                    context.localizations.menuScenes,
+                  ),
+                ),
+                ListTile(
+                  onTap: () {
+                    mode.value = HomeScreenTab.settings;
+                  },
+                  leading: const Icon(Icons.settings_outlined),
+                  title: Text(
+                    context.localizations.menuHomeSettings,
+                  ),
+                ),
+              ],
+            ),
+            flex: 1,
+          ),
+          const VerticalDivider(width: 1),
+          if (mode.value == HomeScreenTab.home)
+            const Expanded(
+              child: HomeScreen(headless: true),
+              flex: 3,
+            ),
+          if (mode.value == HomeScreenTab.media)
+            const Expanded(
+              child: CustomScrollView(slivers: [_MediaTab()]),
+              flex: 3,
+            ),
+          if (mode.value == HomeScreenTab.scenes)
+            const Expanded(
+              child: ScenesWidget(),
+              flex: 3,
+            ),
+          if (mode.value == HomeScreenTab.settings)
+            const Expanded(
+              child: HomeSettingsWidget(),
+              flex: 3,
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class HomeScreen extends HookWidget {
+  static const route = 'home';
+  final bool headless;
+
+  const HomeScreen({Key? key, this.headless = false}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final mode = useState(HomeScreenTab.home);
+    final roomsStore = context.of<RoomStore>();
+
+    useEffect(() {
+      roomsStore.loadRooms();
+      return null;
+    }, const []);
+
+    return Scaffold(
+      body: Scrollbar(
+        child: CustomScrollView(
+          slivers: [
+            if (!headless) _LisaAppBar(mode: mode),
+            if (mode.value == HomeScreenTab.home)
+              CupertinoSliverRefreshControl(
+                onRefresh: () {
+                  return roomsStore.reloadRooms();
+                },
+              ),
+            SliverAnimatedSwitcher(
+              duration: const Duration(milliseconds: 400),
+              child: mode.value == HomeScreenTab.home ? const _RoomTab() : const _MediaTab(),
+            ),
+          ],
+        ),
+      ),
+      extendBody: true,
+      bottomNavigationBar: headless ? null : _LisaBottomBar(mode: mode),
+      floatingActionButtonLocation: headless ? FloatingActionButtonLocation.endFloat : const _CenterDockedFabLocation(),
+      floatingActionButton: const SpeechButton(),
+    );
+  }
+}
+
+const _bottomBarHeight = 56.0;
+
+class _LisaBottomBar extends StatelessWidget {
+  const _LisaBottomBar({
+    Key? key,
+    required this.mode,
+  }) : super(key: key);
+
+  final ValueNotifier<HomeScreenTab> mode;
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomAppBar(
+      notchMargin: 6,
+      shape: const CircularNotchedRectangle(),
+      child: SizedBox(
+        height: _bottomBarHeight, //56 size of floating button
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: InkWell(
+                borderRadius: const BorderRadius.only(topRight: Radius.circular(15)),
+                onTap: () {
+                  mode.value = HomeScreenTab.home;
+                },
+                child: Icon(
+                  Icons.home_outlined,
+                  size: mode.value == HomeScreenTab.home ? 32 : 24,
+                  color: mode.value == HomeScreenTab.home ? context.primaryColor : context.brightnessColor,
+                ),
+              ),
+            ),
+            const SizedBox(width: kToolbarHeight),
+            Expanded(
+              child: InkWell(
+                onTap: () {
+                  mode.value = HomeScreenTab.media;
+                },
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(15)),
+                child: Icon(
+                  Icons.perm_media_outlined,
+                  size: mode.value == HomeScreenTab.media ? 28 : 22,
+                  color: mode.value == HomeScreenTab.media ? context.primaryColor : context.brightnessColor,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _LisaAppBar extends StatelessWidget {
+  const _LisaAppBar({
+    Key? key,
+    required this.mode,
+  }) : super(key: key);
+
+  final ValueNotifier<HomeScreenTab> mode;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverAppBar(
+      backgroundColor: context.theme.scaffoldBackgroundColor,
+      elevation: 4,
+      leading: Visibility(
+        visible: mode.value == HomeScreenTab.home,
+        child: IconButton(
+          onPressed: () {
+            context.navigator.pushNamed(AddDeviceScreen.route);
+          },
+          icon: Icon(Icons.add, color: context.brightnessColor),
+          splashRadius: 28,
+        ),
+      ),
+      title: _LisaAppBarLogo(),
+      floating: true,
+      actions: const [
+        Padding(
+          padding: EdgeInsets.only(right: kSmallPadding),
+          child: _Avatar(),
+        ),
+      ],
+    );
+  }
+}
+
+class _LisaAppBarLogo extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: Observer(
+            builder: (context) {
+              final prefStore = context.of<SettingsStore>();
+              return SvgPicture.asset(
+                prefStore.isDarkTheme ? 'assets/images/lisa_white.svg' : 'assets/images/lisa_black.svg',
+                height: kToolbarHeight - 12,
+                alignment: Alignment.bottomCenter,
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _MediaTab extends StatelessWidget {
+  const _MediaTab({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverPadding(
+      padding: const EdgeInsets.all(kNormalPadding),
+      sliver: SliverGrid(
+        delegate: SliverChildListDelegate(
+          [
+            _MediaItem(
+              label: 'Kodi',
+              image: 'assets/images/kodi.svg',
+              onTap: () {
+                showAppDialog(context, (_) => const Text('title'), (_) => const Text('content'), actions: [
+                  DialogAction(callback: (context) {}, text: 'Ok'),
+                ]);
+              },
+            ),
+            _MediaItem(
+              label: 'Transmission',
+              image: 'assets/images/transmission.png',
+              onTap: () {
+                const routeTransmission = '/multimedia/transmission';
+                final color = HSLColor.fromColor(Theme.of(context).primaryColor).withLightness(0.3);
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => IconTheme(
+                          data: const IconThemeData(color: Colors.white),
+                          child: TransmissionScreen(
+                            iconActiveColor: color.toColor(),
+                          ),
+                        ),
+                    settings: const RouteSettings(name: routeTransmission)));
+              },
+            ),
+            _MediaItem(
+              label: 'SickChill',
+              image: 'assets/images/sickchill.png',
+              onTap: () {
+                const routeSickChill = '/multimedia/sickchill';
+
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const SickChillScreen(),
+                    settings: const RouteSettings(name: routeSickChill),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: kNormalPadding, mainAxisSpacing: kNormalPadding),
+      ),
+    );
+  }
+}
+
+class _MediaItem extends StatelessWidget {
+  final String label;
+  final String image;
+  final VoidCallback onTap;
+
+  const _MediaItem({Key? key, required this.label, required this.image, required this.onTap}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.zero,
+      child: InkWell(
+        onTap: onTap,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (image.endsWith('.svg'))
+              SizedBox(
+                width: 90,
+                height: 90,
+                child: Padding(
+                  padding: const EdgeInsets.all(kSmallPadding),
+                  child: SvgPicture.asset(image),
+                ),
+              ),
+            if (image.endsWith('.png')) Image.asset(image, width: 90, height: 90),
+            Text(label, style: context.textTheme.subtitle1),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _QuickAction extends StatelessWidget {
+  final Widget icon;
+  final String label;
+  final Color? color;
+  final VoidCallback onTap;
+
+  const _QuickAction({Key? key, this.color, required this.onTap, required this.icon, required this.label}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkResponse(
+      radius: 45,
+      onTap: onTap,
+      child: InkWell(
+        child: Padding(
+          padding: const EdgeInsets.all(kNormalPadding),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: kSmallPadding),
+                child: Container(
+                  padding: const EdgeInsets.all(kNormalPadding),
+                  child: icon,
+                  decoration: BoxDecoration(
+                    color: (color ?? context.brightnessColor).withOpacity(.1),
+                    borderRadius: BorderRadius.circular(100),
+                    border: Border.all(width: 1, color: color ?? context.brightnessColor),
+                  ),
+                ),
+              ),
+              Text(label, style: context.textTheme.caption),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _QuickActions extends StatelessWidget {
+  const _QuickActions({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final store = context.of<RoomStore>();
+    return Column(
+      children: [
+        Observer(
+          builder: (context) => Wrap(
+            alignment: WrapAlignment.center,
+            runSpacing: 0,
+            spacing: 0,
+            children: [
+              if (store.hasLights)
+                _QuickAction(
+                  onTap: () {
+                    context.navigator.push(
+                      FromBottomPageRoute(
+                        builder: (context) => const DeviceListScreen(type: DeviceTypeEnum.light),
+                        settings: const RouteSettings(name: DeviceListScreen.route),
+                      ),
+                    );
+                  },
+                  icon: SvgPicture.asset('assets/images/widgets/bulb_off.svg', color: Colors.yellow, width: 20),
+                  label: context.localizations.lights,
+                  color: Colors.yellow,
+                ),
+              if (store.hasShutters)
+                _QuickAction(
+                  onTap: () {
+                    context.navigator.push(
+                      FromBottomPageRoute(
+                        builder: (context) => const DeviceListScreen(type: DeviceTypeEnum.shutter),
+                        settings: const RouteSettings(name: DeviceListScreen.route),
+                      ),
+                    );
+                  },
+                  color: Colors.red,
+                  icon: SvgPicture.asset('assets/images/widgets/shutter_off.svg', color: Colors.red, width: 20),
+                  label: context.localizations.shutters,
+                ),
+              if (store.hasWebcams)
+                _QuickAction(
+                  onTap: () {
+                    context.navigator.push(
+                      FromBottomPageRoute(
+                        builder: (context) => const DeviceListScreen(type: DeviceTypeEnum.webcam),
+                        settings: const RouteSettings(name: DeviceListScreen.route),
+                      ),
+                    );
+                  },
+                  color: Colors.red,
+                  icon: SvgPicture.asset('assets/images/widgets/webcam.svg', color: Colors.red, width: 20),
+                  label: context.localizations.webcams,
+                ),
+              if (store.hasThermostat)
+                _QuickAction(
+                  onTap: () {
+                    context.navigator.push(
+                      FromBottomPageRoute(
+                        builder: (context) => const DeviceListScreen(type: DeviceTypeEnum.thermostat),
+                        settings: const RouteSettings(name: DeviceListScreen.route),
+                      ),
+                    );
+                  },
+                  color: Colors.purple,
+                  icon: SvgPicture.asset('assets/images/widgets/thermostat.svg', color: Colors.purple, width: 20),
+                  label: context.localizations.thermostat,
+                ),
+              _QuickAction(
+                onTap: () {
+                  context.navigator.pushNamed(ScenesScreen.route);
+                },
+                color: Colors.green,
+                icon: const Icon(Icons.room_preferences_outlined, color: Colors.green, size: 20),
+                label: context.localizations.menuScenes,
+              ),
+              _QuickAction(
+                onTap: () {
+                  context.navigator.pushNamed(HomeSettingsScreen.route);
+                },
+                icon: Icon(Icons.settings_outlined, color: context.brightnessColor, size: 20),
+                label: context.localizations.menuSettings,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _RoomTab extends StatelessWidget {
+  const _RoomTab({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final roomsStore = context.of<RoomStore>();
+    return SliverPadding(
+      padding: const EdgeInsets.only(bottom: _bottomBarHeight),
+      sliver: Observer(
+        builder: (context) {
+          if (roomsStore.roomsStatus.status == FutureStatus.pending) {
+            return const SliverToBoxAdapter(
+              child: Loading(),
+            );
+          } else if (roomsStore.roomsStatus.status == FutureStatus.rejected) {
+            return SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.all(kNormalPadding),
+                child: Center(
+                  child: Text(
+                    handleError(roomsStore.roomsStatus.error, null).cause.twoLiner(context),
+                  ),
+                ),
+              ),
+            );
+          }
+          return SliverReorderableList(
+            itemBuilder: (context, index) {
+              if (index == 0) {
+                return const _QuickActions(key: ValueKey('quickActions'));
+              }
+              final room = roomsStore.rooms[index - 1];
+              return _RoomItem(
+                key: ValueKey('${room.id}'),
+                room: room,
+                index: index,
+              );
+            },
+            itemCount: roomsStore.rooms.length + 1,
+            onReorder: (int oldIndex, int newIndex) {},
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _RoomItem extends StatelessWidget {
+  final Room room;
+  final int index;
+
+  const _RoomItem({Key? key, required this.room, required this.index}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: kNormalPadding),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: kNormalPadding),
+            child: Row(
+              children: [
+                const Expanded(child: Divider(height: 1)),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: kNormalPadding),
+                  child: Text(room.name, style: context.textTheme.subtitle1),
+                ),
+                const Expanded(child: Divider(height: 1)),
+              ],
+            ),
+          ),
+          GridView.count(
+            crossAxisCount: 2,
+            primary: false,
+            shrinkWrap: true,
+            padding: EdgeInsets.zero,
+            children: room.devices.map((device) {
+              return _DeviceItem(device: device);
+            }).toList(growable: false),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DeviceItem extends StatelessWidget with BaseUrlProvider {
+  final Device device;
+
+  const _DeviceItem({Key? key, required this.device}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final img = device.powered ? device.imageOn : device.imageOff;
+    Widget imgWidget = SvgPicture.asset(
+      'assets/images/lisa.svg',
+      key: ValueKey(img),
+      fit: BoxFit.contain,
+    );
+
+    if (img != null) {
+      imgWidget = img.startsWith('assets/')
+          ? SvgPicture.asset(
+              img,
+              key: ValueKey(img),
+              fit: BoxFit.contain,
+            )
+          : SvgPicture.network(
+              getPluginImageUrl(device.pluginName, img),
+              key: ValueKey(img),
+              fit: BoxFit.contain,
+            );
+    }
+    return InkWell(
+      onTap: () {
+        context.navigator.pushNamed(DeviceScreen.route, arguments: device);
+      },
+      onLongPress: () async {
+        final success = await showConfirm(context, context.localizations.deleteAction, context.localizations.deleteConfirm);
+        if (success) {
+          context.of<RoomStore>(listen: false).deleteDevice(device);
+        }
+      },
+      child: Column(
+        children: [
+          Expanded(
+            child: Center(
+              child: SizedBox(
+                width: 130,
+                height: 90,
+                child: Stack(
+                  alignment: Alignment.center,
+                  fit: StackFit.expand,
+                  children: [
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 400),
+                      child: imgWidget,
+                    ),
+                    if ((device.groupCount ?? 0) > 0)
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: Chip(
+                          label: Text(device.groupCount!.toString()),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: kNormalPadding),
+            child: Text(device.name, style: context.textTheme.caption),
+          ),
+          TextButton(
+            child: Text(device.defaultAction ?? ''),
+            onPressed: device.defaultAction == null
+                ? null
+                : () {
+                    context.of<RoomStore>(listen: false).triggerDevice(device).catchError((error, stack) {
+                      showErrorDialog(context, error, stack);
+                    });
+                  },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Avatar extends StatelessWidget {
+  const _Avatar({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final userStore = context.of<UserStore>();
+    return Hero(
+      tag: 'userAvatar',
+      child: Observer(
+        builder: (context) => CircleAvatar(
+          radius: 20,
+          backgroundColor: context.primaryColor,
+          backgroundImage: userStore.avatar == null ? null : NetworkImage(userStore.avatar!),
+          child: Stack(
+            children: [
+              if (userStore.avatar == null)
+                Center(
+                  child: Icon(
+                    Icons.person,
+                    color: context.brightnessColor,
+                  ),
+                ),
+              Material(
+                type: MaterialType.circle,
+                clipBehavior: Clip.antiAlias,
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    context.navigator.push(
+                      ModalPageRoute(
+                        builder: (context) => const UserDialog(),
+                        settings: const RouteSettings(name: '/userDialog'),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _CenterDockedFabLocation extends StandardFabLocation with FabCenterOffsetX {
+  const _CenterDockedFabLocation();
+
+  @override
+  String toString() => '_CenterDockedFabLocation.centerDocked';
+
+  /// Calculates y-offset for [FloatingActionButtonLocation]s floating over the
+  /// [Scaffold.bottomNavigationBar] so that the center of the floating
+  /// action button lines up with the top of the bottom navigation bar.
+  /// Copies from FabDockedOffsetY
+  @override
+  double getOffsetY(ScaffoldPrelayoutGeometry scaffoldGeometry, double adjustment) {
+    final double contentBottom = scaffoldGeometry.contentBottom;
+    final double contentMargin = scaffoldGeometry.scaffoldSize.height - contentBottom;
+    final double bottomViewPadding = scaffoldGeometry.minViewPadding.bottom;
+    final double bottomSheetHeight = scaffoldGeometry.bottomSheetSize.height + 15; // add 10 to move a bit up the floating button
+    final double fabHeight = scaffoldGeometry.floatingActionButtonSize.height;
+    final double snackBarHeight = scaffoldGeometry.snackBarSize.height;
+    final double bottomMinInset = scaffoldGeometry.minInsets.bottom;
+
+    double safeMargin;
+
+    if (contentMargin > bottomMinInset + fabHeight / 2.0) {
+      // If contentMargin is higher than bottomMinInset enough to display the
+      // FAB without clipping, don't provide a margin
+      safeMargin = 0.0;
+    } else if (bottomMinInset == 0.0) {
+      // If bottomMinInset is zero(the software keyboard is not on the screen)
+      // provide bottomViewPadding as margin
+      safeMargin = bottomViewPadding;
+    } else {
+      // Provide a margin that would shift the FAB enough so that it stays away
+      // from the keyboard
+      safeMargin = fabHeight / 2.0 + kFloatingActionButtonMargin;
+    }
+
+    double fabY = contentBottom - fabHeight / 2.0 - safeMargin;
+    // The FAB should sit with a margin between it and the snack bar.
+    if (snackBarHeight > 0.0) fabY = math.min(fabY, contentBottom - snackBarHeight - fabHeight - kFloatingActionButtonMargin);
+    // The FAB should sit with its center in front of the top of the bottom sheet.
+    if (bottomSheetHeight > 0.0) fabY = math.min(fabY, contentBottom - bottomSheetHeight - fabHeight / 2.0);
+    final double maxFabY = scaffoldGeometry.scaffoldSize.height - fabHeight - safeMargin;
+    return math.min(maxFabY, fabY);
+  }
+}

@@ -11,7 +11,7 @@ import 'package:intl/src/intl_helpers.dart';
 
 import 'messages_fr.dart' as messages_fr;
 
-typedef Future<dynamic> LibraryLoader();
+typedef LibraryLoader = Future<dynamic> Function();
 Map<String, LibraryLoader> _deferredLibraries = {
 // ignore: unnecessary_new
   'fr': () => new Future.value(null),

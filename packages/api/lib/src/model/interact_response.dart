@@ -8,8 +8,15 @@ import 'package:built_value/serializer.dart';
 
 part 'interact_response.g.dart';
 
-
-
+/// InteractResponse
+///
+/// Properties:
+/// * [action] 
+/// * [lang] 
+/// * [userId] 
+/// * [userSentence] 
+/// * [response] 
+/// * [responses] 
 abstract class InteractResponse implements Built<InteractResponse, InteractResponseBuilder> {
     @BuiltValueField(wireName: r'action')
     String get action;
@@ -31,7 +38,8 @@ abstract class InteractResponse implements Built<InteractResponse, InteractRespo
 
     InteractResponse._();
 
-    static void _initializeBuilder(InteractResponseBuilder b) => b;
+    @BuiltValueHook(initializeBuilder: true)
+    static void _defaults(InteractResponseBuilder b) => b;
 
     factory InteractResponse([void updates(InteractResponseBuilder b)]) = _$InteractResponse;
 

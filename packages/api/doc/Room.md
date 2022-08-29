@@ -9,7 +9,9 @@ import 'package:lisa_server_sdk/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **int** |  | 
+**sortOrder** | **int** |  | 
 **name** | **String** |  | 
+**devices** | [**BuiltList&lt;Device&gt;**](Device.md) |  | 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

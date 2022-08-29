@@ -15,7 +15,7 @@ FileField createFileField({
     FileFieldWeb(key: key, onFileSelected: onFileSelected);
 
 class FileFieldWeb extends FileField {
-  FileFieldWeb({
+  const FileFieldWeb({
     Key? key,
     required OnFileSelected onFileSelected,
   }) : super(key: key, onFileSelected: onFileSelected);
@@ -40,7 +40,7 @@ class FileFieldWeb extends FileField {
             onFileSelected(reader.result as Uint8List, file.name);
           });
           reader.onError.listen((e) {
-            print(e);
+            //print(e);
           });
           reader.readAsArrayBuffer(file);
         }
@@ -58,7 +58,7 @@ class FileFieldWeb extends FileField {
       child: Stack(
         children: [
           Text(translations.chooseFileButton.toUpperCase()),
-          HtmlElementView(
+          const HtmlElementView(
             viewType: 'btn-file-picker',
           ),
         ],

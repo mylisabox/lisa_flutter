@@ -5,11 +5,11 @@
 import 'package:lisa_server_sdk/api.dart';
 ```
 
-All URIs are relative to *http://localhost:3000*
+All URIs are relative to *http://mylisabox:3000*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**isInitialized**](ConfigApi.md#isinitialized) | **get** /api/v1/initialized | 
+[**isInitialized**](ConfigApi.md#isinitialized) | **GET** /api/v1/initialized | 
 
 
 # **isInitialized**
@@ -25,12 +25,12 @@ import 'package:lisa_server_sdk/api.dart';
 // uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 //defaultApiClient.getAuthentication<ApiKeyAuth>('Bearer').apiKeyPrefix = 'Bearer';
 
-var api_instance = new ConfigApi();
+final api = LisaServerSdk().getConfigApi();
 
 try { 
-    var result = api_instance.isInitialized();
-    print(result);
-} catch (e) {
+    final response = api.isInitialized();
+    print(response);
+} catch on DioError (e) {
     print('Exception when calling ConfigApi->isInitialized: $e\n');
 }
 ```

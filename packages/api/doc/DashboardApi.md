@@ -5,12 +5,12 @@
 import 'package:lisa_server_sdk/api.dart';
 ```
 
-All URIs are relative to *http://localhost:3000*
+All URIs are relative to *http://mylisabox:3000*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**getDashboard**](DashboardApi.md#getdashboard) | **get** /api/v1/dashboard/room/{roomId} | 
-[**saveDashboard**](DashboardApi.md#savedashboard) | **post** /api/v1/dashboard/room/{roomId} | 
+[**getDashboard**](DashboardApi.md#getdashboard) | **GET** /api/v1/dashboard/room/{roomId} | 
+[**saveDashboard**](DashboardApi.md#savedashboard) | **POST** /api/v1/dashboard/room/{roomId} | 
 
 
 # **getDashboard**
@@ -26,13 +26,13 @@ import 'package:lisa_server_sdk/api.dart';
 // uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 //defaultApiClient.getAuthentication<ApiKeyAuth>('Bearer').apiKeyPrefix = 'Bearer';
 
-var api_instance = new DashboardApi();
-var roomId = 56; // int | 
+final api = LisaServerSdk().getDashboardApi();
+final int roomId = 56; // int | 
 
 try { 
-    var result = api_instance.getDashboard(roomId);
-    print(result);
-} catch (e) {
+    final response = api.getDashboard(roomId);
+    print(response);
+} catch on DioError (e) {
     print('Exception when calling DashboardApi->getDashboard: $e\n');
 }
 ```
@@ -71,13 +71,13 @@ import 'package:lisa_server_sdk/api.dart';
 // uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 //defaultApiClient.getAuthentication<ApiKeyAuth>('Bearer').apiKeyPrefix = 'Bearer';
 
-var api_instance = new DashboardApi();
-var roomId = 56; // int | 
-var requestBody = [new BuiltList<int>()]; // BuiltList<int> | 
+final api = LisaServerSdk().getDashboardApi();
+final int roomId = 56; // int | 
+final BuiltList<int> requestBody = ; // BuiltList<int> | 
 
 try { 
-    api_instance.saveDashboard(roomId, requestBody);
-} catch (e) {
+    api.saveDashboard(roomId, requestBody);
+} catch on DioError (e) {
     print('Exception when calling DashboardApi->saveDashboard: $e\n');
 }
 ```
@@ -87,7 +87,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **roomId** | **int**|  | 
- **requestBody** | [**BuiltList<int>**](int.md)|  | [optional] 
+ **requestBody** | [**BuiltList&lt;int&gt;**](int.md)|  | [optional] 
 
 ### Return type
 

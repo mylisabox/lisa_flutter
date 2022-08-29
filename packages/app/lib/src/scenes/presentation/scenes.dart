@@ -3,22 +3,40 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:lisa_flutter/src/common/l10n/common_localizations.dart';
 import 'package:lisa_flutter/src/common/presentation/dialogs.dart';
+import 'package:lisa_flutter/src/common/presentation/loading.dart';
 import 'package:lisa_flutter/src/common/presentation/refresh_no_scroll_content.dart';
+import 'package:lisa_flutter/src/common/utils/extensions.dart';
 import 'package:lisa_flutter/src/common/utils/page_route_builders.dart';
 import 'package:lisa_flutter/src/scenes/presentation/scene.dart';
 import 'package:lisa_flutter/src/scenes/stores/scenes_store.dart';
 import 'package:lisa_server_sdk/lisa_server_sdk.dart';
 
-class ScenesWidget extends HookWidget {
+class ScenesScreen extends StatelessWidget {
   static const route = '/scenes';
+
+  const ScenesScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(context.localizations.menuScenes),
+      ),
+      body: const ScenesWidget(),
+    );
+  }
+}
+
+class ScenesWidget extends HookWidget {
+  const ScenesWidget({Key? key}) : super(key: key);
 
   void editScene(BuildContext context, Scene? scene, GlobalKey<RefreshIndicatorState> refreshKey) async {
     final needRefresh = await Navigator.of(context, rootNavigator: true).push(
-      FromBottomPageRoute(
-        builder: (context) => SceneWidget(scene: scene),
-        settings: RouteSettings(name: SceneWidget.route),
-      ),
-    ) ??
+          FromBottomPageRoute(
+            builder: (context) => SceneWidget(scene: scene),
+            settings: const RouteSettings(name: SceneWidget.route),
+          ),
+        ) ??
         false;
 
     if (needRefresh) {
@@ -30,6 +48,7 @@ class ScenesWidget extends HookWidget {
   Widget build(BuildContext context) {
     final store = useMemoized(() => ScenesStore());
     final refreshKey = useMemoized(() => GlobalKey<RefreshIndicatorState>());
+    final controller = useScrollController();
 
     useEffect(() {
       store.loadScenes();
@@ -59,74 +78,82 @@ class ScenesWidget extends HookWidget {
             }
 
             if (store.scenes == null) {
-              return Center(child: CircularProgressIndicator());
+              return const Loading();
             }
 
-            if (store.scenes.length == 0) {
+            if (store.scenes!.isEmpty) {
               return RefreshIndicatorContent(
                 child: Center(child: Text(translations.emptyList)),
               );
             }
 
             return Scrollbar(
+              controller: controller,
               child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: DataTable(
-                  showCheckboxColumn: false,
-                  sortAscending: false,
-                  rows: <DataRow>[
-                    for (var i = 0; i < store.scenes.length; i++)
-                      DataRow(
-                        onSelectChanged: (selected) {
-                          if (selected!) {
-                            editScene(context, store.scenes[i], refreshKey);
-                          }
-                        },
-                        cells: [
-                          DataCell(
-                            Row(
-                              children: <Widget>[
-                                IconButton(
-                                  icon: Icon(Icons.edit),
-                                  onPressed: () async {
-                                    editScene(context, store.scenes[i], refreshKey);
-                                  },
-                                ),
-                                IconButton(
-                                  icon: Icon(Icons.delete),
-                                  onPressed: () async {
-                                    await showLoadingDialog(context, (_) => Text(translations.deleting), () => store.deleteScenes(i), onError: (ex, stack) {
-                                      showErrorDialog(context, ex, stack);
-                                    });
-                                  },
-                                ),
-                              ],
+                controller: controller,
+                scrollDirection: Axis.vertical,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: DataTable(
+                    showCheckboxColumn: false,
+                    sortAscending: false,
+                    rows: <DataRow>[
+                      for (var i = 0; i < store.scenes!.length; i++)
+                        DataRow(
+                          onSelectChanged: (selected) {
+                            if (selected!) {
+                              editScene(context, store.scenes![i], refreshKey);
+                            }
+                          },
+                          cells: [
+                            DataCell(
+                              Row(
+                                children: <Widget>[
+                                  IconButton(
+                                    icon: const Icon(Icons.edit),
+                                    onPressed: () async {
+                                      editScene(context, store.scenes![i], refreshKey);
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.delete),
+                                    onPressed: () async {
+                                      final result = await showConfirm(context, translations.deleteItem(store.scenes![i].displayName), translations.deleteConfirm);
+                                      if (result) {
+                                        await showLoadingDialog(context, (_) => Text(translations.deleting), () => store.deleteScenes(i), onError: (ex, stack) {
+                                          showErrorDialog(context, ex, stack);
+                                        });
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          DataCell(Text(store.scenes[i].displayName)),
-                          DataCell(Text(store.scenes[i].data.sentences.length.toString())),
-                          DataCell(Text(store.scenes[i].data.responses.length.toString())),
-                          DataCell(Text(store.scenes[i].data.commands.length.toString())),
-                        ],
+                            DataCell(Text(store.scenes![i].displayName)),
+                            DataCell(Text(store.scenes![i].data.sentences.length.toString())),
+                            DataCell(Text(store.scenes![i].data.responses.length.toString())),
+                            DataCell(Text(store.scenes![i].data.commands.length.toString())),
+                          ],
+                        ),
+                    ],
+                    columns: <DataColumn>[
+                      DataColumn(
+                        label: Text(translations.actions, style: Theme.of(context).textTheme.headline6),
                       ),
-                  ],
-                  columns: <DataColumn>[
-                    DataColumn(
-                      label: Text(translations.actions, style: Theme.of(context).textTheme.headline6),
-                    ),
-                    DataColumn(
-                      label: Text(translations.nameField, style: Theme.of(context).textTheme.headline6),
-                    ),
-                    DataColumn(
-                      label: Text(translations.sceneCommandsTitle, style: Theme.of(context).textTheme.headline6),
-                    ),
-                    DataColumn(
-                      label: Text(translations.sceneResponsesTitle, style: Theme.of(context).textTheme.headline6),
-                    ),
-                    DataColumn(
-                      label: Text(translations.sceneCommandsTitle, style: Theme.of(context).textTheme.headline6),
-                    ),
-                  ],
+                      DataColumn(
+                        label: Text(translations.nameField, style: Theme.of(context).textTheme.headline6),
+                      ),
+                      DataColumn(
+                        label: Text(translations.sceneCommandsTitle, style: Theme.of(context).textTheme.headline6),
+                      ),
+                      DataColumn(
+                        label: Text(translations.sceneResponsesTitle, style: Theme.of(context).textTheme.headline6),
+                      ),
+                      DataColumn(
+                        label: Text(translations.sceneCommandsTitle, style: Theme.of(context).textTheme.headline6),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );
@@ -137,7 +164,7 @@ class ScenesWidget extends HookWidget {
         onPressed: () async {
           editScene(context, null, refreshKey);
         },
-        child: Icon(Icons.add, color: Colors.white),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }

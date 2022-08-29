@@ -2,6 +2,7 @@
           package="com.mylisabox.lisa.lisa_flutter">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.USE_FINGERPRINT"/>
 
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.
@@ -11,9 +12,11 @@
     <application
             android:networkSecurityConfig="@xml/network_security_config"
             android:label="L.I.S.A."
+            android:allowBackup="false"
+            android:fullBackupContent="false"
             android:icon="@mipmap/ic_launcher">
         <activity
-                android:name="io.flutter.embedding.android.FlutterActivity"
+                android:name="io.flutter.embedding.android.FlutterFragmentActivity"
                 android:launchMode="singleTop"
                 android:theme="@style/LaunchTheme"
                 android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"

@@ -5,13 +5,13 @@
 import 'package:lisa_server_sdk/api.dart';
 ```
 
-All URIs are relative to *http://localhost:3000*
+All URIs are relative to *http://mylisabox:3000*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**addToFavorite**](FavoriteApi.md#addtofavorite) | **put** /api/v1/favorite/{deviceId} | 
-[**deleteFromFavorite**](FavoriteApi.md#deletefromfavorite) | **delete** /api/v1/favorite/{deviceId} | 
-[**getFavorites**](FavoriteApi.md#getfavorites) | **get** /api/v1/favorite | 
+[**addToFavorite**](FavoriteApi.md#addtofavorite) | **PUT** /api/v1/favorite/{deviceId} | 
+[**deleteFromFavorite**](FavoriteApi.md#deletefromfavorite) | **DELETE** /api/v1/favorite/{deviceId} | 
+[**getFavorites**](FavoriteApi.md#getfavorites) | **GET** /api/v1/favorite | 
 
 
 # **addToFavorite**
@@ -27,12 +27,12 @@ import 'package:lisa_server_sdk/api.dart';
 // uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 //defaultApiClient.getAuthentication<ApiKeyAuth>('Bearer').apiKeyPrefix = 'Bearer';
 
-var api_instance = new FavoriteApi();
-var deviceId = 56; // int | 
+final api = LisaServerSdk().getFavoriteApi();
+final int deviceId = 56; // int | 
 
 try { 
-    api_instance.addToFavorite(deviceId);
-} catch (e) {
+    api.addToFavorite(deviceId);
+} catch on DioError (e) {
     print('Exception when calling FavoriteApi->addToFavorite: $e\n');
 }
 ```
@@ -71,12 +71,12 @@ import 'package:lisa_server_sdk/api.dart';
 // uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 //defaultApiClient.getAuthentication<ApiKeyAuth>('Bearer').apiKeyPrefix = 'Bearer';
 
-var api_instance = new FavoriteApi();
-var deviceId = 56; // int | 
+final api = LisaServerSdk().getFavoriteApi();
+final int deviceId = 56; // int | 
 
 try { 
-    api_instance.deleteFromFavorite(deviceId);
-} catch (e) {
+    api.deleteFromFavorite(deviceId);
+} catch on DioError (e) {
     print('Exception when calling FavoriteApi->deleteFromFavorite: $e\n');
 }
 ```
@@ -115,12 +115,12 @@ import 'package:lisa_server_sdk/api.dart';
 // uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 //defaultApiClient.getAuthentication<ApiKeyAuth>('Bearer').apiKeyPrefix = 'Bearer';
 
-var api_instance = new FavoriteApi();
+final api = LisaServerSdk().getFavoriteApi();
 
 try { 
-    var result = api_instance.getFavorites();
-    print(result);
-} catch (e) {
+    final response = api.getFavorites();
+    print(response);
+} catch on DioError (e) {
     print('Exception when calling FavoriteApi->getFavorites: $e\n');
 }
 ```
@@ -130,7 +130,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**BuiltList<Device>**](Device.md)
+[**BuiltList&lt;Device&gt;**](Device.md)
 
 ### Authorization
 

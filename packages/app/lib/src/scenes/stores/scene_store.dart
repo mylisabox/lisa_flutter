@@ -101,15 +101,14 @@ abstract class _SceneStore with Store {
       await _sceneApi
           .saveScene(
             scene: (SceneBuilder()
-                  ..name = _scene?.name
+                  ..name = _scene?.name ?? name
                   ..displayName = name
                   ..data = (SceneDataBuilder()
                     ..commands = ListBuilder(commands)
                     ..responses = ListBuilder(responses)
                     ..sentences = ListBuilder(sentences)))
                 .build(),
-          )
-          .catchError(handleCaughtError);
+          );
     } on ErrorResultException catch (ex) {
       error = ex;
     }

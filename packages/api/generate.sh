@@ -4,9 +4,7 @@ export JAVA_OPTS="${JAVA_OPTS} -XX:MaxPermSize=256M -Xmx1024M -DloggerPath=conf/
 
 WORKDIR=.
 
-rm -R ${WORKDIR}/lib/api
-rm -R ${WORKDIR}/lib/model
-rm -R ${WORKDIR}/lib/auth
+rm -R ${WORKDIR}/lib/src
 
 executable="./openapi-generator-cli.jar"
 # Generate client

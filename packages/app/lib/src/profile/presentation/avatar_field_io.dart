@@ -17,7 +17,7 @@ AvatarField createAvatarField({
     AvatarFieldIO(key: key, onFileSelected: onFileSelected);
 
 class AvatarFieldIO extends AvatarField {
-  AvatarFieldIO({required OnFileSelected onFileSelected, Key? key}) : super(key: key, onFileSelected: onFileSelected);
+  const AvatarFieldIO({required OnFileSelected onFileSelected, Key? key}) : super(key: key, onFileSelected: onFileSelected);
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +55,7 @@ class AvatarFieldIO extends AvatarField {
               }
             }
           },
-          child: Container(
+          child: const SizedBox(
             height: double.infinity,
             width: double.infinity,
             child: Icon(

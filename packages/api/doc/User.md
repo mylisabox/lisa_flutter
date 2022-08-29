@@ -10,9 +10,9 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **int** |  | 
 **email** | **String** |  | 
-**firstname** | **String** |  | [optional] 
+**firstName** | **String** |  | 
 **lang** | **String** |  | 
-**lastname** | **String** |  | [optional] 
+**lastName** | **String** |  | 
 **mobile** | **String** |  | [optional] 
 **avatar** | **String** |  | [optional] 
 

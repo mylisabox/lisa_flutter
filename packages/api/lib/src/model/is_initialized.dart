@@ -7,15 +7,18 @@ import 'package:built_value/serializer.dart';
 
 part 'is_initialized.g.dart';
 
-
-
+/// IsInitialized
+///
+/// Properties:
+/// * [initialized] 
 abstract class IsInitialized implements Built<IsInitialized, IsInitializedBuilder> {
     @BuiltValueField(wireName: r'initialized')
     bool get initialized;
 
     IsInitialized._();
 
-    static void _initializeBuilder(IsInitializedBuilder b) => b;
+    @BuiltValueHook(initializeBuilder: true)
+    static void _defaults(IsInitializedBuilder b) => b;
 
     factory IsInitialized([void updates(IsInitializedBuilder b)]) = _$IsInitialized;
 

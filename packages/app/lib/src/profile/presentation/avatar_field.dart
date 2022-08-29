@@ -11,5 +11,5 @@ abstract class AvatarField extends HookWidget {
 
   factory AvatarField.create({Key? key, required OnFileSelected onFileSelected}) => createAvatarField(key: key, onFileSelected: onFileSelected);
 
-  AvatarField({Key? key, required this.onFileSelected}) : super(key: key);
+  const AvatarField({Key? key, required this.onFileSelected}) : super(key: key);
 }

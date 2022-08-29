@@ -7,14 +7,23 @@ import 'package:built_value/serializer.dart';
 
 part 'store_plugin.g.dart';
 
-
-
+/// StorePlugin
+///
+/// Properties:
+/// * [id] 
+/// * [name] 
+/// * [image] 
+/// * [description] 
+/// * [installed] 
 abstract class StorePlugin implements Built<StorePlugin, StorePluginBuilder> {
     @BuiltValueField(wireName: r'id')
     String get id;
 
     @BuiltValueField(wireName: r'name')
     String get name;
+
+    @BuiltValueField(wireName: r'image')
+    String? get image;
 
     @BuiltValueField(wireName: r'description')
     String get description;
@@ -24,7 +33,8 @@ abstract class StorePlugin implements Built<StorePlugin, StorePluginBuilder> {
 
     StorePlugin._();
 
-    static void _initializeBuilder(StorePluginBuilder b) => b;
+    @BuiltValueHook(initializeBuilder: true)
+    static void _defaults(StorePluginBuilder b) => b;
 
     factory StorePlugin([void updates(StorePluginBuilder b)]) = _$StorePlugin;
 
@@ -51,6 +61,12 @@ class _$StorePluginSerializer implements StructuredSerializer<StorePlugin> {
             ..add(r'name')
             ..add(serializers.serialize(object.name,
                 specifiedType: const FullType(String)));
+        if (object.image != null) {
+            result
+                ..add(r'image')
+                ..add(serializers.serialize(object.image,
+                    specifiedType: const FullType(String)));
+        }
         result
             ..add(r'description')
             ..add(serializers.serialize(object.description,
@@ -79,6 +95,10 @@ class _$StorePluginSerializer implements StructuredSerializer<StorePlugin> {
                     break;
                 case r'name':
                     result.name = serializers.deserialize(value,
+                        specifiedType: const FullType(String)) as String;
+                    break;
+                case r'image':
+                    result.image = serializers.deserialize(value,
                         specifiedType: const FullType(String)) as String;
                     break;
                 case r'description':

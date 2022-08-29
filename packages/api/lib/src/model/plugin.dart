@@ -9,8 +9,14 @@ import 'package:lisa_server_sdk/src/model/device_settings.dart';
 
 part 'plugin.g.dart';
 
-
-
+/// Plugin
+///
+/// Properties:
+/// * [id]
+/// * [name]
+/// * [description]
+/// * [image]
+/// * [devicesSettings]
 abstract class Plugin implements Built<Plugin, PluginBuilder> {
     @BuiltValueField(wireName: r'id')
     String get id;
@@ -29,7 +35,8 @@ abstract class Plugin implements Built<Plugin, PluginBuilder> {
 
     Plugin._();
 
-    static void _initializeBuilder(PluginBuilder b) => b;
+    @BuiltValueHook(initializeBuilder: true)
+    static void _defaults(PluginBuilder b) => b;
 
     factory Plugin([void updates(PluginBuilder b)]) = _$Plugin;
 

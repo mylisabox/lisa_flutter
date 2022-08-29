@@ -16,7 +16,7 @@ AvatarField createAvatarField({
     AvatarFieldWeb(key: key, onFileSelected: onFileSelected);
 
 class AvatarFieldWeb extends AvatarField {
-  AvatarFieldWeb({
+  const AvatarFieldWeb({
     Key? key,
     required OnFileSelected onFileSelected,
   }) : super(key: key, onFileSelected: onFileSelected);
@@ -49,7 +49,7 @@ class AvatarFieldWeb extends AvatarField {
             onFileSelected(reader.result as Uint8List, file.name);
           });
           reader.onError.listen((e) {
-            print(e);
+            //print(e);
           });
           reader.readAsArrayBuffer(file);
         }
@@ -69,8 +69,8 @@ class AvatarFieldWeb extends AvatarField {
         type: MaterialType.circle,
         clipBehavior: Clip.hardEdge,
         child: Stack(
-          children: [
-            Container(
+          children: const [
+            SizedBox(
               height: double.infinity,
               width: double.infinity,
               child: Icon(

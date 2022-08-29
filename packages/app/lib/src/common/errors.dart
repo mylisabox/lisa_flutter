@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:lisa_flutter/src/common/l10n/error_localizations.dart';
@@ -13,8 +14,14 @@ ErrorResultException handleError(error, stackTrace) {
     return error;
   } else {
     var result = ErrorResultException(ErrorResult.internal);
-    if (error is TimeoutException /* || error is SocketException*/) {
+    final isDioTimeout = (error is DioError &&
+        (error.type == DioErrorType.connectTimeout || error.type == DioErrorType.receiveTimeout || error.type == DioErrorType.sendTimeout));
+    if (error is TimeoutException || isDioTimeout) {
       result = ErrorResultException(ErrorResult.noNetwork);
+    } else if (error is DioError && error.response?.statusCode == 401) {
+      result = ErrorResultException(ErrorResult.notLogged);
+    } else if (error is DioError && error.response?.statusCode == 403) {
+      result = ErrorResultException(ErrorResult.forbidden);
     }
     kDebugLogger.severe('handleError: Future error from $error forwarded to $result', error, stackTrace);
     return result;
@@ -41,6 +48,9 @@ class ErrorResultException implements Exception {
 class ErrorResult {
   static const noNetwork = ErrorResult(_ErrorType.noNetwork);
   static const wrongEmail = ErrorResult(_ErrorType.wrongEmail);
+  static const notLogged = ErrorResult(_ErrorType.notLogged);
+  static const forbidden = ErrorResult(_ErrorType.forbidden);
+  static const wrongCredentials = ErrorResult(_ErrorType.wrongCredentials);
 
   // generic
   static const internal = ErrorResult(_ErrorType.internal);
@@ -66,6 +76,12 @@ class ErrorResult {
         return localizations.noAppForTheAction;
       case _ErrorType.fieldRequired:
         return localizations.fieldRequired;
+      case _ErrorType.notLogged:
+        return localizations.notLogged;
+      case _ErrorType.forbidden:
+        return localizations.forbidden;
+      case _ErrorType.wrongCredentials:
+        return localizations.wrongCredentials;
     }
   }
 
@@ -87,6 +103,12 @@ class ErrorResult {
         return localizations.noAppForTheActionHint;
       case _ErrorType.fieldRequired:
         return localizations.fieldRequiredHint;
+      case _ErrorType.notLogged:
+        return localizations.notLoggedHint;
+      case _ErrorType.forbidden:
+        return localizations.forbiddenHint;
+      case _ErrorType.wrongCredentials:
+        return localizations.wrongCredentialsHint;
     }
   }
 
@@ -104,6 +126,9 @@ class ErrorResult {
 
 enum _ErrorType {
   noNetwork,
+  notLogged,
+  forbidden,
+  wrongCredentials,
   internal,
   wrongEmail,
   fieldRequired,

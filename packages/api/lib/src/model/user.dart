@@ -7,8 +7,16 @@ import 'package:built_value/serializer.dart';
 
 part 'user.g.dart';
 
-
-
+/// User
+///
+/// Properties:
+/// * [id] 
+/// * [email] 
+/// * [firstName] 
+/// * [lang] 
+/// * [lastName] 
+/// * [mobile] 
+/// * [avatar] 
 abstract class User implements Built<User, UserBuilder> {
     @BuiltValueField(wireName: r'id')
     int get id;
@@ -16,14 +24,14 @@ abstract class User implements Built<User, UserBuilder> {
     @BuiltValueField(wireName: r'email')
     String get email;
 
-    @BuiltValueField(wireName: r'firstname')
-    String? get firstname;
+    @BuiltValueField(wireName: r'firstName')
+    String get firstName;
 
     @BuiltValueField(wireName: r'lang')
     String get lang;
 
-    @BuiltValueField(wireName: r'lastname')
-    String? get lastname;
+    @BuiltValueField(wireName: r'lastName')
+    String get lastName;
 
     @BuiltValueField(wireName: r'mobile')
     String? get mobile;
@@ -33,7 +41,8 @@ abstract class User implements Built<User, UserBuilder> {
 
     User._();
 
-    static void _initializeBuilder(UserBuilder b) => b;
+    @BuiltValueHook(initializeBuilder: true)
+    static void _defaults(UserBuilder b) => b;
 
     factory User([void updates(UserBuilder b)]) = _$User;
 
@@ -60,22 +69,18 @@ class _$UserSerializer implements StructuredSerializer<User> {
             ..add(r'email')
             ..add(serializers.serialize(object.email,
                 specifiedType: const FullType(String)));
-        if (object.firstname != null) {
-            result
-                ..add(r'firstname')
-                ..add(serializers.serialize(object.firstname,
-                    specifiedType: const FullType(String)));
-        }
+        result
+            ..add(r'firstName')
+            ..add(serializers.serialize(object.firstName,
+                specifiedType: const FullType(String)));
         result
             ..add(r'lang')
             ..add(serializers.serialize(object.lang,
                 specifiedType: const FullType(String)));
-        if (object.lastname != null) {
-            result
-                ..add(r'lastname')
-                ..add(serializers.serialize(object.lastname,
-                    specifiedType: const FullType(String)));
-        }
+        result
+            ..add(r'lastName')
+            ..add(serializers.serialize(object.lastName,
+                specifiedType: const FullType(String)));
         if (object.mobile != null) {
             result
                 ..add(r'mobile')
@@ -110,16 +115,16 @@ class _$UserSerializer implements StructuredSerializer<User> {
                     result.email = serializers.deserialize(value,
                         specifiedType: const FullType(String)) as String;
                     break;
-                case r'firstname':
-                    result.firstname = serializers.deserialize(value,
+                case r'firstName':
+                    result.firstName = serializers.deserialize(value,
                         specifiedType: const FullType(String)) as String;
                     break;
                 case r'lang':
                     result.lang = serializers.deserialize(value,
                         specifiedType: const FullType(String)) as String;
                     break;
-                case r'lastname':
-                    result.lastname = serializers.deserialize(value,
+                case r'lastName':
+                    result.lastName = serializers.deserialize(value,
                         specifiedType: const FullType(String)) as String;
                     break;
                 case r'mobile':

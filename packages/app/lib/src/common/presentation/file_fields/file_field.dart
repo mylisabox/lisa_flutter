@@ -11,5 +11,5 @@ abstract class FileField extends HookWidget {
 
   factory FileField.create({Key? key, required OnFileSelected onFileSelected}) => createFileField(key: key, onFileSelected: onFileSelected);
 
-  FileField({Key? key, required this.onFileSelected}) : super(key: key);
+  const FileField({Key? key, required this.onFileSelected}) : super(key: key);
 }

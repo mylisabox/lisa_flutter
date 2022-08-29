@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-const MethodChannel _channel = const MethodChannel('wear');
+const MethodChannel _channel = MethodChannel('wear');
 
 /// Shape of a Wear device
 enum Shape { square, round }
@@ -23,18 +23,18 @@ class InheritedShape extends InheritedWidget {
   }
 
   @override
-  bool updateShouldNotify(InheritedShape old) => shape != old.shape;
+  bool updateShouldNotify(InheritedShape oldWidget) => shape != oldWidget.shape;
 }
 
 /// Builds a child for a WatchFaceBuilder
-typedef Widget WatchShapeBuilder(
+typedef WatchShapeBuilder = Widget Function(
   BuildContext context,
   Shape shape,
 );
 
 /// Builder widget for watch shapes
 class WatchShape extends StatefulWidget {
-  WatchShape({Key? key, required this.builder})
+  const WatchShape({Key? key, required this.builder})
       : super(key: key);
   final WatchShapeBuilder builder;
 
@@ -77,7 +77,7 @@ class _WatchShapeState extends State<WatchShape> {
 }
 
 /// Builds a child for AmbientModeBuilder
-typedef Widget AmbientModeWidgetBuilder(
+typedef AmbientModeWidgetBuilder = Widget Function(
   BuildContext context,
   Mode mode,
 );
@@ -87,7 +87,7 @@ typedef Widget AmbientModeWidgetBuilder(
 /// called every time the watch triggers an ambient update request. If an update
 /// function is passed in, this widget will not perform an update itself.
 class AmbientMode extends StatefulWidget {
-  AmbientMode({Key? key, required this.builder, this.update})
+  const AmbientMode({Key? key, required this.builder, this.update})
       : super(key: key);
   final AmbientModeWidgetBuilder builder;
   final Function? update;
@@ -109,10 +109,11 @@ class _AmbientModeState extends State<AmbientMode> {
           setState(() => ambientMode = Mode.ambient);
           break;
         case 'update':
-          if (widget.update != null)
+          if (widget.update != null) {
             widget.update!();
-          else
+          } else {
             setState(() => ambientMode = Mode.ambient);
+          }
           break;
         case 'exit':
           setState(() => ambientMode = Mode.active);

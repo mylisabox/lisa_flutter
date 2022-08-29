@@ -5,15 +5,15 @@
 import 'package:lisa_server_sdk/api.dart';
 ```
 
-All URIs are relative to *http://localhost:3000*
+All URIs are relative to *http://mylisabox:3000*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**setupVoiceCommands**](SetupApi.md#setupvoicecommands) | **post** /api/v1/setup/voice_commands | 
+[**setupVoiceCommand**](SetupApi.md#setupvoicecommand) | **POST** /api/v1/setup/voiceCommand | 
 
 
-# **setupVoiceCommands**
-> setupVoiceCommands(config)
+# **setupVoiceCommand**
+> setupVoiceCommand(config)
 
 
 
@@ -25,13 +25,13 @@ import 'package:lisa_server_sdk/api.dart';
 // uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 //defaultApiClient.getAuthentication<ApiKeyAuth>('Bearer').apiKeyPrefix = 'Bearer';
 
-var api_instance = new SetupApi();
-var config = BINARY_DATA_HERE; // Uint8List | 
+final api = LisaServerSdk().getSetupApi();
+final MultipartFile config = BINARY_DATA_HERE; // MultipartFile | 
 
 try { 
-    api_instance.setupVoiceCommands(config);
-} catch (e) {
-    print('Exception when calling SetupApi->setupVoiceCommands: $e\n');
+    api.setupVoiceCommand(config);
+} catch on DioError (e) {
+    print('Exception when calling SetupApi->setupVoiceCommand: $e\n');
 }
 ```
 
@@ -39,7 +39,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **config** | **Uint8List**|  | 
+ **config** | **MultipartFile**|  | 
 
 ### Return type
 

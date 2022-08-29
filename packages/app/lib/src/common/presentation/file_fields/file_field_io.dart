@@ -14,7 +14,7 @@ FileField createFileField({
     FileFieldIO(key: key, onFileSelected: onFileSelected);
 
 class FileFieldIO extends FileField {
-  FileFieldIO({required OnFileSelected onFileSelected, Key? key}) : super(key: key, onFileSelected: onFileSelected);
+  const FileFieldIO({required OnFileSelected onFileSelected, Key? key}) : super(key: key, onFileSelected: onFileSelected);
 
   @override
   Widget build(BuildContext context) {

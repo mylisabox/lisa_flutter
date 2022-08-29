@@ -34,7 +34,7 @@ android {
 
     defaultConfig {
         applicationId "com.mylisabox.lisa.lisa_flutter"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -55,6 +55,7 @@ flutter {
 }
 
 dependencies {
+    implementation 'androidx.multidex:multidex:2.0.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.4.0-alpha06'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0-alpha06'

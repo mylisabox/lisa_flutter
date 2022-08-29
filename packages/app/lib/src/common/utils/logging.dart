@@ -2,7 +2,6 @@ import 'dart:collection';
 import 'dart:developer';
 
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:lisa_flutter/src/common/constants.dart';
 import 'package:logging/logging.dart';
@@ -99,12 +98,14 @@ void _log(LogRecord record) async {
           error: record.error,
           stackTrace: record.stackTrace,
           time: DateTime.now());
+      /*
       debugPrint(
           record.message.toString()); //FIXME until IDE plugin does it for us
       debugPrint(
           record.error.toString()); //FIXME until IDE plugin does it for us
       print(
           record.stackTrace.toString()); //FIXME until IDE plugin does it for us
+          */
     } else {
       if (_logFilter.isEmpty ||
           _logFilter.contains(record.loggerName) ||

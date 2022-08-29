@@ -9,8 +9,21 @@ import 'package:built_value/serializer.dart';
 
 part 'device_settings.g.dart';
 
-
-
+/// DeviceSettings
+///
+/// Properties:
+/// * [name]
+/// * [driver]
+/// * [image]
+/// * [imageOn]
+/// * [imageOff]
+/// * [defaultAction]
+/// * [pairing]
+/// * [pluginName]
+/// * [description]
+/// * [type]
+/// * [template]
+/// * [settings]
 abstract class DeviceSettings implements Built<DeviceSettings, DeviceSettingsBuilder> {
     @BuiltValueField(wireName: r'name')
     String get name;
@@ -20,6 +33,15 @@ abstract class DeviceSettings implements Built<DeviceSettings, DeviceSettingsBui
 
     @BuiltValueField(wireName: r'image')
     String get image;
+
+    @BuiltValueField(wireName: r'imageOn')
+    String? get imageOn;
+
+    @BuiltValueField(wireName: r'imageOff')
+    String? get imageOff;
+
+    @BuiltValueField(wireName: r'defaultAction')
+    String? get defaultAction;
 
     @BuiltValueField(wireName: r'pairing')
     String get pairing;
@@ -41,7 +63,8 @@ abstract class DeviceSettings implements Built<DeviceSettings, DeviceSettingsBui
 
     DeviceSettings._();
 
-    static void _initializeBuilder(DeviceSettingsBuilder b) => b;
+    @BuiltValueHook(initializeBuilder: true)
+    static void _defaults(DeviceSettingsBuilder b) => b;
 
     factory DeviceSettings([void updates(DeviceSettingsBuilder b)]) = _$DeviceSettings;
 
@@ -72,6 +95,24 @@ class _$DeviceSettingsSerializer implements StructuredSerializer<DeviceSettings>
             ..add(r'image')
             ..add(serializers.serialize(object.image,
                 specifiedType: const FullType(String)));
+        if (object.imageOn != null) {
+            result
+                ..add(r'imageOn')
+                ..add(serializers.serialize(object.imageOn,
+                    specifiedType: const FullType(String)));
+        }
+        if (object.imageOff != null) {
+            result
+                ..add(r'imageOff')
+                ..add(serializers.serialize(object.imageOff,
+                    specifiedType: const FullType(String)));
+        }
+        if (object.defaultAction != null) {
+            result
+                ..add(r'defaultAction')
+                ..add(serializers.serialize(object.defaultAction,
+                    specifiedType: const FullType(String)));
+        }
         result
             ..add(r'pairing')
             ..add(serializers.serialize(object.pairing,
@@ -126,6 +167,18 @@ class _$DeviceSettingsSerializer implements StructuredSerializer<DeviceSettings>
                     break;
                 case r'image':
                     result.image = serializers.deserialize(value,
+                        specifiedType: const FullType(String)) as String;
+                    break;
+                case r'imageOn':
+                    result.imageOn = serializers.deserialize(value,
+                        specifiedType: const FullType(String)) as String;
+                    break;
+                case r'imageOff':
+                    result.imageOff = serializers.deserialize(value,
+                        specifiedType: const FullType(String)) as String;
+                    break;
+                case r'defaultAction':
+                    result.defaultAction = serializers.deserialize(value,
                         specifiedType: const FullType(String)) as String;
                     break;
                 case r'pairing':

@@ -9,8 +9,13 @@ import 'package:lisa_server_sdk/src/model/device.dart';
 
 part 'dashboard.g.dart';
 
-
-
+/// Dashboard
+///
+/// Properties:
+/// * [id]
+/// * [roomId]
+/// * [userId]
+/// * [widgets]
 abstract class Dashboard implements Built<Dashboard, DashboardBuilder> {
     @BuiltValueField(wireName: r'id')
     int get id;
@@ -26,7 +31,8 @@ abstract class Dashboard implements Built<Dashboard, DashboardBuilder> {
 
     Dashboard._();
 
-    static void _initializeBuilder(DashboardBuilder b) => b;
+    @BuiltValueHook(initializeBuilder: true)
+    static void _defaults(DashboardBuilder b) => b;
 
     factory Dashboard([void updates(DashboardBuilder b)]) = _$Dashboard;
 
